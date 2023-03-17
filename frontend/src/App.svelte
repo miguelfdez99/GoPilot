@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Sidebar from './components/Sidebar.svelte';
   import {Greet} from '../wailsjs/go/main/App.js'
 
   let resultText: string = "Please enter your name below 👇"
@@ -7,7 +8,10 @@
   function greet(): void {
     Greet(name).then(result => resultText = result)
   }
+
 </script>
+
+<Sidebar />
 
 <main>
   <div class="result" id="result">{resultText}</div>
