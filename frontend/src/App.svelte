@@ -43,7 +43,8 @@
   .sidebar {
     width: 200px;
     height: 100%;
-    background-color: #f0f0f0;
+    background-color: #30abdb;
+    text-align: center;
   }
 
   .main {
