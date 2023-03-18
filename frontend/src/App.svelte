@@ -1,27 +1,53 @@
 <script lang="ts">
-  import Sidebar from './components/Sidebar.svelte';
-  import {Greet} from '../wailsjs/go/main/App.js'
+  import { onMount, createEventDispatcher } from 'svelte';
+  import Home from './components/Home.svelte';
+  import Users from './components/Users.svelte';
 
-  let resultText: string = "Please enter your name below 👇"
-  let name: string
+  let currentView = 'home';
+  const dispatch = createEventDispatcher();
 
-  function greet(): void {
-    Greet(name).then(result => resultText = result)
+  function handleViewChange(event: CustomEvent<string>) {
+    currentView = event.detail;
   }
+
+  onMount(() => {
+    const event = new CustomEvent('changeView', { detail: currentView });
+    dispatchEvent(event);
+  });
 
 </script>
 
-<Sidebar />
-
-<main>
-  <div class="result" id="result">{resultText}</div>
-  <div class="input-box" id="input">
-    <input autocomplete="off" bind:value={name} class="input" id="name" type="text"/>
-    <button class="btn" on:click={greet}>Greet</button>
+<div class="container">
+  <div class="sidebar">
+    <ul>
+      <li><button on:click={() => currentView = 'home'}>Home</button></li>
+      <li><button on:click={() => currentView = 'users'}>Users</button></li>
+    </ul>
   </div>
-</main>
+
+  <div class="main">
+    {#if currentView === 'home'}
+      <Home />
+    {:else if currentView === 'users'}
+      <Users />
+    {/if}
+  </div>
+</div>
 
 <style>
+  .container {
+    display: flex;
+    height: 100vh;
+  }
 
+  .sidebar {
+    width: 200px;
+    height: 100%;
+    background-color: #f0f0f0;
+  }
 
+  .main {
+    flex: 1;
+    padding: 1rem;
+  }
 </style>

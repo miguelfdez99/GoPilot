@@ -1,16 +1,15 @@
 <script lang="ts">
-    import Sidebar from './Sidebar.svelte';
+  import { onMount } from 'svelte';
 
+  let currentView = 'home';
 
-  </script>
+  onMount(() => {
+    addEventListener('changeView', (event: CustomEvent) => {
+      currentView = event.detail;
+    });
+  });
+</script>
 
-  <Sidebar />
+<h1>Home</h1>
 
-  <main>
-    <h1>HOME PAGE</h1>
-  </main>
-
-  <style>
-
-
-  </style>
+<p>This is the Home view.</p>

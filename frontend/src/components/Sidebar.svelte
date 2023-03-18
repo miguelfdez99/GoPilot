@@ -1,29 +1,14 @@
-<script>
-    import Home from './Home.svelte';
-    import Users from './Users.svelte';
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
 
-    let currentView = Home;
+  const dispatch = createEventDispatcher();
 
-    function changeView(view) {
-      if (view === 'home') {
-        currentView = Home;
-      } else if (view === 'users') {
-        currentView = Users;
-      }
-    }
-  </script>
+  function handleButtonClick(view: string) {
+    dispatch('changeView', { detail: view });
+  }
+</script>
 
-  <nav>
-    <ul>
-      <li><a on:click={() => changeView('home')}>Home</a></li>
-      <li><a on:click={() => changeView('users')}>Users</a></li>
-    </ul>
-  </nav>
-
-  <main>
-    <svelte:component this={currentView} />
-  </main>
-
-  <style>
-    /* Styles for the nav and main sections go here */
-  </style>
+<ul>
+  <li><button on:click={() => handleButtonClick('home')}>Home</button></li>
+  <li><button on:click={() => handleButtonClick('users')}>Users</button></li>
+</ul>
