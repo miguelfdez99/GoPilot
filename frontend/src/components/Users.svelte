@@ -2,7 +2,7 @@
 
   import { onMount } from 'svelte';
 
-  import {PrintUsers, CreateUser, DeleteUser, CreateUserWithDir, DeleteUserWithDir, CheckAdmin} from '../wailsjs/go/main/App.js'
+  import {PrintUsers, CreateUser, DeleteUser, CreateUserWithDir, DeleteUserWithDir, CheckAdmin} from '../../wailsjs/go/main/App.js'
 
   let currentView = 'users';
   let name: string
