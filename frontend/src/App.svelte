@@ -2,6 +2,7 @@
   import { onMount, createEventDispatcher } from 'svelte';
   import Home from './components/Home.svelte';
   import Users from './components/Users.svelte';
+  import Packages from './components/Packages.svelte';
 
   let currentView = 'home';
   const dispatch = createEventDispatcher();
@@ -22,6 +23,7 @@
     <ul>
       <li><button on:click={() => currentView = 'home'}>Home</button></li>
       <li><button on:click={() => currentView = 'users'}>Users</button></li>
+      <li><button on:click={() => currentView = 'packages'}>Packages</button></li>
     </ul>
   </div>
 
@@ -30,6 +32,8 @@
       <Home />
     {:else if currentView === 'users'}
       <Users />
+    {:else if currentView === 'packages'}
+      <Packages />
     {/if}
   </div>
 </div>
