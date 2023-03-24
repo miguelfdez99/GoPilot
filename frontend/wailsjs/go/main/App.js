@@ -26,6 +26,10 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function ListPackages() {
+  return window['go']['main']['App']['ListPackages']();
+}
+
 export function PrintUsers() {
   return window['go']['main']['App']['PrintUsers']();
 }

@@ -105,3 +105,27 @@ func (a *App) CheckAdmin() bool {
 		return true
 	}
 }
+
+func (a *App) ListPackages() []string {
+	cmd := exec.Command("apt", "list", "--installed")
+	out, err := cmd.Output()
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	// Extract only the package names using the extractFirstParams function
+	packageNames := ExtractFirstParams(string(out))
+	s := packageNames[1:10]
+	fmt.Println(s)
+	return s
+}
+
+// func (a *App) ListPackagesVisual() []string {
+// 	cmd := exec.Command("apt", "list", "--installed")
+// 	out, err := cmd.Output()
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return nil
+// 	}
+// 	//return strings.Split(string(out), "
+// }
