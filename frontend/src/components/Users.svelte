@@ -33,17 +33,15 @@ function printUser(): void {
       CheckAdmin()
     }
 
-    onMount(() => {
-      CheckAdmin().then(result => {
-        if (result === false) {
-          adminText = "You are not an admin"
-        }
-      })
-    })
 
   onMount(() => {
     addEventListener('changeView', (event: CustomEvent) => {
       currentView = event.detail;
+    });
+    CheckAdmin().then(result => {
+        if (result === false) {
+          adminText = "You are not an admin"
+        }
     });
   });
 </script>

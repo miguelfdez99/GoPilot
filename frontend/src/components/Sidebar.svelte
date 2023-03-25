@@ -11,4 +11,5 @@
 <ul>
   <li><button on:click={() => handleButtonClick('home')}>Home</button></li>
   <li><button on:click={() => handleButtonClick('users')}>Users</button></li>
+  <li><button on:click={() => handleButtonClick('packages')}>Packages</button></li>
 </ul>

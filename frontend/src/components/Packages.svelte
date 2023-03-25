@@ -11,7 +11,7 @@
       });
     });
 
-  let packages = [];
+  let packages: string[] = [];
 
   function listPackages() {
     ListPackages().then(result => {

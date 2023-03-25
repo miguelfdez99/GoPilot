@@ -11,6 +11,8 @@ export function DeleteUser():Promise<void>;
 
 export function DeleteUserWithDir(arg1:string):Promise<void>;
 
+export function GetDistribution():Promise<string>;
+
 export function Greet(arg1:string):Promise<string>;
 
 export function ListPackages():Promise<Array<string>>;

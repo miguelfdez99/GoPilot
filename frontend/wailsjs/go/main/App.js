@@ -22,6 +22,10 @@ export function DeleteUserWithDir(arg1) {
   return window['go']['main']['App']['DeleteUserWithDir'](arg1);
 }
 
+export function GetDistribution() {
+  return window['go']['main']['App']['GetDistribution']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
