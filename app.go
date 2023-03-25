@@ -107,7 +107,26 @@ func (a *App) CheckAdmin() bool {
 }
 
 func (a *App) ListPackages() []string {
-	cmd := exec.Command("apt", "list", "--installed")
+	// Get the Linux distribution
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	var cmd *exec.Cmd
+
+	switch distribution {
+	case "ubuntu":
+		fallthrough
+	case "debian":
+		cmd = exec.Command("apt", "list", "--installed")
+	case "fedora":
+		cmd = exec.Command("dnf", "list", "installed")
+	case "arch":
+		cmd = exec.Command("pacman", "-Q")
+	}
+
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Println(err)
