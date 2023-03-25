@@ -115,9 +115,19 @@ func (a *App) ListPackages() []string {
 	}
 	// Extract only the package names using the extractFirstParams function
 	packageNames := ExtractFirstParams(string(out))
-	s := packageNames[1:10]
+	s := packageNames[1:25]
 	fmt.Println(s)
 	return s
+}
+
+func (a *App) GetDistribution() string {
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	fmt.Println(distribution)
+	return distribution
 }
 
 // func (a *App) ListPackagesVisual() []string {

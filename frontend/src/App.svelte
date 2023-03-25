@@ -3,6 +3,7 @@
   import Home from './components/Home.svelte';
   import Users from './components/Users.svelte';
   import Packages from './components/Packages.svelte';
+  import System from './components/SystemInformation.svelte';
 
   let currentView = 'home';
   const dispatch = createEventDispatcher();
@@ -24,6 +25,7 @@
       <li><button on:click={() => currentView = 'home'}>Home</button></li>
       <li><button on:click={() => currentView = 'users'}>Users</button></li>
       <li><button on:click={() => currentView = 'packages'}>Packages</button></li>
+      <li><button on:click={() => currentView = 'system'}>System</button></li>
     </ul>
   </div>
 
@@ -34,6 +36,8 @@
       <Users />
     {:else if currentView === 'packages'}
       <Packages />
+    {:else if currentView === 'system'}
+      <System />
     {/if}
   </div>
 </div>
