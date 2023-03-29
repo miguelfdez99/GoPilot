@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
-  import Home from './components/Home.svelte';
-  import Users from './components/Users.svelte';
-  import Packages from './components/Packages.svelte';
-  import System from './components/SystemInformation.svelte';
+  import Home from './views/Home.svelte';
+  import Users from './views/Users.svelte';
+  import Packages from './views/Packages.svelte';
+  import System from './views/SystemInformation.svelte';
 
   let currentView = 'home';
   const dispatch = createEventDispatcher();
