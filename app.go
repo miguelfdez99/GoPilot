@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/shirou/gopsutil/cpu"
 )
 
 // App struct
@@ -42,7 +44,16 @@ func (a *App) PrintUsers() {
 }
 
 func (a *App) CreateUser() error {
-	cmd := exec.Command("adduser", "testuser")
+
+	distribution := checkDistro()
+
+	var cmd *exec.Cmd
+	if distribution == "ubuntu" || distribution == "debian" {
+		cmd = exec.Command("adduser", "testuser")
+	} else {
+		cmd = exec.Command("useradd", "testuser")
+	}
+
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	err := cmd.Run()
@@ -76,7 +87,16 @@ func (a *App) CreateUserWithDir(username string) error {
 }
 
 func (a *App) DeleteUser() error {
-	cmd := exec.Command("deluser", "testuser")
+
+	distribution := checkDistro()
+
+	var cmd *exec.Cmd
+	if distribution == "ubuntu" || distribution == "debian" {
+		cmd = exec.Command("deluser", "testuser")
+	} else {
+		cmd = exec.Command("userdel", "testuser")
+	}
+
 	err := cmd.Run()
 	if err != nil {
 		return err
@@ -107,24 +127,21 @@ func (a *App) CheckAdmin() bool {
 }
 
 func (a *App) ListPackages() []string {
+
 	// Get the Linux distribution
-	distribution, err := getLinuxDistribution()
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
+	distribution := checkDistro()
 
 	var cmd *exec.Cmd
 
-	switch distribution {
-	case "ubuntu":
-		fallthrough
-	case "debian":
+	if distribution == "ubuntu" || distribution == "debian" {
 		cmd = exec.Command("apt", "list", "--installed")
-	case "fedora":
+	} else if distribution == "fedora" || distribution == "centos" || distribution == "rhel" {
 		cmd = exec.Command("dnf", "list", "installed")
-	case "arch":
+	} else if distribution == "arch" {
 		cmd = exec.Command("pacman", "-Q")
+	} else {
+		fmt.Println("Unsupported Linux distribution")
+		return nil
 	}
 
 	out, err := cmd.Output()
@@ -149,12 +166,10 @@ func (a *App) GetDistribution() string {
 	return distribution
 }
 
-// func (a *App) ListPackagesVisual() []string {
-// 	cmd := exec.Command("apt", "list", "--installed")
-// 	out, err := cmd.Output()
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return nil
-// 	}
-// 	//return strings.Split(string(out), "
-// }
+func (a *App) GetCPUInfo() ([]cpu.InfoStat, error) {
+	cpuInfo, err := cpu.Info()
+	if err != nil {
+		return nil, err
+	}
+	return cpuInfo, nil
+}

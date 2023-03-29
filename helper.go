@@ -16,6 +16,16 @@ func ExtractFirstParams(input string) []string {
 	return params
 }
 
+func checkDistro() string {
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	fmt.Println(distribution)
+	return distribution
+}
+
 func getLinuxDistribution() (string, error) {
 	fileContent, err := ioutil.ReadFile("/etc/os-release")
 	if err != nil {
@@ -29,6 +39,17 @@ func getLinuxDistribution() (string, error) {
 			continue
 		}
 		if strings.Trim(parts[0], "\"") == "ID_LIKE" {
+			return strings.Trim(parts[1], "\""), nil
+		}
+	}
+
+	// If ID_LIKE is not present, try ID(Fedora does not have ID_LIKE)
+	for _, field := range fields {
+		parts := strings.Split(field, "=")
+		if len(parts) != 2 {
+			continue
+		}
+		if strings.Trim(parts[0], "\"") == "ID" {
 			return strings.Trim(parts[1], "\""), nil
 		}
 	}
