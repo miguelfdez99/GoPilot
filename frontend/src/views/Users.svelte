@@ -29,7 +29,7 @@ function printUser(): void {
       DeleteUserWithDir(username)
     }
 
-    function checkAdmin(): boolean {
+    function checkAdmin(): void {
       CheckAdmin()
     }
 

@@ -11,7 +11,6 @@
       addEventListener('changeView', (event: CustomEvent) => {
         currentView = event.detail;
       });
-      getDistribution();
     });
 
     let distribution: string = "";

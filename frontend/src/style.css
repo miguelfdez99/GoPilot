@@ -23,4 +23,5 @@ body {
 #app {
     height: 100vh;
     text-align: center;
+    background-color: rgb(152, 95, 226, 0.8);
 }

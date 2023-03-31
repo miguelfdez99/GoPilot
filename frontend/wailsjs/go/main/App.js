@@ -10,6 +10,10 @@ export function CreateUser() {
   return window['go']['main']['App']['CreateUser']();
 }
 
+export function CreateUser2(arg1) {
+  return window['go']['main']['App']['CreateUser2'](arg1);
+}
+
 export function CreateUserWithDir(arg1) {
   return window['go']['main']['App']['CreateUserWithDir'](arg1);
 }
@@ -34,10 +38,18 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function ListCronJobs() {
+  return window['go']['main']['App']['ListCronJobs']();
+}
+
 export function ListPackages() {
   return window['go']['main']['App']['ListPackages']();
 }
 
 export function PrintUsers() {
   return window['go']['main']['App']['PrintUsers']();
+}
+
+export function RemoveAllCronJobs() {
+  return window['go']['main']['App']['RemoveAllCronJobs']();
 }
