@@ -4,6 +4,8 @@
   import Users from './views/Users.svelte';
   import Packages from './views/Packages.svelte';
   import System from './views/SystemInformation.svelte';
+  import Users2 from './views/Users2.svelte';
+  import Cron from './views/Cron.svelte';
 
   let currentView = 'home';
   const dispatch = createEventDispatcher();
@@ -21,12 +23,12 @@
 
 <div class="container">
   <div class="sidebar">
-    <ul>
-      <li><button on:click={() => currentView = 'home'}>Home</button></li>
-      <li><button on:click={() => currentView = 'users'}>Users</button></li>
-      <li><button on:click={() => currentView = 'packages'}>Packages</button></li>
-      <li><button on:click={() => currentView = 'system'}>System</button></li>
-    </ul>
+    <button on:click={() => currentView = 'home'} style="width: 100%">Home</button>
+    <button on:click={() => currentView = 'users'} style="width: 100%">Users</button>
+    <button on:click={() => currentView = 'packages'} style="width: 100%">Packages</button>
+    <button on:click={() => currentView = 'system'} style="width: 100%">System</button>
+    <button on:click={() => currentView = 'users2'} style="width: 100%">Users2</button>
+    <button on:click={() => currentView = 'cron'} style="width: 100%">Cron</button>
   </div>
 
   <div class="main">
@@ -38,6 +40,10 @@
       <Packages />
     {:else if currentView === 'system'}
       <System />
+    {:else if currentView === 'users2'}
+      <Users2 />
+    {:else if currentView === 'cron'}
+      <Cron />
     {/if}
   </div>
 </div>
@@ -51,8 +57,25 @@
   .sidebar {
     width: 200px;
     height: 100%;
-    background-color: #30abdb;
-    text-align: center;
+    background-color: #3e778d;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .sidebar button {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: #2c6278;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .sidebar button:hover {
+    background-color: #245468;
   }
 
   .main {
