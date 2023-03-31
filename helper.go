@@ -16,16 +16,6 @@ func ExtractFirstParams(input string) []string {
 	return params
 }
 
-func checkDistro() string {
-	distribution, err := getLinuxDistribution()
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	fmt.Println(distribution)
-	return distribution
-}
-
 func getLinuxDistribution() (string, error) {
 	fileContent, err := ioutil.ReadFile("/etc/os-release")
 	if err != nil {
