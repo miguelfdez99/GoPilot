@@ -3,6 +3,8 @@
 import {main} from '../models';
 import {cpu} from '../models';
 
+export function AddCronJob(arg1:string,arg2:string):Promise<void>;
+
 export function CheckAdmin():Promise<boolean>;
 
 export function CreateUser():Promise<void>;

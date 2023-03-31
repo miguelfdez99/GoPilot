@@ -3,6 +3,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import {ListCronJobs, RemoveAllCronJobs} from '../../wailsjs/go/main/App.js'
+    import AddCronJob from '../components/AddCronJob.svelte'
 
     let jobs = [];
     let currentView = 'cron';
@@ -30,13 +31,14 @@
         await getCronJobs();
     });
 
-
 </script>
 
 <div class="container">
     <h1>Cron Jobs</h1>
 
     <button on:click={removeAllCronJobs}>Remove all cron jobs</button>
+
+    <AddCronJob />
 
     {#if jobs.length < 1}
         <p>No jobs found</p>

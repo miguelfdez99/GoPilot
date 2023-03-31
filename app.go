@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -40,6 +41,8 @@ func (a *App) startup(ctx context.Context) {
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
+
+///////////////////////////-----------------///////////////////////////
 
 func (a *App) PrintUsers() {
 	fmt.Println("User ID:", os.Getuid())
@@ -140,6 +143,8 @@ func (a *App) DeleteUserWithDir(username string) error {
 	return nil
 }
 
+///////////////////////////-----------------///////////////////////////
+
 func (a *App) CheckAdmin() bool {
 	uid := os.Getuid()
 	if uid != 0 {
@@ -150,6 +155,8 @@ func (a *App) CheckAdmin() bool {
 		return true
 	}
 }
+
+///////////////////////////-----------------///////////////////////////
 
 func (a *App) ListPackages() []string {
 
@@ -191,6 +198,8 @@ func (a *App) GetDistribution() string {
 	return distribution
 }
 
+///////////////////////////-----------------///////////////////////////
+
 func (a *App) GetCPUInfo() ([]cpu.InfoStat, error) {
 	cpuInfo, err := cpu.Info()
 	if err != nil {
@@ -198,6 +207,8 @@ func (a *App) GetCPUInfo() ([]cpu.InfoStat, error) {
 	}
 	return cpuInfo, nil
 }
+
+///////////////////////////-----------------///////////////////////////
 
 type CronJob struct {
 	Schedule string
@@ -248,3 +259,42 @@ func (a *App) RemoveAllCronJobs() error {
 	fmt.Println("All cron jobs removed successfully")
 	return nil
 }
+
+func (a *App) AddCronJob(schedule string, command string) error {
+	// Create a temporary file to store the current crontab
+	tmpfile, err := ioutil.TempFile("", "crontab")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tmpfile.Name())
+
+	// Execute the crontab command with the '-l' option to list the current crontab
+	cmd := exec.Command("crontab", "-l")
+	output, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+
+	// Write the current crontab to the temporary file
+	_, err = tmpfile.Write(output)
+	if err != nil {
+		return err
+	}
+
+	// Add the new cron job to the temporary file
+	_, err = fmt.Fprintf(tmpfile, "%s %s\n", schedule, command)
+	if err != nil {
+		return err
+	}
+
+	// Execute the crontab command with the temporary file as input to update the crontab
+	cmd = exec.Command("crontab", tmpfile.Name())
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+///////////////////////////-----------------///////////////////////////
