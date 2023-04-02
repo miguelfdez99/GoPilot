@@ -5,6 +5,8 @@ import {cpu} from '../models';
 
 export function AddCronJob(arg1:string,arg2:string):Promise<void>;
 
+export function AddFirewallRule(arg1:string):Promise<void>;
+
 export function CheckAdmin():Promise<boolean>;
 
 export function CreateUser():Promise<void>;
@@ -32,3 +34,5 @@ export function ListPackages():Promise<Array<string>>;
 export function PrintUsers():Promise<void>;
 
 export function RemoveAllCronJobs():Promise<void>;
+
+export function RemoveFirewallRule(arg1:string):Promise<void>;

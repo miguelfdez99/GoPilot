@@ -6,6 +6,10 @@ export function AddCronJob(arg1, arg2) {
   return window['go']['main']['App']['AddCronJob'](arg1, arg2);
 }
 
+export function AddFirewallRule(arg1) {
+  return window['go']['main']['App']['AddFirewallRule'](arg1);
+}
+
 export function CheckAdmin() {
   return window['go']['main']['App']['CheckAdmin']();
 }
@@ -60,4 +64,8 @@ export function PrintUsers() {
 
 export function RemoveAllCronJobs() {
   return window['go']['main']['App']['RemoveAllCronJobs']();
+}
+
+export function RemoveFirewallRule(arg1) {
+  return window['go']['main']['App']['RemoveFirewallRule'](arg1);
 }
