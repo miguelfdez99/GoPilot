@@ -46,6 +46,10 @@ export function ListCronJobs() {
   return window['go']['main']['App']['ListCronJobs']();
 }
 
+export function ListFirewallRules() {
+  return window['go']['main']['App']['ListFirewallRules']();
+}
+
 export function ListPackages() {
   return window['go']['main']['App']['ListPackages']();
 }

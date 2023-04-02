@@ -25,6 +25,8 @@ export function Greet(arg1:string):Promise<string>;
 
 export function ListCronJobs():Promise<Array<main.CronJob>>;
 
+export function ListFirewallRules():Promise<Array<string>>;
+
 export function ListPackages():Promise<Array<string>>;
 
 export function PrintUsers():Promise<void>;
