@@ -9,5 +9,8 @@
   "author": {
     "name": "Miguel Fernandez",
     "email": "miguelfdez99@gmail.com"
-  }
+  },
+  "resources": [
+    "frontend/src/style.css"
+  ]
 }
