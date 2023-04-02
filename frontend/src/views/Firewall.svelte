@@ -1,22 +1,47 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { ListFirewallRules } from '../../wailsjs/go/main/App.js';
+    import { onMount } from "svelte";
+    import {
+        ListFirewallRules,
+        AddFirewallRule,
+        RemoveFirewallRule,
+    } from "../../wailsjs/go/main/App.js";
 
     let rules = [];
     let error = null;
 
-    let currentView = 'cron';
+    let currentView = "cron";
+    let port = "";
+    let protocol = "";
 
-    function handleViewChange(event: CustomEvent<string>) {
-    currentView = event.detail;
+    async function addRule() {
+        try {
+            await AddFirewallRule(port, protocol);
+            listFirewallRules();
+            port = "";
+            protocol = "";
+        } catch (err) {
+            error = err;
+        }
     }
 
+    async function removeRule(rule: string) {
+        try {
+            await RemoveFirewallRule(rule);
+            listFirewallRules();
+        } catch (err) {
+            error = err;
+        }
+    }
+
+    function handleViewChange(event: CustomEvent<string>) {
+        currentView = event.detail;
+    }
 
     onMount(() => {
-        addEventListener('changeView', (event: CustomEvent) => {
+        addEventListener("changeView", (event: CustomEvent) => {
             currentView = event.detail;
         });
-        listFirewallRules()
+        listFirewallRules();
     });
 
     async function listFirewallRules() {
@@ -41,6 +66,18 @@
         <p>No firewall rules found.</p>
     {/if}
 
+    <form on:submit|preventDefault={addRule}>
+        <h2>Add Firewall Rule</h2>
+        <label>
+            Port:
+            <input type="text" bind:value={port} required />
+        </label>
+        <label>
+            Protocol:
+            <input type="text" bind:value={protocol} required />
+        </label>
+        <button type="submit">Add Rule</button>
+    </form>
     <button on:click={listFirewallRules}>Refresh</button>
 </main>
 

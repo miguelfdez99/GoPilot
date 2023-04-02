@@ -67,3 +67,70 @@ func listFirewalld() ([]string, error) {
 	lines := strings.Split(string(output), "\n")
 	return lines, nil
 }
+
+func listUfw() ([]string, error) {
+	cmd := exec.Command("ufw", "status")
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, err
+	}
+	lines := strings.Split(string(output), "\n")
+	if lines[0] == "" {
+		return lines[1:], nil
+	}
+	return lines, nil
+}
+
+func addUfwRule(rule string) error {
+	cmd := exec.Command("ufw", rule)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func addIpTablesRule(rule string) error {
+	cmd := exec.Command("iptables", rule)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func addFirewalldRule(rule string) error {
+	cmd := exec.Command("firewall-cmd", rule)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func removeUfwRule(rule string) error {
+	cmd := exec.Command("ufw", rule)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func removeIpTablesRule(rule string) error {
+	cmd := exec.Command("iptables", rule)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func removeFirewalldRule(rule string) error {
+	cmd := exec.Command("firewall-cmd", rule)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
