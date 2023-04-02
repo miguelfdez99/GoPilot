@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import "../style.css"
 
   let currentView = 'home';
 
