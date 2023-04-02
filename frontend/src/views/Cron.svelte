@@ -25,10 +25,9 @@
       addEventListener('changeView', (event: CustomEvent) => {
         currentView = event.detail;
       });
-    });
-
-    onMount(async () => {
+      async () => {
         await getCronJobs();
+    }
     });
 
 </script>
