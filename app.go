@@ -183,9 +183,7 @@ func (a *App) ListPackages() []string {
 	}
 	// Extract only the package names using the extractFirstParams function
 	packageNames := ExtractFirstParams(string(out))
-	s := packageNames[1:25]
-	fmt.Println(s)
-	return s
+	return packageNames
 }
 
 func (a *App) GetDistribution() string {
