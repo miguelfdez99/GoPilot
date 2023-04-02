@@ -1,17 +1,18 @@
-<script>
-    import { createEventDispatcher } from 'svelte';
-    import {CreateUser2} from '../../wailsjs/go/main/App.js'
+<script lang="ts">
+  import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
+  import { CreateUser2 } from "../../wailsjs/go/main/App.js";
 
-    const dispatcher = createEventDispatcher();
+  const dispatcher = createEventDispatcher();
+  let currentView = "users2";
 
-    let username = '';
-    let password = '';
-    let uid = '';
-    let gid = '';
-    let homeDirectory = '';
-    let shell = '';
+  let username = '';
+  let password = '';
+  let uid = '';
+  let gid = '';
+  let shell = "/bin/bash";
 
-    async function createUser() {
+  async function createUser() {
   // Check if required fields are empty
   if (!username ) {
     alert('Please fill out all fields');
@@ -43,76 +44,93 @@
   }
 }
 
-  </script>
+onMount(() => {
+    addEventListener('changeView', (event: CustomEvent) => {
+      currentView = event.detail;
+    });
+  });
+</script>
 
-  <form on:submit|preventDefault={createUser}>
-    <div>
-      <label for="username">Username:</label>
-      <input type="text" id="username" bind:value={username} required />
-    </div>
-
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" bind:value={password}/>
-    </div>
-
-    <div>
-      <label for="uid">UID:</label>
-      <input type="number" id="uid" bind:value={uid}/>
-    </div>
-
-    <div>
-      <label for="gid">GID:</label>
-      <input type="number" id="gid" bind:value={gid}/>
-    </div>
-
-    <div>
-      <label for="homeDirectory">Home directory:</label>
-      <input type="text" id="homeDirectory" bind:value={homeDirectory}/>
-    </div>
-
-    <div>
-      <label for="shell">Shell:</label>
-      <input type="text" id="shell" bind:value={shell}/>
-    </div>
-
-    <button type="submit">Create User</button>
-  </form>
-
+<form on:submit|preventDefault={createUser}>
+  <label>
+    <span>Username:</span>
+    <input type="text" bind:value={username} />
+  </label>
+  <label>
+    <span>Password:</span>
+    <input type="password" bind:value={password} />
+  </label>
+  <label>
+    <span>User ID (UID):</span>
+    <input type="text" bind:value={uid} />
+  </label>
+  <label>
+    <span>Group ID (GID):</span>
+    <input type="text" bind:value={gid} />
+  </label>
+  <label>
+    <span>Login shell:</span>
+    <select bind:value={shell}>
+      <option value="/bin/bash">/bin/bash</option>
+      <option value="/bin/sh">/bin/sh</option>
+      <option value="/usr/bin/zsh">/usr/bin/zsh</option>
+    </select>
+  </label>
+  <button type="submit">Create user</button>
+</form>
 
 <style>
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 2rem;
-      font-size: 1.2rem;
-    }
+  form {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+  }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
+  label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
 
-    input {
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border-radius: 0.25rem;
-      border: none;
-      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
-    }
+  label span {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-    button {
-      padding: 0.5rem 1rem;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 0.25rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease-in-out;
-    }
+  input[type="text"],
+  select {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
 
-    button:hover {
-      background-color: #0069d9;
-    }
-  </style>
+  input[type="password"],
+  select {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0069d9;
+  }
+</style>
