@@ -6,6 +6,7 @@
   import System from './views/SystemInformation.svelte';
   import Users2 from './views/Users2.svelte';
   import Cron from './views/Cron.svelte';
+  import Firewall from './views/Firewall.svelte';
 
   let currentView = 'home';
   const dispatch = createEventDispatcher();
@@ -29,6 +30,7 @@
     <button on:click={() => currentView = 'system'} style="width: 100%">System</button>
     <button on:click={() => currentView = 'users2'} style="width: 100%">Users2</button>
     <button on:click={() => currentView = 'cron'} style="width: 100%">Cron</button>
+    <button on:click={() => currentView = 'firewall'} style="width: 100%">Firewall</button>
   </div>
 
   <div class="main">
@@ -44,6 +46,8 @@
       <Users2 />
     {:else if currentView === 'cron'}
       <Cron />
+    {:else if currentView === 'firewall'}
+      <Firewall />
     {/if}
   </div>
 </div>

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os/exec"
 	"strings"
 )
 
@@ -45,4 +46,24 @@ func getLinuxDistribution() (string, error) {
 	}
 
 	return "", fmt.Errorf("unable to determine Linux distribution")
+}
+
+func listIptables() ([]string, error) {
+	cmd := exec.Command("iptables", "-L")
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, err
+	}
+	lines := strings.Split(string(output), "\n")
+	return lines, nil
+}
+
+func listFirewalld() ([]string, error) {
+	cmd := exec.Command("firewall-cmd", "--list-all")
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, err
+	}
+	lines := strings.Split(string(output), "\n")
+	return lines, nil
 }

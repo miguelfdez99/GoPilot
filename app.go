@@ -298,3 +298,17 @@ func (a *App) AddCronJob(schedule string, command string) error {
 }
 
 ///////////////////////////-----------------///////////////////////////
+
+func (a *App) ListFirewallRules() ([]string, error) {
+
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		return nil, err
+	}
+
+	if distribution == "fedora" || distribution == "rhel" || distribution == "centos" {
+		return listFirewalld()
+	}
+
+	return listIptables()
+}
