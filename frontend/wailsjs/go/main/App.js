@@ -26,8 +26,8 @@ export function CreateUserWithDir(arg1) {
   return window['go']['main']['App']['CreateUserWithDir'](arg1);
 }
 
-export function DeleteUser() {
-  return window['go']['main']['App']['DeleteUser']();
+export function DeleteUser(arg1, arg2, arg3) {
+  return window['go']['main']['App']['DeleteUser'](arg1, arg2, arg3);
 }
 
 export function DeleteUserWithDir(arg1) {

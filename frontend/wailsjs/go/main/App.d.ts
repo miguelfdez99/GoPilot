@@ -15,7 +15,7 @@ export function CreateUser2(arg1:main.User):Promise<void>;
 
 export function CreateUserWithDir(arg1:string):Promise<void>;
 
-export function DeleteUser():Promise<void>;
+export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
 export function DeleteUserWithDir(arg1:string):Promise<void>;
 

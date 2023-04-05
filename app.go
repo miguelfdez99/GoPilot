@@ -44,44 +44,7 @@ func (a *App) Greet(name string) string {
 
 ///////////////////////////-----------------///////////////////////////
 
-func (a *App) PrintUsers() {
-	fmt.Println("User ID:", os.Getuid())
-	fmt.Println("Group ID:", os.Getgid())
-	groups, err := os.Getgroups()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println("Group IDs:", groups)
-}
-
-func (a *App) CreateUser() error {
-
-	distribution, err := getLinuxDistribution()
-
-	var cmd *exec.Cmd
-	if distribution == "ubuntu" || distribution == "debian" {
-		cmd = exec.Command("adduser", "testuser")
-	} else {
-		cmd = exec.Command("useradd", "testuser")
-	}
-
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	err = cmd.Run()
-
-	if stderr.Len() > 0 && stderr.String() == "adduser: The user `testuser' already exists.\n" {
-		fmt.Printf("error creating user: %v\nStderr output: %s", err, stderr.String())
-	}
-
-	if err != nil {
-		return err
-	}
-	fmt.Printf("User %s created successfully\n", "testuser")
-	return nil
-}
-
-func (a *App) CreateUser2(user User) error {
+func (a *App) CreateUser(user User) error {
 	cmd := exec.Command("useradd",
 		"-m",
 		"-s", user.Shell,
@@ -114,22 +77,20 @@ func (a *App) CreateUserWithDir(username string) error {
 	return nil
 }
 
-func (a *App) DeleteUser() error {
-
-	distribution, err := getLinuxDistribution()
-
-	var cmd *exec.Cmd
-	if distribution == "ubuntu" || distribution == "debian" {
-		cmd = exec.Command("deluser", "testuser")
-	} else {
-		cmd = exec.Command("userdel", "testuser")
+func (a *App) DeleteUser(username string, removeHomeDir bool, forceDelete bool) error {
+	args := []string{}
+	if removeHomeDir {
+		args = append(args, "-r")
 	}
-
-	err = cmd.Run()
+	if forceDelete {
+		args = append(args, "-f")
+	}
+	args = append(args, username)
+	cmd := exec.Command("userdel", args...)
+	err := cmd.Run()
 	if err != nil {
-		return err
+		return fmt.Errorf("error deleting user %s: %s", username, err)
 	}
-	fmt.Printf("User %s deleted successfully\n", "testuser")
 	return nil
 }
 
