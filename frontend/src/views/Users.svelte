@@ -2,19 +2,29 @@
   import { onMount } from "svelte";
   import AddUser from "../components/AddUser.svelte";
   import DelUser from "../components/DelUser.svelte";
-  import {
-    CheckAdmin,
-  } from "../../wailsjs/go/main/App.js";
+  import ModifyUser from "../components/ModifyUser.svelte";
+  import AddGroup from "../components/AddGroup.svelte";
+  import DelGroup from "../components/DelGroup.svelte";
+  import ModifyGroup from "../components/ModifyGroup.svelte";
+  import { CheckAdmin } from "../../wailsjs/go/main/App.js";
 
   let currentView = "users";
   let showUserAdd = false;
   let showUserDel = false;
+  let showUserMod = false;
+  let showGroupAdd = false;
+  let showGroupDel = false;
+  let showGroupMod = false;
   let adminText: string;
 
   function toggleAddUser(): void {
     showUserAdd = !showUserAdd;
     if (showUserAdd) {
       showUserDel = false;
+      showUserMod = false;
+      showGroupAdd = false;
+      showGroupDel = false;
+      showGroupMod = false;
     }
   }
 
@@ -22,6 +32,54 @@
     showUserDel = !showUserDel;
     if (showUserDel) {
       showUserAdd = false;
+      showUserMod = false;
+      showGroupAdd = false;
+      showGroupDel = false;
+      showGroupMod = false;
+    }
+  }
+
+  function toggleModUser(): void {
+    showUserMod = !showUserMod;
+    if (showUserMod) {
+      showUserAdd = false;
+      showUserDel = false;
+      showGroupAdd = false;
+      showGroupDel = false;
+      showGroupMod = false;
+    }
+  }
+
+  function toggleAddGroup(): void {
+    showGroupAdd = !showGroupAdd;
+    if (showGroupAdd) {
+      showGroupDel = false;
+      showGroupMod = false;
+      showUserAdd = false;
+      showUserDel = false;
+      showUserMod = false;
+    }
+  }
+
+  function toggleDelGroup(): void {
+    showGroupDel = !showGroupDel;
+    if (showGroupDel) {
+      showGroupAdd = false;
+      showGroupMod = false;
+      showUserAdd = false;
+      showUserDel = false;
+      showUserMod = false;
+    }
+  }
+
+  function toggleModGroup(): void {
+    showGroupMod = !showGroupMod;
+    if (showGroupMod) {
+      showGroupAdd = false;
+      showGroupDel = false;
+      showUserAdd = false;
+      showUserDel = false;
+      showUserMod = false;
     }
   }
 
@@ -43,21 +101,32 @@
     <h1>Users</h1>
     <button class="btn" on:click={toggleAddUser}>Add User</button>
     <button class="btn" on:click={toggleDelUser}>Delete User</button>
+    <button class="btn" on:click={toggleModUser}>Modify User</button>
     <div style="display: flex; flex-direction: column-reverse;">
       {#if showUserAdd}
         <AddUser />
       {:else if showUserDel}
         <DelUser />
+      {:else if showUserMod}
+        <ModifyUser />
       {/if}
     </div>
   </div>
 
   <div class="section" id="groups">
     <h1>Groups</h1>
-    <button class="btn" on:click={toggleAddUser}>Create Group</button>
-    <button class="btn" on:click={toggleAddUser}>Delete Group</button>
-    <button class="btn" on:click={toggleAddUser}>Add User to Group</button>
-    <button class="btn" on:click={toggleAddUser}>Remove User from Group</button>
+    <button class="btn" on:click={toggleAddGroup}>Create Group</button>
+    <button class="btn" on:click={toggleDelGroup}>Delete Group</button>
+    <button class="btn" on:click={toggleModGroup}>Modify Group</button>
+    <div style="display: flex; flex-direction: column-reverse;">
+      {#if showGroupAdd}
+        <AddGroup />
+      {:else if showGroupDel}
+        <DelGroup />
+      {:else if showGroupMod}
+        <ModifyGroup />
+      {/if}
+    </div>
   </div>
 </main>
 

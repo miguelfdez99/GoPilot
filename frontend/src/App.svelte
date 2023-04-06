@@ -4,7 +4,6 @@
   import Users from './views/Users.svelte';
   import Packages from './views/Packages.svelte';
   import System from './views/SystemInformation.svelte';
-  import Users2 from './views/Users2.svelte';
   import Cron from './views/Cron.svelte';
   import Firewall from './views/Firewall.svelte';
 
@@ -42,8 +41,6 @@
       <Packages />
     {:else if currentView === 'system'}
       <System />
-    {:else if currentView === 'users2'}
-      <Users2 />
     {:else if currentView === 'cron'}
       <Cron />
     {:else if currentView === 'firewall'}

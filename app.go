@@ -1,12 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/shirou/gopsutil/cpu"
@@ -24,6 +24,7 @@ type User struct {
 	GID           int
 	HomeDirectory string
 	Shell         string
+	Groups        []string
 }
 
 // NewApp creates a new App application struct
@@ -60,23 +61,6 @@ func (a *App) CreateUser(user User) error {
 	return nil
 }
 
-func (a *App) CreateUserWithDir(username string) error {
-	cmd := exec.Command("adduser", "--home", "/home/"+username, "--disabled-password", "--gecos", "", username)
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	err := cmd.Run()
-
-	if stderr.Len() > 0 && strings.Contains(stderr.String(), "The user `"+username+"' already exists.") {
-		fmt.Printf("error creating user: %v\nStderr output: %s", err, stderr.String())
-	}
-
-	if err != nil {
-		return err
-	}
-	fmt.Printf("User %s created successfully\n", username)
-	return nil
-}
-
 func (a *App) DeleteUser(username string, removeHomeDir bool, forceDelete bool) error {
 	args := []string{}
 	if removeHomeDir {
@@ -94,13 +78,65 @@ func (a *App) DeleteUser(username string, removeHomeDir bool, forceDelete bool) 
 	return nil
 }
 
-func (a *App) DeleteUserWithDir(username string) error {
-	cmd := exec.Command("deluser", "--remove-home", username)
+func (a *App) ModifyUser(username string, userPtr *User) error {
+	cmd := exec.Command("usermod", username)
+
+	if userPtr != nil {
+		if userPtr.Shell != "" {
+			cmd.Args = append(cmd.Args, "-s", userPtr.Shell)
+		}
+		if userPtr.UID != 0 {
+			cmd.Args = append(cmd.Args, "-u", fmt.Sprint(userPtr.UID))
+		}
+		if userPtr.GID != 0 {
+			cmd.Args = append(cmd.Args, "-g", fmt.Sprint(userPtr.GID))
+		}
+		if userPtr.Password != "" {
+			cmd.Args = append(cmd.Args, "-p", userPtr.Password)
+		}
+		if userPtr.HomeDirectory != "" {
+			cmd.Args = append(cmd.Args, "-d", userPtr.HomeDirectory, "-m")
+		}
+		if len(userPtr.Groups) > 0 {
+			cmd.Args = append(cmd.Args, "-aG", strings.Join(userPtr.Groups, ","))
+		}
+	}
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("failed to modify user: %v", err)
+	}
+	return nil
+}
+
+func (a *App) CreateGroup(name string, gid *int) error {
+	cmdArgs := []string{"groupadd", name}
+	if gid != nil {
+		cmdArgs = append(cmdArgs, "-g", strconv.Itoa(*gid))
+	}
+	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	err := cmd.Run()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("User %s deleted successfully\n", username)
+	return nil
+}
+
+func (a *App) ModifyGroup(name string, gid int) error {
+	cmd := exec.Command("groupmod", "-g", strconv.Itoa(gid), name)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *App) DeleteGroup(name string) error {
+	cmd := exec.Command("groupdel", name)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
