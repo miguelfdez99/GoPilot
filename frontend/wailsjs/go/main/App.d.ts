@@ -9,15 +9,13 @@ export function AddFirewallRule(arg1:string):Promise<void>;
 
 export function CheckAdmin():Promise<boolean>;
 
-export function CreateUser():Promise<void>;
+export function CreateGroup(arg1:string,arg2:any):Promise<void>;
 
-export function CreateUser2(arg1:main.User):Promise<void>;
+export function CreateUser(arg1:main.User):Promise<void>;
 
-export function CreateUserWithDir(arg1:string):Promise<void>;
+export function DeleteGroup(arg1:string):Promise<void>;
 
-export function DeleteUser():Promise<void>;
-
-export function DeleteUserWithDir(arg1:string):Promise<void>;
+export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
 export function GetCPUInfo():Promise<Array<cpu.InfoStat>>;
 
@@ -31,7 +29,9 @@ export function ListFirewallRules():Promise<Array<string>>;
 
 export function ListPackages():Promise<Array<string>>;
 
-export function PrintUsers():Promise<void>;
+export function ModifyGroup(arg1:string,arg2:number):Promise<void>;
+
+export function ModifyUser(arg1:string,arg2:any):Promise<void>;
 
 export function RemoveAllCronJobs():Promise<void>;
 

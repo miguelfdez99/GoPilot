@@ -14,24 +14,20 @@ export function CheckAdmin() {
   return window['go']['main']['App']['CheckAdmin']();
 }
 
-export function CreateUser() {
-  return window['go']['main']['App']['CreateUser']();
+export function CreateGroup(arg1, arg2) {
+  return window['go']['main']['App']['CreateGroup'](arg1, arg2);
 }
 
-export function CreateUser2(arg1) {
-  return window['go']['main']['App']['CreateUser2'](arg1);
+export function CreateUser(arg1) {
+  return window['go']['main']['App']['CreateUser'](arg1);
 }
 
-export function CreateUserWithDir(arg1) {
-  return window['go']['main']['App']['CreateUserWithDir'](arg1);
+export function DeleteGroup(arg1) {
+  return window['go']['main']['App']['DeleteGroup'](arg1);
 }
 
-export function DeleteUser() {
-  return window['go']['main']['App']['DeleteUser']();
-}
-
-export function DeleteUserWithDir(arg1) {
-  return window['go']['main']['App']['DeleteUserWithDir'](arg1);
+export function DeleteUser(arg1, arg2, arg3) {
+  return window['go']['main']['App']['DeleteUser'](arg1, arg2, arg3);
 }
 
 export function GetCPUInfo() {
@@ -58,8 +54,12 @@ export function ListPackages() {
   return window['go']['main']['App']['ListPackages']();
 }
 
-export function PrintUsers() {
-  return window['go']['main']['App']['PrintUsers']();
+export function ModifyGroup(arg1, arg2) {
+  return window['go']['main']['App']['ModifyGroup'](arg1, arg2);
+}
+
+export function ModifyUser(arg1, arg2) {
+  return window['go']['main']['App']['ModifyUser'](arg1, arg2);
 }
 
 export function RemoveAllCronJobs() {

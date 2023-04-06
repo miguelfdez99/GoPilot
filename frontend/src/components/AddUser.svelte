@@ -1,9 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from "svelte";
-    import { CreateUser2 } from "../../wailsjs/go/main/App.js";
-
-    const dispatcher = createEventDispatcher();
-    let currentView = "users2";
+    import { CreateUser } from "../../wailsjs/go/main/App.js";
 
     let username = "";
     let password = "";
@@ -29,7 +25,7 @@
 
         try {
             // Call the Create User function in the Go environment
-            await CreateUser2(user);
+            await CreateUser(user);
             alert("User created successfully!");
             // Clear the form
             username = "";
@@ -43,11 +39,6 @@
         }
     }
 
-    onMount(() => {
-        addEventListener("changeView", (event: CustomEvent) => {
-            currentView = event.detail;
-        });
-    });
 </script>
 
 <form on:submit|preventDefault={createUser}>
