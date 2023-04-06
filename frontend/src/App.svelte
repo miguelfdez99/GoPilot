@@ -27,7 +27,6 @@
     <button on:click={() => currentView = 'users'} style="width: 100%">Users</button>
     <button on:click={() => currentView = 'packages'} style="width: 100%">Packages</button>
     <button on:click={() => currentView = 'system'} style="width: 100%">System</button>
-    <button on:click={() => currentView = 'users2'} style="width: 100%">Users2</button>
     <button on:click={() => currentView = 'cron'} style="width: 100%">Cron</button>
     <button on:click={() => currentView = 'firewall'} style="width: 100%">Firewall</button>
   </div>
