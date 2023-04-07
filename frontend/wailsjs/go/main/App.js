@@ -38,6 +38,10 @@ export function GetLSCPU() {
   return window['go']['main']['App']['GetLSCPU']();
 }
 
+export function GetSystemInfo() {
+  return window['go']['main']['App']['GetSystemInfo']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
@@ -68,4 +72,8 @@ export function RemoveAllCronJobs() {
 
 export function RemoveFirewallRule(arg1) {
   return window['go']['main']['App']['RemoveFirewallRule'](arg1);
+}
+
+export function RemovePackage(arg1) {
+  return window['go']['main']['App']['RemovePackage'](arg1);
 }

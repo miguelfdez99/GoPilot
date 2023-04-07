@@ -20,6 +20,8 @@ export function GetDistribution():Promise<string>;
 
 export function GetLSCPU():Promise<string>;
 
+export function GetSystemInfo():Promise<string>;
+
 export function Greet(arg1:string):Promise<string>;
 
 export function ListCronJobs():Promise<Array<main.CronJob>>;
@@ -35,3 +37,5 @@ export function ModifyUser(arg1:string,arg2:any):Promise<void>;
 export function RemoveAllCronJobs():Promise<void>;
 
 export function RemoveFirewallRule(arg1:string):Promise<void>;
+
+export function RemovePackage(arg1:string):Promise<void>;
