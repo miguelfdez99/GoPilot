@@ -62,7 +62,7 @@
     left: 0;
     bottom: 0;
     width: 200px;
-    background-color: #0d6efd;
+    background-color: #1f1f1f;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -74,21 +74,22 @@
   .sidebar button {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background-color: #0d6efd;
+    background-color: #1f1f1f;
     border: none;
-    color: white;
+    color: #f1f1f1;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
   }
 
   .sidebar button:hover {
-    background-color: #025ee4;
+    background-color: #3d3d3d;
   }
 
   .main {
     flex: 1;
     padding: 1rem;
     margin-left: 200px;
+    color: white;
   }
 </style>
