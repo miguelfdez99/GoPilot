@@ -1,18 +1,33 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 )
 
 func ExtractFirstParams(input string) []string {
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		return nil
+	}
+
 	lines := strings.Split(input, "\n")
 	params := make([]string, len(lines))
 	for i, line := range lines {
-		fields := strings.Split(line, "/")
-		params[i] = fields[0]
+		if distribution == "debian" || distribution == "ubuntu" {
+			fields := strings.Split(line, "/")
+			params[i] = fields[0]
+		} else if distribution == "fedora" || distribution == "centos" || distribution == "rhel" {
+			fields := strings.Split(line, ".")
+			params[i] = fields[0]
+		} else if distribution == "arch" {
+			fields := strings.Split(line, " ")
+			params[i] = fields[0]
+		}
 	}
 	return params
 }
@@ -133,4 +148,48 @@ func removeFirewalldRule(rule string) error {
 		return err
 	}
 	return nil
+}
+
+func getOSName() (string, error) {
+	file, err := os.Open("/etc/os-release")
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "PRETTY_NAME=") {
+			name := strings.TrimSpace(line[len("PRETTY_NAME="):])
+			if strings.HasPrefix(name, "\"") && strings.HasSuffix(name, "\"") {
+				name = name[1 : len(name)-1]
+			}
+			return name, nil
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+	return "", fmt.Errorf("OS name not found")
+}
+
+func getKernelVersion() (string, error) {
+	kernelVersion := exec.Command("uname", "-r")
+	out, err := kernelVersion.Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}
+
+// getUptime returns the system uptime as a time.Duration.
+func getUptime() (string, error) {
+	cmd := exec.Command("uptime", "-p")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(out)), nil
 }

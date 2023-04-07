@@ -156,7 +156,6 @@ func (a *App) CheckAdmin() bool {
 
 func (a *App) ListPackages() []string {
 
-	// Get the Linux distribution
 	distribution, err := getLinuxDistribution()
 
 	var cmd *exec.Cmd
@@ -177,9 +176,37 @@ func (a *App) ListPackages() []string {
 		fmt.Println(err)
 		return nil
 	}
-	// Extract only the package names using the extractFirstParams function
 	packageNames := ExtractFirstParams(string(out))
 	return packageNames
+}
+
+func (a *App) RemovePackage(pkgName string) error {
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	var cmd *exec.Cmd
+
+	switch distribution {
+	case "ubuntu", "debian":
+		cmd = exec.Command("apt", "remove", pkgName, "-y")
+	case "fedora", "centos", "rhel":
+		cmd = exec.Command("dnf", "remove", pkgName, "-y")
+	case "arch":
+		cmd = exec.Command("pacman", "-R", pkgName, "--noconfirm")
+	default:
+		return fmt.Errorf("unsupported Linux distribution: %s", distribution)
+	}
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Package %s removed successfully", pkgName)
+
+	return nil
 }
 
 func (a *App) GetDistribution() string {
@@ -242,6 +269,36 @@ func (a *App) GetLSCPU() string {
 	return string(jsonData)
 }
 
+func (a *App) GetSystemInfo() (string, error) {
+	osName, err := getOSName()
+	if err != nil {
+		return "", fmt.Errorf("error obtaining operating system name: %v", err)
+	}
+
+	kernelVer, err := getKernelVersion()
+	if err != nil {
+		return "", fmt.Errorf("error obtaining kernel version: %v", err)
+	}
+
+	uptime, err := getUptime()
+	if err != nil {
+		return "", fmt.Errorf("error obtaining system uptime: %v", err)
+	}
+
+	data := map[string]string{
+		"osName":    osName,
+		"kernelVer": kernelVer,
+		"uptime":    uptime,
+	}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return "", fmt.Errorf("error converting system info to JSON: %v", err)
+	}
+
+	return string(jsonData), nil
+}
+
 ///////////////////////////-----------------///////////////////////////
 
 type CronJob struct {
@@ -295,33 +352,28 @@ func (a *App) RemoveAllCronJobs() error {
 }
 
 func (a *App) AddCronJob(schedule string, command string) error {
-	// Create a temporary file to store the current crontab
 	tmpfile, err := ioutil.TempFile("", "crontab")
 	if err != nil {
 		return err
 	}
 	defer os.Remove(tmpfile.Name())
 
-	// Execute the crontab command with the '-l' option to list the current crontab
 	cmd := exec.Command("crontab", "-l")
 	output, err := cmd.Output()
 	if err != nil {
 		return err
 	}
 
-	// Write the current crontab to the temporary file
 	_, err = tmpfile.Write(output)
 	if err != nil {
 		return err
 	}
 
-	// Add the new cron job to the temporary file
 	_, err = fmt.Fprintf(tmpfile, "%s %s\n", schedule, command)
 	if err != nil {
 		return err
 	}
 
-	// Execute the crontab command with the temporary file as input to update the crontab
 	cmd = exec.Command("crontab", tmpfile.Name())
 	err = cmd.Run()
 	if err != nil {
