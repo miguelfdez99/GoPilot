@@ -30,12 +30,16 @@ export function DeleteUser(arg1, arg2, arg3) {
   return window['go']['main']['App']['DeleteUser'](arg1, arg2, arg3);
 }
 
-export function GetCPUInfo() {
-  return window['go']['main']['App']['GetCPUInfo']();
-}
-
 export function GetDistribution() {
   return window['go']['main']['App']['GetDistribution']();
+}
+
+export function GetLSCPU() {
+  return window['go']['main']['App']['GetLSCPU']();
+}
+
+export function GetSystemInfo() {
+  return window['go']['main']['App']['GetSystemInfo']();
 }
 
 export function Greet(arg1) {
@@ -68,4 +72,8 @@ export function RemoveAllCronJobs() {
 
 export function RemoveFirewallRule(arg1) {
   return window['go']['main']['App']['RemoveFirewallRule'](arg1);
+}
+
+export function RemovePackage(arg1) {
+  return window['go']['main']['App']['RemovePackage'](arg1);
 }
