@@ -30,12 +30,12 @@ export function DeleteUser(arg1, arg2, arg3) {
   return window['go']['main']['App']['DeleteUser'](arg1, arg2, arg3);
 }
 
-export function GetCPUInfo() {
-  return window['go']['main']['App']['GetCPUInfo']();
-}
-
 export function GetDistribution() {
   return window['go']['main']['App']['GetDistribution']();
+}
+
+export function GetLSCPU() {
+  return window['go']['main']['App']['GetLSCPU']();
 }
 
 export function Greet(arg1) {

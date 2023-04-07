@@ -33,7 +33,7 @@
     <p>Distribution: {distribution}</p>
     <button on:click={getDistribution}>Get Distribution</button>
     <div>
-      <h1>CPU Info</h1>
+      <CpuInfo />
     </div>
   </div>
 

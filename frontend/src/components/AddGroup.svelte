@@ -1,7 +1,7 @@
 <script lang="ts">
     import { CreateGroup } from "../../wailsjs/go/main/App.js";
 
-    let name = "";
+    let name: string = "";
     let gid = undefined;
 
     async function createGroup() {
