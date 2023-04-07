@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { GetLSCPU } from "../../wailsjs/go/main/App.js";
+  import { onMount } from 'svelte';
+  import { GetLSCPU, GetSystemInfo } from "../../wailsjs/go/main/App.js";
 
-  let systemInfo = {
+  let cpuInfo = {
     architecture: '',
     cpus: '',
     modelName: '',
@@ -12,12 +12,20 @@
     cpuModes: '',
   };
 
+  let systemInfo = {
+    osName: '',
+    kernelVer: '',
+    uptime: '',
+  };
+
   onMount(async () => {
     const response = await GetLSCPU();
-    systemInfo = parseResponse(response);
+    cpuInfo = parseResponse(response);
+    const response2 = await GetSystemInfo();
+    systemInfo = parseSystemInfo(response2);
   });
 
-  function parseResponse(response) {
+  function parseResponse(response: string) {
     const data = JSON.parse(response);
     return {
       architecture: data.architecture,
@@ -29,64 +37,95 @@
       cpuModes: data.cpuModes,
     };
   }
+
+  function parseSystemInfo(response: string) {
+    const data = JSON.parse(response);
+    return {
+      osName: data.osName,
+      kernelVer: data.kernelVer,
+      uptime: data.uptime,
+    };
+  }
+
 </script>
 
-
-    <template>
+<template>
   <div class="container">
     <h2>System Information</h2>
     <div class="row">
-      <div class="col-6">Architecture:</div>
-      <div class="col-6">{systemInfo.architecture}</div>
+      <div>OS Name:</div>
+      <div>{systemInfo.osName}</div>
     </div>
     <div class="row">
-      <div class="col-6">CPU(s):</div>
-      <div class="col-6">{systemInfo.cpus}</div>
+      <div>Kernel Version:</div>
+      <div>{systemInfo.kernelVer}</div>
     </div>
     <div class="row">
-      <div class="col-6">Model name:</div>
-      <div class="col-6">{systemInfo.modelName}</div>
+      <div>Uptime:</div>
+      <div>{systemInfo.uptime}</div>
+    </div>
+    <h2>CPU Information</h2>
+    <div class="row">
+      <div>Architecture:</div>
+      <div>{cpuInfo.architecture}</div>
     </div>
     <div class="row">
-      <div class="col-6">Threads per core:</div>
-      <div class="col-6">{systemInfo.threadPerCore}</div>
+      <div>CPU(s):</div>
+      <div>{cpuInfo.cpus}</div>
     </div>
     <div class="row">
-      <div class="col-6">Cores per socket:</div>
-      <div class="col-6">{systemInfo.corePerSocket}</div>
+      <div>Model name:</div>
+      <div>{cpuInfo.modelName}</div>
     </div>
     <div class="row">
-      <div class="col-6">Socket(s):</div>
-      <div class="col-6">{systemInfo.socket}</div>
+      <div>Threads per core:</div>
+      <div>{cpuInfo.threadPerCore}</div>
     </div>
     <div class="row">
-      <div class="col-6">CPU modes:</div>
-      <div class="col-6">{systemInfo.cpuModes}</div>
+      <div>Cores per socket:</div>
+      <div>{cpuInfo.corePerSocket}</div>
+    </div>
+    <div class="row">
+      <div>Socket(s):</div>
+      <div>{cpuInfo.socket}</div>
+    </div>
+    <div class="row">
+      <div>CPU modes:</div>
+      <div>{cpuInfo.cpuModes}</div>
     </div>
   </div>
 </template>
 
 <style>
   .container {
-    padding: 20px;
-    background-color: #65d81d;
-    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: whitesmoke;
+  }
+
+  h2 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
   }
 
   .row {
     display: flex;
-    margin-bottom: 10px;
+    justify-content: space-between;
+    width: 40%;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
   }
 
-  .col-6 {
-    flex: 1;
+  .row > div:first-child {
+    font-weight: bold;
   }
 
-  .col-6:last-child {
-    text-align: right;
-  }
-
-  h2 {
-    margin-top: 0;
+  @media screen and (max-width: 768px) {
+    .row {
+      width: 80%;
+    }
   }
 </style>
