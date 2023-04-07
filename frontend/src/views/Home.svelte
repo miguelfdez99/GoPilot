@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import "@picocss/pico/css/pico.css"
 
   let currentView = 'home';
 
@@ -10,10 +11,12 @@
   });
 </script>
 
-<h1>Home</h1>
+<h1 class="text-2xl font-bold">Home</h1>
 
-<p>This is the Home view.</p>
+<p class="text-lg">This is the Home view.</p>
+
 <h1 class="text-3xl font-bold underline">
   Hello world!
 </h1>
+
 

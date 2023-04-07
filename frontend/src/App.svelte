@@ -23,12 +23,12 @@
 
 <div class="container">
   <div class="sidebar">
-    <button on:click={() => currentView = 'home'} style="width: 100%">Home</button>
-    <button on:click={() => currentView = 'users'} style="width: 100%">Users</button>
-    <button on:click={() => currentView = 'packages'} style="width: 100%">Packages</button>
-    <button on:click={() => currentView = 'system'} style="width: 100%">System</button>
-    <button on:click={() => currentView = 'cron'} style="width: 100%">Cron</button>
-    <button on:click={() => currentView = 'firewall'} style="width: 100%">Firewall</button>
+    <button on:click={() => currentView = 'home'}>Home</button>
+    <button on:click={() => currentView = 'users'}>Users</button>
+    <button on:click={() => currentView = 'packages'}>Packages</button>
+    <button on:click={() => currentView = 'system'}>System</button>
+    <button on:click={() => currentView = 'cron'}>Cron</button>
+    <button on:click={() => currentView = 'firewall'}>Firewall</button>
   </div>
 
   <div class="main">
@@ -49,38 +49,46 @@
 </div>
 
 <style>
+  @import url("https://unpkg.com/picocss@4.1.1/dist/pico.min.css");
+
   .container {
     display: flex;
     height: 100vh;
   }
 
   .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
     width: 200px;
-    height: 100%;
-    background-color: #3e778d;
+    background-color: #0d6efd;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow-y: scroll;
+    overflow-y: auto;
+    z-index: 100;
   }
 
   .sidebar button {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background-color: #2c6278;
+    background-color: #0d6efd;
     border: none;
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s;
   }
 
   .sidebar button:hover {
-    background-color: #245468;
+    background-color: #025ee4;
   }
 
   .main {
     flex: 1;
     padding: 1rem;
+    margin-left: 200px;
   }
 </style>

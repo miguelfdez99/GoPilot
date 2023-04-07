@@ -104,11 +104,11 @@
     <button class="btn" on:click={toggleModUser}>Modify User</button>
     <div style="display: flex; flex-direction: column-reverse;">
       {#if showUserAdd}
-        <AddUser />
+        <AddUser on:clickOutside={toggleAddUser} />
       {:else if showUserDel}
-        <DelUser />
+        <DelUser on:clickOutside={toggleDelUser} />
       {:else if showUserMod}
-        <ModifyUser />
+        <ModifyUser on:clickOutside={toggleModUser} />
       {/if}
     </div>
   </div>
@@ -120,11 +120,11 @@
     <button class="btn" on:click={toggleModGroup}>Modify Group</button>
     <div style="display: flex; flex-direction: column-reverse;">
       {#if showGroupAdd}
-        <AddGroup />
+        <AddGroup on:clickOutside={toggleAddGroup} />
       {:else if showGroupDel}
-        <DelGroup />
+        <DelGroup on:clickOutside={toggleDelGroup} />
       {:else if showGroupMod}
-        <ModifyGroup />
+        <ModifyGroup on:clickOutside={toggleModGroup} />
       {/if}
     </div>
   </div>
@@ -133,7 +133,6 @@
 <style>
   main {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -146,7 +145,7 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+    margin-right: 2rem;
   }
 
   h1 {
