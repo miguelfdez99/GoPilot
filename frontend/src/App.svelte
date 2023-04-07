@@ -86,10 +86,6 @@
     background-color: #025ee4;
   }
 
-  .sidebar button.active {
-    background-color: #025ee4;
-  }
-
   .main {
     flex: 1;
     padding: 1rem;

@@ -17,10 +17,9 @@
 
 <template>
     <form on:submit|preventDefault={handleSubmit}>
-        <h2>Delete User</h2>
         <label>
-            Username:
-            <input type="text" bind:value={username} />
+            <span>Username:</span>
+            <input type="text" bind:value={username} required />
         </label>
         <label>
             <input type="checkbox" bind:checked={removeHomeDir} />
@@ -46,15 +45,16 @@
         max-width: 400px;
     }
 
-    h2 {
-        margin-top: 0;
-        margin-bottom: 20px;
-    }
-
     label {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         margin-bottom: 10px;
+    }
+
+    label span {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
     }
 
     input[type="checkbox"] {
