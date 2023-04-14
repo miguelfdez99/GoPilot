@@ -177,6 +177,10 @@ func (a *App) ListPackages() []string {
 		return nil
 	}
 	packageNames := ExtractFirstParams(string(out))
+	if distribution != "arch" {
+		packageNames = packageNames[1:]
+	}
+
 	return packageNames
 }
 
