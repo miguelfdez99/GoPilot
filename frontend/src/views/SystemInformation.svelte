@@ -5,12 +5,8 @@
 
     import CpuInfo from '../components/CpuInfo.svelte'
 
-    let currentView: string = 'system';
 
     onMount(() => {
-      addEventListener('changeView', (event: CustomEvent) => {
-        currentView = event.detail;
-      });
       getDistribution();
     });
 

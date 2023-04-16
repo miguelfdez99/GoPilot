@@ -8,7 +8,6 @@
   import ModifyGroup from "../components/ModifyGroup.svelte";
   import { CheckAdmin } from "../../wailsjs/go/main/App.js";
 
-  let currentView = "users";
   let showUserAdd = false;
   let showUserDel = false;
   let showUserMod = false;
@@ -84,9 +83,6 @@
   }
 
   onMount(() => {
-    addEventListener("changeView", (event: CustomEvent) => {
-      currentView = event.detail;
-    });
     CheckAdmin().then((result) => {
       if (result === false) {
         adminText = "You are not an admin";

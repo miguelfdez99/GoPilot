@@ -3,7 +3,6 @@
   import { ListPackages, RemovePackage } from "../../wailsjs/go/main/App.js";
   import deleteIcon from "../assets/images/delete.png";
 
-  let currentView = "packages";
   let packages: string[] = [];
   let filteredPackages: string[] = [];
   let searchInput: string = "";
@@ -46,9 +45,6 @@
   }
 
   onMount(() => {
-    addEventListener("changeView", (event: CustomEvent) => {
-      currentView = event.detail;
-    });
     listPackages();
   });
 </script>

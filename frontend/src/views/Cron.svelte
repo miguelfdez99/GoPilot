@@ -1,12 +1,15 @@
 <!-- CronJobs.svelte -->
 
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import {ListCronJobs, RemoveAllCronJobs} from '../../wailsjs/go/main/App.js'
-    import AddCronJob from '../components/AddCronJob.svelte'
+    import { onMount } from "svelte";
+    import {
+        ListCronJobs,
+        RemoveAllCronJobs,
+    } from "../../wailsjs/go/main/App.js";
+    import AddCronJob from "../components/AddCronJob.svelte";
 
     let jobs = [];
-    let currentView = 'cron';
+    let currentView = "cron";
 
     async function getCronJobs() {
         jobs = await ListCronJobs();
@@ -18,16 +21,12 @@
     }
 
     onMount(() => {
-      addEventListener('changeView', (event: CustomEvent) => {
-        currentView = event.detail;
-      });
-      try {
+        try {
             getCronJobs();
         } catch (error) {
-            console.error('Failed to fetch cron jobs:', error);
+            console.error("Failed to fetch cron jobs:", error);
         }
     });
-
 </script>
 
 <div class="container">
@@ -46,8 +45,8 @@
             {/each}
         </ul>
     {/if}
-
 </div>
+
 <style>
     /* Reset styles */
     * {

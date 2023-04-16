@@ -9,7 +9,6 @@
     let rules = [];
     let error = null;
 
-    let currentView = "firewall";
     let port = "";
     let protocol = "";
 
@@ -33,14 +32,7 @@
         }
     }
 
-    function handleViewChange(event: CustomEvent<string>) {
-        currentView = event.detail;
-    }
-
     onMount(() => {
-        addEventListener("changeView", (event: CustomEvent) => {
-            currentView = event.detail;
-        });
         listFirewallRules();
     });
 
