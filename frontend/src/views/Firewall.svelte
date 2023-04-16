@@ -9,7 +9,7 @@
     let rules = [];
     let error = null;
 
-    let currentView = "cron";
+    let currentView = "firewall";
     let port = "";
     let protocol = "";
 
