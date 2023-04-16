@@ -8,10 +8,6 @@
     let jobs = [];
     let currentView = 'cron';
 
-    function handleViewChange(event: CustomEvent<string>) {
-    currentView = event.detail;
-  }
-
     async function getCronJobs() {
         jobs = await ListCronJobs();
     }
@@ -25,9 +21,11 @@
       addEventListener('changeView', (event: CustomEvent) => {
         currentView = event.detail;
       });
-      async () => {
-        await getCronJobs();
-    }
+      try {
+            getCronJobs();
+        } catch (error) {
+            console.error('Failed to fetch cron jobs:', error);
+        }
     });
 
 </script>
@@ -44,7 +42,7 @@
     {:else}
         <ul>
             {#each jobs as job}
-                <li>{job.Schedule} - {job.Command}</li>
+                <li>{job.Schedule} {job.Command}</li>
             {/each}
         </ul>
     {/if}

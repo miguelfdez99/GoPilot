@@ -8,11 +8,6 @@
   import Firewall from './views/Firewall.svelte';
 
   let currentView = 'home';
-  const dispatch = createEventDispatcher();
-
-  function handleViewChange(event: CustomEvent<string>) {
-    currentView = event.detail;
-  }
 
   onMount(() => {
     const event = new CustomEvent('changeView', { detail: currentView });
