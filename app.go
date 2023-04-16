@@ -342,6 +342,8 @@ func (a *App) ListCronJobs() []CronJob {
 		fmt.Println("No cron jobs found")
 	}
 
+	fmt.Println("Jobs:", jobs)
+
 	return jobs
 }
 
