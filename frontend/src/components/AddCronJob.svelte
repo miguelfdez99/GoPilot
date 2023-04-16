@@ -13,74 +13,79 @@
     }
 </script>
 
+
 <div class="container">
-    <form on:submit|preventDefault="{onSubmit}">
-        <h2>Add a New Cron Job</h2>
-        <label>
+    <form class="form" on:submit|preventDefault="{onSubmit}">
+        <h2 class="form-title">Add a New Cron Job</h2>
+        <label class="form-label">
             Schedule:
-            <input type="text" bind:value="{schedule}" />
+            <input class="form-input" type="text" bind:value="{schedule}" />
         </label>
-        <label>
+        <label class="form-label">
             Command:
-            <input type="text" bind:value="{command}" />
+            <input class="form-input" type="text" bind:value="{command}" />
         </label>
-        <button type="submit">Add Job</button>
+        <p class="form-note">Enter cron job schedule in the format: <code>minute hour day month day-of-week</code></p>
+        <p class="form-note">For example: <code>30 * * * *</code> for every hour at 30 minutes past the hour</p>
+        <p class="form-note">Or: <code>0 0 * * *</code> for midnight every day</p>
+        <p class="form-note">Refer to cron syntax for more information on how to specify cron job schedules.</p>
+        <button class="form-button" type="submit">Add Job</button>
     </form>
 </div>
 
 <style>
-    /* Reset styles */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        margin-bottom: 20px;
-    }
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+}
 
-    /* Component styles */
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
+.form {
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+}
 
-    h2 {
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
+.form-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
 
-    form {
-        display: flex;
-        flex-direction: column;
-    }
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff;
+}
 
-    label {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 20px;
-    }
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #555;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #fff;
+}
 
-    input {
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
+.form-note {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #fff;
+}
 
-    button[type="submit"] {
-        padding: 10px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        background-color: #a70a0a;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+.form-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
 
-    button[type="submit"]:hover {
-        background-color: #721c24;
-    }
+.form-button:hover {
+    background-color: #0056b3;
+}
 </style>
