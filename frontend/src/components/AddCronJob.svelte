@@ -39,6 +39,10 @@
     margin: 0 auto;
 }
 
+h2 {
+    color: white;
+}
+
 .form {
     padding: 20px;
     background-color: #333;
