@@ -9,7 +9,6 @@
     import AddCronJob from "../components/AddCronJob.svelte";
 
     let jobs = [];
-    let currentView = "cron";
 
     async function getCronJobs() {
         jobs = await ListCronJobs();
@@ -21,18 +20,12 @@
     }
 
     onMount(() => {
-        try {
-            getCronJobs();
-        } catch (error) {
-            console.error("Failed to fetch cron jobs:", error);
-        }
+        getCronJobs();
     });
 </script>
 
 <div class="container">
     <h1>Cron Jobs</h1>
-
-    <button on:click={removeAllCronJobs}>Remove all cron jobs</button>
 
     <AddCronJob />
 
@@ -45,6 +38,8 @@
             {/each}
         </ul>
     {/if}
+
+    <button on:click={removeAllCronJobs}>Remove all cron jobs</button>
 </div>
 
 <style>
@@ -53,6 +48,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        color: white;
     }
 
     /* Component styles */
@@ -85,12 +81,18 @@
     }
 
     button {
-        padding: 10px 20px;
-        background-color: #a70a0a;
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: #fff;
         border: none;
-        color: white;
-        font-weight: bold;
+        border-radius: 4px;
         cursor: pointer;
-        margin-bottom: 20px;
+        font-size: 16px;
+        transition: background-color 0.2s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
     }
 </style>
