@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -354,22 +355,39 @@ func (a *App) ListCronJobs() ([]CronJob, error) {
 	lines := strings.Split(string(output), "\n")
 	jobs := []CronJob{}
 
+	specialSchedulePattern := regexp.MustCompile(`^\s*@[^ \t]+\s+.*$`)
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, "#") || line == "" {
 			continue
 		}
-		parts := strings.SplitN(line, " ", 6)
-		if len(parts) < 6 {
-			continue
+
+		if specialSchedulePattern.MatchString(line) {
+			parts := strings.Fields(line)
+
+			if len(parts) < 2 {
+				continue
+			}
+
+			job := CronJob{
+				Schedule: parts[0],
+				Command:  strings.Join(parts[1:], " "),
+			}
+			jobs = append(jobs, job)
+		} else {
+			parts := strings.SplitN(line, " ", 6)
+			if len(parts) < 6 {
+				continue
+			}
+
+			job := CronJob{
+				Schedule: strings.Join(parts[:5], " "),
+				Command:  strings.Join(parts[5:], " "),
+			}
+			jobs = append(jobs, job)
 		}
 
-		job := CronJob{
-			Schedule: strings.Join(parts[:5], " "),
-			Command:  strings.Join(parts[5:], " "),
-		}
-
-		jobs = append(jobs, job)
 	}
 
 	return jobs, nil
