@@ -1,29 +1,81 @@
 <script>
     import { AddCronJob } from '../../wailsjs/go/main/App.js';
-    let schedule = '';
+    let minute = '';
+    let hour = '';
+    let day = '';
+    let month = '';
+    let dayOfWeek = '';
     let command = '';
+    let composedJob = '';
+
+    $: {
+    composedJob = `${minute} ${hour} ${day} ${month} ${dayOfWeek} ${command}`;
+}
 
     async function onSubmit() {
-        if (schedule && command) {
+        if (minute && hour && day && month && dayOfWeek && command) {
+            const schedule = `${minute} ${hour} ${day} ${month} ${dayOfWeek}`;
             await AddCronJob(schedule, command);
-            schedule = '';
+            minute = '';
+            hour = '';
+            day = '';
+            month = '';
+            dayOfWeek = '';
             command = '';
         }
     }
-</script>
 
+</script>
 
 <div class="container">
     <form class="form" on:submit|preventDefault="{onSubmit}">
         <h2 class="form-title">Add a New Cron Job</h2>
         <label class="form-label">
-            Schedule:
-            <input class="form-input" type="text" bind:value="{schedule}" />
+            <div class="input-container">
+                <span class="input-indicator">Minutes:</span>
+                <span class="input-value">
+                    <input class="form-input" type="text" bind:value="{minute}" />
+                </span>
+            </div>
+            <div class="input-container">
+                <span class="input-indicator">Hour:</span>
+                <span class="input-value">
+                    <input class="form-input" type="text" bind:value="{hour}" />
+                </span>
+            </div>
+            <div class="input-container">
+                <span class="input-indicator">Day:</span>
+                <span class="input-value">
+                    <input class="form-input" type="text" bind:value="{day}" />
+                </span>
+            </div>
+            <div class="input-container">
+                <span class="input-indicator">Month:</span>
+                <span class="input-value">
+                    <input class="form-input" type="text" bind:value="{month}" />
+                </span>
+            </div>
+            <div class="input-container">
+                <span class="input-indicator">Day of Week:</span>
+                <span class="input-value">
+                    <input class="form-input" type="text" bind:value="{dayOfWeek}" />
+                </span>
+            </div>
         </label>
-        <label class="form-label">
-            Command:
+        <div class="input-container">
+            <span class="input-indicator">Command:</span>
+            <span class="input-value">
             <input class="form-input" type="text" bind:value="{command}" />
+            </span>
+        </div>
+
+        <label class="form-label">
+            Job:
+            <span class="input-value">
+                <input class="form-input" type="text" bind:value="{composedJob}" readonly />
+            </span>
         </label>
+
         <p class="form-note">Enter cron job schedule in the format: <code>minute hour day month day-of-week</code></p>
         <p class="form-note">For example: <code>30 * * * *</code> for every hour at 30 minutes past the hour</p>
         <p class="form-note">Or: <code>0 0 * * *</code> for midnight every day</p>
@@ -32,9 +84,11 @@
     </form>
 </div>
 
+
+
+
 <style>
 .container {
-    max-width: 400px;
     margin: 0 auto;
 }
 
@@ -68,6 +122,7 @@ h2 {
     background-color: #555;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     color: #fff;
+    flex-grow: 1;
 }
 
 .form-note {
@@ -91,4 +146,15 @@ h2 {
 .form-button:hover {
     background-color: #0056b3;
 }
+
+.input-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .input-indicator {
+        flex-basis: 50%;
+        font-weight: bold;
+    }
 </style>
