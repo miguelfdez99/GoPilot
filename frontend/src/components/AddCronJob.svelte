@@ -7,10 +7,15 @@
     let dayOfWeek = '';
     let command = '';
     let composedJob = '';
+    let quickScheduleOption = '';
 
     $: {
-    composedJob = `${minute} ${hour} ${day} ${month} ${dayOfWeek} ${command}`;
-}
+        if (quickScheduleOption) {
+            composedJob = `${quickScheduleOption} ${command}`;
+        } else {
+            composedJob = `${minute} ${hour} ${day} ${month} ${dayOfWeek} ${command}`;
+        }
+    }
 
     async function onSubmit() {
         if (minute && hour && day && month && dayOfWeek && command) {
@@ -22,6 +27,12 @@
             month = '';
             dayOfWeek = '';
             command = '';
+        } else if (quickScheduleOption && command) {
+            await AddCronJob(quickScheduleOption, command);
+            quickScheduleOption = '';
+            command = '';
+        } else {
+            alert('Please fill out all fields');
         }
     }
 
@@ -30,6 +41,23 @@
 <div class="container">
     <form class="form" on:submit|preventDefault="{onSubmit}">
         <h2 class="form-title">Add a New Cron Job</h2>
+
+        <div class="input-container">
+            <span class="input-indicator">Quick Schedule:</span>
+            <span class="input-value">
+                <select class="form-select" bind:value="{quickScheduleOption}">
+                    <option value="">None</option>
+                    <option value="@reboot">Startup</option>
+                    <option value="@hourly">Hourly</option>
+                    <option value="@daily">Daily</option>
+                    <option value="@weekly">Weekly</option>
+                    <option value="@monthly">Monthly</option>
+                    <option value="@yearly">Yearly</option>
+                </select>
+            </span>
+        </div>
+
+        {#if !quickScheduleOption}
         <label class="form-label">
             <div class="input-container">
                 <span class="input-indicator">Minutes:</span>
@@ -62,6 +90,7 @@
                 </span>
             </div>
         </label>
+        {/if}
         <div class="input-container">
             <span class="input-indicator">Command:</span>
             <span class="input-value">
