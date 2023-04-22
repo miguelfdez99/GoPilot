@@ -74,6 +74,10 @@ export function RemoveAllCronJobs() {
   return window['go']['main']['App']['RemoveAllCronJobs']();
 }
 
+export function RemoveCronJob(arg1) {
+  return window['go']['main']['App']['RemoveCronJob'](arg1);
+}
+
 export function RemoveFirewallRule(arg1) {
   return window['go']['main']['App']['RemoveFirewallRule'](arg1);
 }
