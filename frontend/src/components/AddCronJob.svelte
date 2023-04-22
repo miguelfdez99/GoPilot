@@ -1,4 +1,3 @@
-<!-- CronJobForm.svelte -->
 <script>
     import { AddCronJob } from '../../wailsjs/go/main/App.js';
     let schedule = '';
