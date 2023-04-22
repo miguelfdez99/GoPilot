@@ -1,11 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { ListPackages, RemovePackage } from "../../wailsjs/go/main/App.js";
+  import {
+    ListPackages,
+    RemovePackage,
+    InstallPackage,
+  } from "../../wailsjs/go/main/App.js";
   import deleteIcon from "../assets/images/delete.png";
 
   let packages: string[] = [];
   let filteredPackages: string[] = [];
   let searchInput: string = "";
+  let installInput: string = "";
 
   function listPackages() {
     ListPackages().then((result) => {
@@ -32,11 +37,38 @@
       });
   }
 
+  function confirmInstall(name: string) {
+    if (confirm(`Are you sure you want to install ${name}?`)) {
+      installPackage(name);
+    }
+  }
+
+  function installPackage(name: string) {
+    InstallPackage(name)
+      .then(() => {
+        packages.push(name);
+        filteredPackages.push(name);
+        alert(`Successfully installed ${name}`);
+      })
+      .catch((err) => {
+        alert(`Failed to install ${name}: ${err}`);
+      });
+  }
+
   function handleSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     searchInput = target.value.trim();
     filteredPackages = search();
   }
+
+  function handleInstall() {
+  const packageName = installInput.trim();
+  if (packageName !== "") {
+    confirmInstall(packageName);
+    installInput = ""; // Clear the install input field
+  }
+}
+
 
   function search() {
     return packages.filter((pkg) => {
@@ -52,8 +84,22 @@
 <main>
   <div class="input-box" id="input">
     <h1>Packages</h1>
+    <div class="input-container">
+      <input
+        id="install-input"
+        type="text"
+        bind:value={installInput}
+        placeholder="Enter package name..."
+      />
+      <button on:click={handleInstall}>Install</button>
+    </div>
+
     <div class="search-box">
-      <input type="text" placeholder="Search packages" on:input={handleSearch} />
+      <input
+        type="text"
+        placeholder="Search packages"
+        on:input={handleSearch}
+      />
     </div>
     <div>
       {#if filteredPackages.length > 0}
@@ -94,22 +140,41 @@
     font-size: 14px;
   }
   .delete-btn {
-  float: right;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: none;
-}
+    float: right;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+  }
 
-.delete-icon {
-  width: 100%;
-  height: 100%;
-}
+  .delete-icon {
+    width: 100%;
+    height: 100%;
+  }
 
-h1, li, input, p {
-  color: white;
-}
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
 
+  #install-input {
+    flex-grow: 1;
+    margin-right: 1rem;
+  }
+
+  button {
+    width: 6rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  h1,
+  li,
+  input,
+  p {
+    color: white;
+  }
 </style>

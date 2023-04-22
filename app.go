@@ -157,16 +157,21 @@ func (a *App) CheckAdmin() bool {
 func (a *App) ListPackages() []string {
 
 	distribution, err := getLinuxDistribution()
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
 
 	var cmd *exec.Cmd
 
-	if distribution == "ubuntu" || distribution == "debian" {
+	switch distribution {
+	case "ubuntu", "debian":
 		cmd = exec.Command("apt", "list", "--installed")
-	} else if distribution == "fedora" || distribution == "centos" || distribution == "rhel" {
+	case "fedora", "centos", "rhel":
 		cmd = exec.Command("dnf", "list", "installed")
-	} else if distribution == "arch" {
+	case "arch":
 		cmd = exec.Command("pacman", "-Q")
-	} else {
+	default:
 		fmt.Println("Unsupported Linux distribution")
 		return nil
 	}
@@ -209,6 +214,35 @@ func (a *App) RemovePackage(pkgName string) error {
 	}
 
 	fmt.Printf("Package %s removed successfully", pkgName)
+
+	return nil
+}
+
+func (a *App) InstallPackage(pkgName string) error {
+	distribution, err := getLinuxDistribution()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	var cmd *exec.Cmd
+
+	switch distribution {
+	case "ubuntu", "debian":
+		cmd = exec.Command("apt", "install", pkgName, "-y")
+	case "fedora", "centos", "rhel":
+		cmd = exec.Command("dnf", "install", pkgName, "-y")
+	case "arch":
+		cmd = exec.Command("pacman", "-S", pkgName, "--noconfirm")
+	default:
+		return fmt.Errorf("unsupported Linux distribution: %s", distribution)
+	}
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Package %s installed successfully", pkgName)
 
 	return nil
 }

@@ -46,6 +46,10 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function InstallPackage(arg1) {
+  return window['go']['main']['App']['InstallPackage'](arg1);
+}
+
 export function ListCronJobs() {
   return window['go']['main']['App']['ListCronJobs']();
 }

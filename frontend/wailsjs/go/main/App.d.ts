@@ -24,6 +24,8 @@ export function GetSystemInfo():Promise<string>;
 
 export function Greet(arg1:string):Promise<string>;
 
+export function InstallPackage(arg1:string):Promise<void>;
+
 export function ListCronJobs():Promise<Array<main.CronJob>>;
 
 export function ListFirewallRules():Promise<Array<string>>;
