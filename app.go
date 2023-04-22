@@ -310,11 +310,11 @@ type CronJob struct {
 	Command  string
 }
 
-func (a *App) ListCronJobs() []CronJob {
+func (a *App) ListCronJobs() ([]CronJob, error) {
 	cmd := exec.Command("crontab", "-l")
 	output, err := cmd.Output()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	lines := strings.Split(string(output), "\n")
@@ -325,7 +325,7 @@ func (a *App) ListCronJobs() []CronJob {
 		if strings.HasPrefix(line, "#") || line == "" {
 			continue
 		}
-		parts := strings.Fields(line)
+		parts := strings.SplitN(line, " ", 6)
 		if len(parts) < 6 {
 			continue
 		}
@@ -338,13 +338,7 @@ func (a *App) ListCronJobs() []CronJob {
 		jobs = append(jobs, job)
 	}
 
-	if jobs == nil || len(jobs) == 0 {
-		fmt.Println("No cron jobs found")
-	}
-
-	fmt.Println("Jobs:", jobs)
-
-	return jobs
+	return jobs, nil
 }
 
 func (a *App) RemoveAllCronJobs() error {
