@@ -65,7 +65,7 @@
   const packageName = installInput.trim();
   if (packageName !== "") {
     confirmInstall(packageName);
-    installInput = ""; // Clear the install input field
+    installInput = "";
   }
 }
 
