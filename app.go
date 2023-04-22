@@ -385,6 +385,52 @@ func (a *App) RemoveAllCronJobs() error {
 	return nil
 }
 
+func (a *App) RemoveCronJob(job string) error {
+
+	jobs, err := a.ListCronJobs()
+	if err != nil {
+		return err
+	}
+
+	index := -1
+	for i, j := range jobs {
+		if j.Command == job {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return fmt.Errorf("cron job not found: %s", job)
+	}
+
+	jobs = append(jobs[:index], jobs[index+1:]...)
+
+	err = a.updateCronTab(jobs)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *App) updateCronTab(jobs []CronJob) error {
+
+	var cronTabBuffer strings.Builder
+	for _, job := range jobs {
+		cronTabBuffer.WriteString(fmt.Sprintf("%s %s\n", job.Schedule, job.Command))
+	}
+
+	cmd := exec.Command("crontab", "-")
+	cmd.Stdin = strings.NewReader(cronTabBuffer.String())
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (a *App) AddCronJob(schedule string, command string) error {
 	tmpfile, err := ioutil.TempFile("", "crontab")
 	if err != nil {
