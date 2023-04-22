@@ -26,7 +26,3 @@
       <CpuInfo />
     </div>
   </div>
-
-  <style>
-
-  </style>

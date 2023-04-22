@@ -107,4 +107,9 @@
   width: 100%;
   height: 100%;
 }
+
+h1, li, input, p {
+  color: white;
+}
+
 </style>

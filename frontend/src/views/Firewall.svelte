@@ -80,10 +80,16 @@
         font-family: monospace;
         white-space: pre-wrap;
         overflow-y: scroll;
+        color: white;
     }
 
     .error {
         color: red;
         font-weight: bold;
     }
+
+    h1, h2, label {
+        color: white;
+    }
+
 </style>

@@ -12,4 +12,8 @@
   Hello world!
 </h1>
 
-
+<style>
+* {
+  color: white;
+}
+</style>

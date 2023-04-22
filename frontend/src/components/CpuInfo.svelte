@@ -109,6 +109,7 @@
   h2 {
     font-size: 3rem;
     margin-bottom: 2rem;
+    color: white;
   }
 
   .row {
