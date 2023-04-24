@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { CreateUser } from "../../wailsjs/go/main/App.js";
+    import { CreateUser } from '../../wailsjs/go/backend/Backend.js';
 
     let username = "";
     let password = "";

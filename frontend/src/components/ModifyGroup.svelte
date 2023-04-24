@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ModifyGroup } from "../../wailsjs/go/main/App.js";
+    import { ModifyGroup } from '../../wailsjs/go/backend/Backend.js';
 
     let name = "";
     let gid = "";

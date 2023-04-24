@@ -1,5 +1,5 @@
 <script>
-    import { AddCronJob } from '../../wailsjs/go/main/App.js';
+    import { AddCronJob } from '../../wailsjs/go/backend/Backend.js';
     let minute = '';
     let hour = '';
     let day = '';

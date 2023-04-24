@@ -5,7 +5,7 @@
         RemoveAllCronJobs,
         RemoveCronJob,
         AddCronJob as AddCronJobAPI // Rename to avoid conflict with component name
-    } from "../../wailsjs/go/main/App.js";
+    } from '../../wailsjs/go/backend/Backend.js';
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
 
