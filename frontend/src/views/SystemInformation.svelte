@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    import {GetDistribution} from '../../wailsjs/go/main/App.js'
+    import {GetDistribution} from '../../wailsjs/go/backend/Backend.js';
 
     import CpuInfo from '../components/CpuInfo.svelte'
 

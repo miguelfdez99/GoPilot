@@ -6,7 +6,7 @@
   import AddGroup from "../components/AddGroup.svelte";
   import DelGroup from "../components/DelGroup.svelte";
   import ModifyGroup from "../components/ModifyGroup.svelte";
-  import { CheckAdmin } from "../../wailsjs/go/main/App.js";
+  import { CheckAdmin } from "../../wailsjs/go/backend/Backend.js";
 
   let showUserAdd = false;
   let showUserDel = false;

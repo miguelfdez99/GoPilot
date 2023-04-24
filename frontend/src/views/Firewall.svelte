@@ -4,7 +4,7 @@
         ListFirewallRules,
         AddFirewallRule,
         RemoveFirewallRule,
-    } from "../../wailsjs/go/main/App.js";
+    } from '../../wailsjs/go/backend/Backend.js';
 
     let rules = [];
     let error = null;

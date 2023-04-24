@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { DeleteUser } from "../../wailsjs/go/main/App.js";
+    import { DeleteUser } from '../../wailsjs/go/backend/Backend.js';
 
     export let username = "";
     export let removeHomeDir = false;

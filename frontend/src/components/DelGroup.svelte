@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { DeleteGroup } from "../../wailsjs/go/main/App.js";
+    import { DeleteGroup } from '../../wailsjs/go/backend/Backend.js';
 
     let name = "";
 

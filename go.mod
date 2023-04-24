@@ -1,4 +1,4 @@
-module changeme
+module goPilot
 
 go 1.18
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ModifyUser } from "../../wailsjs/go/main/App.js";
+    import { ModifyUser } from '../../wailsjs/go/backend/Backend.js';
 
     let username = "";
     let password = "";

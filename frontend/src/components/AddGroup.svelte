@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { CreateGroup } from "../../wailsjs/go/main/App.js";
+    import { CreateGroup } from '../../wailsjs/go/backend/Backend.js';
 
     let name: string = "";
     let gid = undefined;
