@@ -4,7 +4,6 @@
         ListCronJobs,
         RemoveAllCronJobs,
         RemoveCronJob,
-        AddCronJob as AddCronJobAPI // Rename to avoid conflict with component name
     } from '../../wailsjs/go/backend/Backend.js';
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
@@ -56,7 +55,7 @@
     <button on:click={toggleAddCronJob}>{addButtonText}</button>
 
     {#if showAddCronJob}
-        <AddCronJob />
+        <AddCronJob on:cronJobAdded={() => getCronJobs()} />
     {/if}
 
     <button on:click={removeAllCronJobs}>Remove all cron jobs</button>

@@ -1,13 +1,17 @@
-<script>
+<script lang="ts">
     import { AddCronJob } from '../../wailsjs/go/backend/Backend.js';
-    let minute = '';
-    let hour = '';
-    let day = '';
-    let month = '';
-    let dayOfWeek = '';
-    let command = '';
-    let composedJob = '';
-    let quickScheduleOption = '';
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
+
+    let minute: string = '';
+    let hour: string = '';
+    let day: string = '';
+    let month: string = '';
+    let dayOfWeek: string = '';
+    let command: string = '';
+    let composedJob: string = '';
+    let quickScheduleOption: string = '';
 
     $: {
         if (quickScheduleOption) {
@@ -16,6 +20,7 @@
             composedJob = `${minute} ${hour} ${day} ${month} ${dayOfWeek} ${command}`;
         }
     }
+
 
     async function onSubmit() {
         if (minute && hour && day && month && dayOfWeek && command) {
@@ -27,10 +32,12 @@
             month = '';
             dayOfWeek = '';
             command = '';
+            dispatch("cronJobAdded", null);
         } else if (quickScheduleOption && command) {
             await AddCronJob(quickScheduleOption, command);
             quickScheduleOption = '';
             command = '';
+            dispatch("cronJobAdded", null);
         } else {
             alert('Please fill out all fields');
         }
@@ -109,6 +116,7 @@
         <p class="form-note">For example: <code>30 * * * *</code> for every hour at 30 minutes past the hour</p>
         <p class="form-note">Or: <code>0 0 * * *</code> for midnight every day</p>
         <p class="form-note">Refer to cron syntax for more information on how to specify cron job schedules.</p>
+        <p class="form-note">Or select a quick schedule from the dropdown above.</p>
         <button class="form-button" type="submit">Add Job</button>
     </form>
 </div>
