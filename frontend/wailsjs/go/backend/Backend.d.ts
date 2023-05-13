@@ -6,6 +6,8 @@ export function AddCronJob(arg1:string,arg2:string):Promise<void>;
 
 export function AddFirewallRule(arg1:string):Promise<void>;
 
+export function Backup(arg1:backend.BackupOptions):Promise<void>;
+
 export function CheckAdmin():Promise<boolean>;
 
 export function CreateGroup(arg1:string,arg2:any):Promise<void>;
