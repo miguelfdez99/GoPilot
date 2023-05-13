@@ -27,8 +27,10 @@ func (b *Backend) CreateUser(user User) error {
 	)
 	err := cmd.Run()
 	if err != nil {
+		b.logger.WithError(err).Errorf("Failed to create user: %s", user.Username)
 		return fmt.Errorf("failed to create user: %v", err)
 	}
+	b.logger.Infof("User created successfully: %s", user.Username)
 	return nil
 }
 
@@ -44,8 +46,10 @@ func (b *Backend) DeleteUser(username string, removeHomeDir bool, forceDelete bo
 	cmd := exec.Command("userdel", args...)
 	err := cmd.Run()
 	if err != nil {
+		b.logger.WithError(err).Errorf("Failed to delete user: %s", username)
 		return fmt.Errorf("error deleting user %s: %s", username, err)
 	}
+	b.logger.Infof("User deleted successfully: %s", username)
 	return nil
 }
 
@@ -75,7 +79,9 @@ func (b *Backend) ModifyUser(username string, userPtr *User) error {
 
 	err := cmd.Run()
 	if err != nil {
+		b.logger.WithError(err).Errorf("Failed to modify user: %s", username)
 		return fmt.Errorf("failed to modify user: %v", err)
 	}
+	b.logger.Infof("User modified successfully: %s", username)
 	return nil
 }

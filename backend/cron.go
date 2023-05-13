@@ -18,6 +18,7 @@ func (b *Backend) ListCronJobs() ([]CronJob, error) {
 	cmd := exec.Command("crontab", "-l")
 	output, err := cmd.Output()
 	if err != nil {
+		b.logger.WithError(err).Error("Failed to list cron jobs")
 		return nil, err
 	}
 
@@ -66,9 +67,10 @@ func (b *Backend) RemoveAllCronJobs() error {
 	cmd := exec.Command("crontab", "-r")
 	err := cmd.Run()
 	if err != nil {
+		b.logger.WithError(err).Error("Failed to remove all cron jobs")
 		return err
 	}
-	fmt.Println("All cron jobs removed successfully")
+	b.logger.Info("All cron jobs removed successfully")
 	return nil
 }
 
@@ -76,6 +78,7 @@ func (b *Backend) RemoveCronJob(job string) error {
 
 	jobs, err := b.ListCronJobs()
 	if err != nil {
+		b.logger.WithError(err).Error("Failed to list cron jobs for removal")
 		return err
 	}
 
@@ -95,9 +98,11 @@ func (b *Backend) RemoveCronJob(job string) error {
 
 	err = b.updateCronTab(jobs)
 	if err != nil {
+		b.logger.WithError(err).Error("Failed to update cron tab")
 		return err
 	}
 
+	b.logger.Infof("Cron job removed successfully: %s", job)
 	return nil
 }
 
@@ -121,6 +126,7 @@ func (b *Backend) updateCronTab(jobs []CronJob) error {
 func (b *Backend) AddCronJob(schedule string, command string) error {
 	tmpfile, err := ioutil.TempFile("", "crontab")
 	if err != nil {
+		b.logger.WithError(err).Error("Failed to create temp file")
 		return err
 	}
 	defer os.Remove(tmpfile.Name())
@@ -144,8 +150,10 @@ func (b *Backend) AddCronJob(schedule string, command string) error {
 	cmd = exec.Command("crontab", tmpfile.Name())
 	err = cmd.Run()
 	if err != nil {
+		b.logger.WithError(err).Error("Failed to run cron tab add command")
 		return err
 	}
 
+	b.logger.Infof("Cron job added successfully: %s %s", schedule, command)
 	return nil
 }
