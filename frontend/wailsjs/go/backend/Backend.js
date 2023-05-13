@@ -10,6 +10,10 @@ export function AddFirewallRule(arg1) {
   return window['go']['backend']['Backend']['AddFirewallRule'](arg1);
 }
 
+export function Backup(arg1) {
+  return window['go']['backend']['Backend']['Backup'](arg1);
+}
+
 export function CheckAdmin() {
   return window['go']['backend']['Backend']['CheckAdmin']();
 }
