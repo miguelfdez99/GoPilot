@@ -18,6 +18,8 @@ export function DeleteGroup(arg1:string):Promise<void>;
 
 export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
+export function GetCPUUsage():Promise<Array<number>>;
+
 export function GetDistribution():Promise<string>;
 
 export function GetLSCPU():Promise<string>;

@@ -34,6 +34,10 @@ export function DeleteUser(arg1, arg2, arg3) {
   return window['go']['backend']['Backend']['DeleteUser'](arg1, arg2, arg3);
 }
 
+export function GetCPUUsage() {
+  return window['go']['backend']['Backend']['GetCPUUsage']();
+}
+
 export function GetDistribution() {
   return window['go']['backend']['Backend']['GetDistribution']();
 }
