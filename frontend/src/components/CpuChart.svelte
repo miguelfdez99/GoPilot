@@ -44,10 +44,8 @@
     ];
 
     onMount(async () => {
-        // Initial fetch of CPU usage
         cpuUsages = await GetCPUUsage();
 
-        // Initialize chart with initial CPU usage
         const ctx = canvas.getContext("2d");
         chart = new Chart(ctx, {
             type: "line",
@@ -71,27 +69,24 @@
             },
         });
 
-        // Start fetching CPU usage every second
         intervalId = setInterval(updateChart, 1000);
     });
 
     onDestroy(() => {
-        clearInterval(intervalId); // Clear interval when the component is destroyed
+        clearInterval(intervalId);
     });
 
     async function updateChart() {
         const newCpuUsages = await GetCPUUsage();
 
         newCpuUsages.forEach((usage, i) => {
-            // Add new data point to each dataset
             chart.data.datasets[i].data.push(usage);
 
-            const roundedPercentage = usage.toFixed(1); // Round to one decimal place
+            const roundedPercentage = usage.toFixed(1);
             chart.data.datasets[i].label = `CPU ${
                 i + 1
             } (${roundedPercentage}%)`;
 
-            // Remove first data point if there are too many
             if (chart.data.datasets[i].data.length > MAX_HISTORY) {
                 chart.data.datasets[i].data.shift();
             }
