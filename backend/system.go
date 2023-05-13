@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	"time"
+
+	"github.com/shirou/gopsutil/cpu"
 )
 
 func (b *Backend) GetLSCPU() string {
@@ -83,4 +86,14 @@ func (b *Backend) GetSystemInfo() (string, error) {
 	}
 
 	return string(jsonData), nil
+}
+
+func (b *Backend) GetCPUUsage() ([]float64, error) {
+	// Get percpu usage
+	percpuUsage, err := cpu.Percent(time.Second, true)
+	if err != nil {
+		return nil, err
+	}
+
+	return percpuUsage, nil
 }
