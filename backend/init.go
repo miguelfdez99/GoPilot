@@ -1,19 +1,32 @@
 package backend
 
-import "context"
+import (
+	"context"
+	"os"
 
-// App struct
+	"github.com/sirupsen/logrus"
+)
+
 type Backend struct {
-	ctx context.Context
+	ctx    context.Context
+	logger *logrus.Logger
 }
 
-// NewApp creates a new App application struct
 func NewBackend() *Backend {
-	return &Backend{}
+	logger := logrus.New()
+	logger.Out = os.Stdout
+
+	// Set log level, e.g. logrus.DebugLevel, logrus.InfoLevel, logrus.WarnLevel, logrus.ErrorLevel
+	logger.SetLevel(logrus.InfoLevel)
+
+	// Use JSONFormatter for structured logging
+	logger.SetFormatter(&logrus.JSONFormatter{})
+
+	return &Backend{
+		logger: logger,
+	}
 }
 
-// startup is called when the Backend starts. The context is saved
-// so we can call the runtime methods
 func (b *Backend) startup(ctx context.Context) {
 	b.ctx = ctx
 }
