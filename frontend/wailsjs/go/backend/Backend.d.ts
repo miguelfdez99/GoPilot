@@ -42,7 +42,7 @@ export function ListPackages():Promise<Array<string>>;
 
 export function ModifyGroup(arg1:string,arg2:number):Promise<void>;
 
-export function ModifyUser(arg1:string,arg2:any):Promise<void>;
+export function ModifyUser(arg1:string,arg2:backend.User):Promise<void>;
 
 export function RemoveAllCronJobs():Promise<void>;
 
