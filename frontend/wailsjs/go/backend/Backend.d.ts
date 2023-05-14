@@ -24,8 +24,6 @@ export function GetDiskUsage():Promise<backend.DiskUsage>;
 
 export function GetDistribution():Promise<string>;
 
-export function GetFolderSizes(arg1:string):Promise<Array<backend.FolderSize>>;
-
 export function GetLSCPU():Promise<string>;
 
 export function GetSystemInfo():Promise<string>;
