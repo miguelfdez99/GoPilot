@@ -46,10 +46,6 @@ export function GetDistribution() {
   return window['go']['backend']['Backend']['GetDistribution']();
 }
 
-export function GetFolderSizes(arg1) {
-  return window['go']['backend']['Backend']['GetFolderSizes'](arg1);
-}
-
 export function GetLSCPU() {
   return window['go']['backend']['Backend']['GetLSCPU']();
 }
