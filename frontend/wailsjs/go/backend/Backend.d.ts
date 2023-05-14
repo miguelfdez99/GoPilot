@@ -20,7 +20,11 @@ export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
 export function GetCPUUsage():Promise<Array<number>>;
 
+export function GetDiskUsage():Promise<backend.DiskUsage>;
+
 export function GetDistribution():Promise<string>;
+
+export function GetFolderSizes(arg1:string):Promise<Array<backend.FolderSize>>;
 
 export function GetLSCPU():Promise<string>;
 

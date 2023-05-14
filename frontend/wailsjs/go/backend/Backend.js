@@ -38,8 +38,16 @@ export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }
 
+export function GetDiskUsage() {
+  return window['go']['backend']['Backend']['GetDiskUsage']();
+}
+
 export function GetDistribution() {
   return window['go']['backend']['Backend']['GetDistribution']();
+}
+
+export function GetFolderSizes(arg1) {
+  return window['go']['backend']['Backend']['GetFolderSizes'](arg1);
 }
 
 export function GetLSCPU() {
