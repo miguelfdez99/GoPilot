@@ -3,7 +3,8 @@
 
     import {GetDistribution} from '../../wailsjs/go/backend/Backend';
 
-    import CpuInfo from '../components/CpuInfo.svelte'
+    import CpuChart from '../components/CpuChart.svelte'
+    import DiskChart from '../components/DiskChart.svelte'
 
 
     onMount(() => {
@@ -11,7 +12,6 @@
     });
 
     let distribution: string = "";
-    let info: string = "";
 
     function getDistribution() {
       GetDistribution().then(result => {
@@ -23,6 +23,9 @@
   </script>
   <div>
     <div>
-      <CpuInfo />
+      <CpuChart />
+    </div>
+    <div>
+      <DiskChart />
     </div>
   </div>
