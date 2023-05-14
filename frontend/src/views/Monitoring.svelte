@@ -1,31 +1,75 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+  import CpuChart from "../components/CpuChart.svelte";
+  import DiskChart from "../components/DiskChart.svelte";
 
-    import {GetDistribution} from '../../wailsjs/go/backend/Backend.js';
+  import dropdownIcon from "../assets/images/dropdown.png";
 
-    import CpuChart from '../components/CpuChart.svelte'
-    import DiskChart from '../components/DiskChart.svelte'
+  let showCpuChart = true;
+  let showDiskChart = true;
 
+  function toggleCpuChart() {
+    showCpuChart = !showCpuChart;
+  }
 
-    onMount(() => {
-      getDistribution();
-    });
+  function toggleDiskChart() {
+    showDiskChart = !showDiskChart;
+  }
+</script>
 
-    let distribution: string = "";
-
-    function getDistribution() {
-      GetDistribution().then(result => {
-        distribution = result;
-      });
-    }
-
-
-  </script>
+<div>
   <div>
-    <div>
+    <div class="chart-header">
+      <button class="dropdown-btn" on:click={toggleCpuChart}>
+        <img src={dropdownIcon} alt="Dropdown" class="dropdown-icon" />
+      </button>
+      <h2>CPU</h2>
+    </div>
+    {#if showCpuChart}
       <CpuChart />
-    </div>
-    <div>
-      <DiskChart />
-    </div>
+    {/if}
   </div>
+
+  <div>
+    <div class="chart-header">
+      <button class="dropdown-btn" on:click={toggleDiskChart}>
+        <img src={dropdownIcon} alt="Dropdown" class="dropdown-icon" />
+      </button>
+      <h2>Disk Space</h2>
+    </div>
+    {#if showDiskChart}
+      <DiskChart />
+    {/if}
+  </div>
+</div>
+
+<style>
+  .chart-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chart-header h2 {
+    margin: 0;
+    line-height: 24px;
+    padding: 10px;
+  }
+
+  .dropdown-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .dropdown-icon {
+    width: 100%;
+    height: 100%;
+  }
+</style>
