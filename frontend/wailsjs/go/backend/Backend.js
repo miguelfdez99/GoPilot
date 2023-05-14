@@ -50,6 +50,14 @@ export function GetLSCPU() {
   return window['go']['backend']['Backend']['GetLSCPU']();
 }
 
+export function GetMemoryUsage() {
+  return window['go']['backend']['Backend']['GetMemoryUsage']();
+}
+
+export function GetNetworkUsage() {
+  return window['go']['backend']['Backend']['GetNetworkUsage']();
+}
+
 export function GetSystemInfo() {
   return window['go']['backend']['Backend']['GetSystemInfo']();
 }

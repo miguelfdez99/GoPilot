@@ -26,6 +26,10 @@ export function GetDistribution():Promise<string>;
 
 export function GetLSCPU():Promise<string>;
 
+export function GetMemoryUsage():Promise<backend.MemoryUsage>;
+
+export function GetNetworkUsage():Promise<backend.NetworkUsage>;
+
 export function GetSystemInfo():Promise<string>;
 
 export function InstallPackage(arg1:string):Promise<void>;
