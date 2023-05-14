@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetCPUUsage } from "../../wailsjs/go/backend/Backend.js";
+    import { GetMemoryUsage } from "../../wailsjs/go/backend/Backend.js";
     import {
         Chart,
         LineController,
@@ -22,26 +22,7 @@
     let intervalId: number;
     let canvas: HTMLCanvasElement;
 
-
     const MAX_HISTORY = 300; // Keep data for the last 60 seconds
-    const COLORS = [
-        "red",
-        "blue",
-        "green",
-        "yellow",
-        "purple",
-        "cyan",
-        "magenta",
-        "orange",
-        "teal",
-        "pink",
-        "lime",
-        "deepskyblue",
-        "violet",
-        "gold",
-        "darkgreen",
-        "salmon",
-    ];
 
     onMount(async () => {
         const ctx = canvas.getContext("2d");
@@ -49,15 +30,26 @@
             type: "line",
             data: {
                 labels: Array(MAX_HISTORY).fill(""),
-                datasets: COLORS.map((color, i) => ({
-                    label: `CPU ${i + 1}`,
-                    data: Array(MAX_HISTORY).fill(null),
-                    borderColor: color,
-                    borderWidth: 1,
-                    fill: false,
-                    tension: 0.1,
-                    pointRadius: 0,
-                })),
+                datasets: [
+                    {
+                        label: `RAM Usage`,
+                        data: Array(MAX_HISTORY).fill(null),
+                        borderColor: "blue",
+                        borderWidth: 1,
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                    },
+                    {
+                        label: `Swap Usage`,
+                        data: Array(MAX_HISTORY).fill(null),
+                        borderColor: "red",
+                        borderWidth: 1,
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                    },
+                ],
             },
             options: {
                 animation: false,
@@ -87,14 +79,17 @@
     });
 
     async function updateChart() {
-        const newCpuUsages = await GetCPUUsage();
+        const newMemoryUsage = await GetMemoryUsage();
 
-        newCpuUsages.forEach((usage, i) => {
-            chart.data.datasets[i].data.shift();
-            chart.data.datasets[i].data.push(usage);
-            const roundedPercentage = usage.toFixed(1);
-            chart.data.datasets[i].label = `CPU ${i + 1} (${roundedPercentage}%)`;
-        });
+        chart.data.datasets[0].data.shift();
+        chart.data.datasets[0].data.push(newMemoryUsage.ram);
+        const roundedRamPercentage = newMemoryUsage.ram.toFixed(1);
+        chart.data.datasets[0].label = `RAM Usage (${roundedRamPercentage}%)`;
+
+        chart.data.datasets[1].data.shift();
+        chart.data.datasets[1].data.push(newMemoryUsage.swap);
+        const roundedSwapPercentage = newMemoryUsage.swap.toFixed(1);
+        chart.data.datasets[1].label = `Swap Usage (${roundedSwapPercentage}%)`;
 
         chart.update();
     }

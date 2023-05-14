@@ -20,9 +20,15 @@ export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
 export function GetCPUUsage():Promise<Array<number>>;
 
+export function GetDiskUsage():Promise<backend.DiskUsage>;
+
 export function GetDistribution():Promise<string>;
 
 export function GetLSCPU():Promise<string>;
+
+export function GetMemoryUsage():Promise<backend.MemoryUsage>;
+
+export function GetNetworkUsage():Promise<backend.NetworkUsage>;
 
 export function GetSystemInfo():Promise<string>;
 
@@ -36,7 +42,7 @@ export function ListPackages():Promise<Array<string>>;
 
 export function ModifyGroup(arg1:string,arg2:number):Promise<void>;
 
-export function ModifyUser(arg1:string,arg2:any):Promise<void>;
+export function ModifyUser(arg1:string,arg2:backend.User):Promise<void>;
 
 export function RemoveAllCronJobs():Promise<void>;
 

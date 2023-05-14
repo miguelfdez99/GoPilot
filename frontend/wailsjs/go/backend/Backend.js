@@ -38,12 +38,24 @@ export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }
 
+export function GetDiskUsage() {
+  return window['go']['backend']['Backend']['GetDiskUsage']();
+}
+
 export function GetDistribution() {
   return window['go']['backend']['Backend']['GetDistribution']();
 }
 
 export function GetLSCPU() {
   return window['go']['backend']['Backend']['GetLSCPU']();
+}
+
+export function GetMemoryUsage() {
+  return window['go']['backend']['Backend']['GetMemoryUsage']();
+}
+
+export function GetNetworkUsage() {
+  return window['go']['backend']['Backend']['GetNetworkUsage']();
 }
 
 export function GetSystemInfo() {

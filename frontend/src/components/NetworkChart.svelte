@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetCPUUsage } from "../../wailsjs/go/backend/Backend.js";
+    import { GetNetworkUsage } from "../../wailsjs/go/backend/Backend.js";
     import {
         Chart,
         LineController,
@@ -22,26 +22,7 @@
     let intervalId: number;
     let canvas: HTMLCanvasElement;
 
-
     const MAX_HISTORY = 300; // Keep data for the last 60 seconds
-    const COLORS = [
-        "red",
-        "blue",
-        "green",
-        "yellow",
-        "purple",
-        "cyan",
-        "magenta",
-        "orange",
-        "teal",
-        "pink",
-        "lime",
-        "deepskyblue",
-        "violet",
-        "gold",
-        "darkgreen",
-        "salmon",
-    ];
 
     onMount(async () => {
         const ctx = canvas.getContext("2d");
@@ -49,23 +30,29 @@
             type: "line",
             data: {
                 labels: Array(MAX_HISTORY).fill(""),
-                datasets: COLORS.map((color, i) => ({
-                    label: `CPU ${i + 1}`,
+                datasets: [{
+                    label: `MB Sent/s`,
                     data: Array(MAX_HISTORY).fill(null),
-                    borderColor: color,
+                    borderColor: 'blue',
                     borderWidth: 1,
                     fill: false,
                     tension: 0.1,
                     pointRadius: 0,
-                })),
+                }, {
+                    label: `MB Received/s`,
+                    data: Array(MAX_HISTORY).fill(null),
+                    borderColor: 'red',
+                    borderWidth: 1,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 0,
+                }],
             },
             options: {
                 animation: false,
                 scales: {
                     y: {
                         beginAtZero: true,
-                        min: 0,
-                        max: 100,
                         ticks: {
                             stepSize: 20,
                         },
@@ -87,14 +74,15 @@
     });
 
     async function updateChart() {
-        const newCpuUsages = await GetCPUUsage();
+        const newNetworkUsage = await GetNetworkUsage();
 
-        newCpuUsages.forEach((usage, i) => {
-            chart.data.datasets[i].data.shift();
-            chart.data.datasets[i].data.push(usage);
-            const roundedPercentage = usage.toFixed(1);
-            chart.data.datasets[i].label = `CPU ${i + 1} (${roundedPercentage}%)`;
-        });
+        chart.data.datasets[0].data.shift();
+        chart.data.datasets[0].data.push(newNetworkUsage.bytes_sent);
+        chart.data.datasets[0].label = `MB Sent/s (${newNetworkUsage.bytes_sent.toFixed(2)})`;
+
+        chart.data.datasets[1].data.shift();
+        chart.data.datasets[1].data.push(newNetworkUsage.bytes_received);
+        chart.data.datasets[1].label = `MB Received/s (${newNetworkUsage.bytes_received.toFixed(2)})`;
 
         chart.update();
     }
