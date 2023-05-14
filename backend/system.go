@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/mem"
 )
 
 func (b *Backend) GetLSCPU() string {
@@ -96,4 +97,29 @@ func (b *Backend) GetCPUUsage() ([]float64, error) {
 	}
 
 	return percpuUsage, nil
+}
+
+type MemoryUsage struct {
+	RAM  float64 `json:"ram"`
+	Swap float64 `json:"swap"`
+}
+
+func (b *Backend) GetMemoryUsage() (*MemoryUsage, error) {
+	v, err := mem.VirtualMemory()
+	if err != nil {
+		return nil, err
+	}
+
+	s, err := mem.SwapMemory()
+	if err != nil {
+		return nil, err
+	}
+
+	ramUsage := 100.0 * (float64(v.Total) - float64(v.Available)) / float64(v.Total)
+	swapUsage := 100.0 * (float64(s.Total) - float64(s.Free)) / float64(s.Total)
+
+	return &MemoryUsage{
+		RAM:  ramUsage,
+		Swap: swapUsage,
+	}, nil
 }
