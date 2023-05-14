@@ -3,7 +3,7 @@
   import Home from './views/Home.svelte';
   import Users from './views/Users.svelte';
   import Packages from './views/Packages.svelte';
-  import System from './views/SystemInformation.svelte';
+  import Monitor from './views/Monitoring.svelte';
   import Cron from './views/Cron.svelte';
   import Firewall from './views/Firewall.svelte';
   import Backup from './views/Backup.svelte';
@@ -22,7 +22,7 @@
     <button on:click={() => currentView = 'home'}>Home</button>
     <button on:click={() => currentView = 'users'}>Users</button>
     <button on:click={() => currentView = 'packages'}>Packages</button>
-    <button on:click={() => currentView = 'system'}>System</button>
+    <button on:click={() => currentView = 'monitoring'}>Monitoring</button>
     <button on:click={() => currentView = 'cron'}>Cron</button>
     <button on:click={() => currentView = 'firewall'}>Firewall</button>
     <button on:click={() => currentView = 'backup'}>Backup</button>
@@ -35,8 +35,8 @@
       <Users />
     {:else if currentView === 'packages'}
       <Packages />
-    {:else if currentView === 'system'}
-      <System />
+    {:else if currentView === 'monitoring'}
+      <Monitor />
     {:else if currentView === 'cron'}
       <Cron />
     {:else if currentView === 'firewall'}
