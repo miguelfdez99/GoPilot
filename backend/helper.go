@@ -195,7 +195,6 @@ func getKernelVersion() (string, error) {
 	return string(out), nil
 }
 
-// getUptime returns the system uptime as a time.Duration.
 func getUptime() (string, error) {
 	cmd := exec.Command("uptime", "-p")
 	out, err := cmd.Output()
