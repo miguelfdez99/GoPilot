@@ -1,11 +1,15 @@
 <script lang="ts">
   import CpuChart from "../components/CpuChart.svelte";
   import DiskChart from "../components/DiskChart.svelte";
+  import MemChart from "../components/MemChart.svelte";
+  import NetworkChart from "../components/NetworkChart.svelte";
 
   import dropdownIcon from "../assets/images/dropdown.png";
 
-  let showCpuChart = true;
-  let showDiskChart = true;
+  let showCpuChart: boolean = true;
+  let showDiskChart: boolean = true;
+  let showMemChart: boolean = true;
+  let showNetworkChart: boolean = true;
 
   function toggleCpuChart() {
     showCpuChart = !showCpuChart;
@@ -13,6 +17,14 @@
 
   function toggleDiskChart() {
     showDiskChart = !showDiskChart;
+  }
+
+  function toggleMemChart() {
+    showMemChart = !showMemChart;
+  }
+
+  function toggleNetworkChart() {
+    showNetworkChart = !showNetworkChart;
   }
 </script>
 
@@ -38,6 +50,30 @@
     </div>
     {#if showDiskChart}
       <DiskChart />
+    {/if}
+  </div>
+
+  <div>
+    <div class="chart-header">
+      <button class="dropdown-btn" on:click={toggleMemChart}>
+        <img src={dropdownIcon} alt="Dropdown" class="dropdown-icon" />
+      </button>
+      <h2>RAM</h2>
+    </div>
+    {#if showMemChart}
+      <MemChart />
+    {/if}
+  </div>
+
+  <div>
+    <div class="chart-header">
+      <button class="dropdown-btn" on:click={toggleNetworkChart}>
+        <img src={dropdownIcon} alt="Dropdown" class="dropdown-icon" />
+      </button>
+      <h2>Network</h2>
+    </div>
+    {#if showNetworkChart}
+      <NetworkChart />
     {/if}
   </div>
 </div>
