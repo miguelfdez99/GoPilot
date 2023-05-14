@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { onMount, afterUpdate } from "svelte";
-    import { GetDiskUsage, GetFolderSizes } from "../../wailsjs/go/backend/Backend.js";
+    import { onMount } from "svelte";
+    import { GetDiskUsage } from "../../wailsjs/go/backend/Backend.js";
     import {
         Chart,
         DoughnutController,
@@ -19,8 +19,8 @@
     );
 
     let chart;
-    let canvas;
-    let folderSizes = [];
+    let canvas: HTMLCanvasElement;
+    const COLORS: string[] = ["#4BC0C0", "#FF6384"];
 
     onMount(async () => {
         const diskUsage = await GetDiskUsage();
@@ -36,36 +36,35 @@
                             diskUsage.Used / 1024 / 1024 / 1024, // Convert from bytes to GB
                             (diskUsage.Total - diskUsage.Used) / 1024 / 1024 / 1024, // Convert from bytes to GB
                         ],
-                        backgroundColor: ["#4BC0C0", "#FF6384"],
+                        backgroundColor: COLORS,
                     },
                 ],
             },
             options: {
-                onClick: (event, elements) => {
-                   
-                    if (elements.length > 0) {
-                        const chartElement = elements[0];
-                        const label = chart.data.labels[chartElement.index];
-                        if (label === "Used") {
-                            fetchFolderSizes();
-                        }
-                    }
+                animation: false,
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Disk Usage (GB)",
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const label = context.label || "";
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce(
+                                    (a, b) => a + b
+                                );
+                                const percentage = ((value / total) * 100).toFixed(2); // Calculate the percentage
+                                return `${label}: ${value.toFixed(2)} GB (${percentage}%)`;
+                            },
+                        },
+                    },
                 },
             },
         });
     });
-
-    async function fetchFolderSizes() {
-        folderSizes = await GetFolderSizes("/");
-        console.log("Folder sizes fetched", folderSizes);
-        // Update the UI as needed
-    }
 </script>
 
 <canvas bind:this={canvas} />
-
-<div>
-    {#each folderSizes as folderSize}
-        <div>{folderSize.Path}: {Math.round(folderSize.Size / 1024 / 1024)} MB</div>
-    {/each}
-</div>
