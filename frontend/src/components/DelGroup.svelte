@@ -1,7 +1,13 @@
 <script lang="ts">
-    import { DeleteGroup } from '../../wailsjs/go/backend/Backend.js';
+    import { DeleteGroup } from '../../wailsjs/go/backend/Backend';
+    import { checkCommand } from "../functions/functions";
+    import { onMount } from "svelte";
 
-    let name = "";
+    let name: string = "";
+
+    onMount(async () => {
+        await checkCommand("groupdel");
+    });
 
     async function deleteGroup() {
         // Check if required fields are empty

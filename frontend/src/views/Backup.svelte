@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Backup } from "../../wailsjs/go/backend/Backend.js";
+    import { Backup } from "../../wailsjs/go/backend/Backend";
 
     let options = {
         sourceDir: "",

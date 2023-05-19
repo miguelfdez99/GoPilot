@@ -1,8 +1,14 @@
 <script lang="ts">
-    import { CreateGroup } from '../../wailsjs/go/backend/Backend.js';
+    import { CreateGroup } from '../../wailsjs/go/backend/Backend';
+    import { checkCommand } from "../functions/functions";
+    import { onMount } from "svelte";
 
     let name: string = "";
     let gid = undefined;
+
+    onMount(async () => {
+        await checkCommand("groupadd");
+    });
 
     async function createGroup() {
         // Check if required fields are empty

@@ -1,29 +1,11 @@
 <script lang="ts">
-    import { DeleteUser, CommandExists } from '../../wailsjs/go/backend/Backend.js';
+    import { DeleteUser } from '../../wailsjs/go/backend/Backend.js';
     import { onMount } from 'svelte';
+    import { checkCommand } from "../functions/functions";
 
-    export let username: string = "";
-    export let removeHomeDir: boolean = false;
-    export let forceDelete: boolean = false;
-
-
-
-    async function checkCommand(command: string) {
-        try {
-            const commandExists = await CommandExists(command);
-            if (!commandExists) {
-                alert(
-                    `System command '${command}' required for this operation is not installed.` +
-                        ` Please install it and try again.`
-                );
-            }
-        } catch (err) {
-            console.error(err);
-            alert(
-                `Failed to check if system command '${command}' is installed: ${err.message}`
-            );
-        }
-    }
+    let username: string = "";
+    let removeHomeDir: boolean = false;
+    let forceDelete: boolean = false;
 
     onMount(async () => {
         await checkCommand("userdel");

@@ -4,9 +4,10 @@
         ListCronJobs,
         RemoveAllCronJobs,
         RemoveCronJob,
-    } from '../../wailsjs/go/backend/Backend.js';
+    } from '../../wailsjs/go/backend/Backend';
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
+    import { checkCommand } from "../functions/functions";
 
     let jobs = [];
     let showAddCronJob = false;
@@ -20,7 +21,8 @@
         jobs = [];
     }
 
-    onMount(() => {
+    onMount(async() => {
+        await checkCommand("crontab");
         getCronJobs();
     });
 

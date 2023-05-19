@@ -1,9 +1,9 @@
 <script lang="ts">
     import {
         ModifyUser,
-        CommandExists,
-    } from "../../wailsjs/go/backend/Backend.js";
+    } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
+    import { checkCommand } from "../functions/functions";
 
     let username: string = "";
     let password: string = "";
@@ -13,24 +13,6 @@
     let shell: string = "/bin/bash";
     let expire: string = "";
     let addGroup: string = "";
-
-
-    async function checkCommand(command: string) {
-        try {
-            const commandExists = await CommandExists(command);
-            if (!commandExists) {
-                alert(
-                    `System command '${command}' required for this operation is not installed.` +
-                        ` Please install it and try again.`
-                );
-            }
-        } catch (err) {
-            console.error(err);
-            alert(
-                `Failed to check if system command '${command}' is installed: ${err.message}`
-            );
-        }
-    }
 
     onMount(async () => {
         await checkCommand("usermod");
