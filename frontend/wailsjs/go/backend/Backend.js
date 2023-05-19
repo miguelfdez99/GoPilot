@@ -18,6 +18,10 @@ export function CheckAdmin() {
   return window['go']['backend']['Backend']['CheckAdmin']();
 }
 
+export function CommandExists(arg1) {
+  return window['go']['backend']['Backend']['CommandExists'](arg1);
+}
+
 export function CreateGroup(arg1, arg2) {
   return window['go']['backend']['Backend']['CreateGroup'](arg1, arg2);
 }

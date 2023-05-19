@@ -204,3 +204,13 @@ func getUptime() (string, error) {
 	}
 	return strings.TrimSpace(string(out)), nil
 }
+
+func (b *Backend) CommandExists(cmd string) (bool, string) {
+	_, err := exec.LookPath(cmd)
+	if err != nil {
+		b.logger.WithError(err).Errorf("%s command is not available", cmd)
+		return false, fmt.Sprintf("%s command is not available", cmd)
+	}
+	b.logger.Infof("%s command is available", cmd)
+	return true, ""
+}

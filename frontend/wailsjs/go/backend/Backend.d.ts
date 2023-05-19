@@ -10,6 +10,8 @@ export function Backup(arg1:backend.BackupOptions):Promise<void>;
 
 export function CheckAdmin():Promise<boolean>;
 
+export function CommandExists(arg1:string):Promise<boolean|string>;
+
 export function CreateGroup(arg1:string,arg2:any):Promise<void>;
 
 export function CreateUser(arg1:backend.User):Promise<void>;
