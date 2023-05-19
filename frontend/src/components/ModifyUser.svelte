@@ -11,7 +11,6 @@
     let gid: string = "";
     let home: string = "";
     let shell: string = "/bin/bash";
-    let expire: string = "";
     let addGroup: string = "";
 
     onMount(async () => {
