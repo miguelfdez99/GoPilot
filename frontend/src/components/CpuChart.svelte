@@ -22,7 +22,6 @@
     let intervalId: number;
     let canvas: HTMLCanvasElement;
 
-
     const MAX_HISTORY = 300; // Keep data for the last 60 seconds
     const COLORS = [
         "red",
@@ -72,6 +71,9 @@
                     },
                 },
                 plugins: {
+                    legend: {
+                        display: true,
+                    },
                     tooltip: {
                         enabled: true,
                     },
@@ -93,7 +95,9 @@
             chart.data.datasets[i].data.shift();
             chart.data.datasets[i].data.push(usage);
             const roundedPercentage = usage.toFixed(1);
-            chart.data.datasets[i].label = `CPU ${i + 1} (${roundedPercentage}%)`;
+            chart.data.datasets[i].label = `CPU ${
+                i + 1
+            } (${roundedPercentage}%)`;
         });
 
         chart.update();
