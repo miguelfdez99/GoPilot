@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AddCronJob } from '../../wailsjs/go/backend/Backend.js';
+    import { AddCronJob } from '../../wailsjs/go/backend/Backend';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();

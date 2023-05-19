@@ -1,9 +1,15 @@
 <script lang="ts">
     import { DeleteUser } from '../../wailsjs/go/backend/Backend.js';
+    import { onMount } from 'svelte';
+    import { checkCommand } from "../functions/functions";
 
-    export let username = "";
-    export let removeHomeDir = false;
-    export let forceDelete = false;
+    let username: string = "";
+    let removeHomeDir: boolean = false;
+    let forceDelete: boolean = false;
+
+    onMount(async () => {
+        await checkCommand("userdel");
+    });
 
     async function handleSubmit() {
         try {

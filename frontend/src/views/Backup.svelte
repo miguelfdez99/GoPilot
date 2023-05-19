@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { Backup } from "../../wailsjs/go/backend/Backend.js";
+    import { Backup } from "../../wailsjs/go/backend/Backend";
+    import { onMount } from "svelte";
+    import { checkCommand } from "../functions/functions";
 
     let options = {
         sourceDir: "",
@@ -11,6 +13,10 @@
         schedule: "",
         compressFile: false,
     };
+
+    onMount(async () => {
+        await checkCommand("rsync");
+    });
 
     const backup = async () => {
         try {

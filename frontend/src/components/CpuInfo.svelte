@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { GetLSCPU, GetSystemInfo } from '../../wailsjs/go/backend/Backend.js';
+  import { GetLSCPU, GetSystemInfo } from '../../wailsjs/go/backend/Backend';
 
   let cpuInfo = {
     architecture: '',

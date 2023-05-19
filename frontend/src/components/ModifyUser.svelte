@@ -1,14 +1,22 @@
 <script lang="ts">
-    import { ModifyUser } from '../../wailsjs/go/backend/Backend.js';
+    import {
+        ModifyUser,
+    } from "../../wailsjs/go/backend/Backend";
+    import { onMount } from "svelte";
+    import { checkCommand } from "../functions/functions";
 
-    let username = "";
-    let password = "";
-    let uid = "";
-    let gid = "";
-    let home = "";
-    let shell = "/bin/bash";
-    let expire = "";
-    let addGroup = "";
+    let username: string = "";
+    let password: string = "";
+    let uid: string = "";
+    let gid: string = "";
+    let home: string = "";
+    let shell: string = "/bin/bash";
+    let expire: string = "";
+    let addGroup: string = "";
+
+    onMount(async () => {
+        await checkCommand("usermod");
+    });
 
     async function modifyUser() {
         // Check if required fields are empty

@@ -1,8 +1,14 @@
 <script lang="ts">
-    import { ModifyGroup } from '../../wailsjs/go/backend/Backend.js';
+    import { ModifyGroup } from '../../wailsjs/go/backend/Backend';
+    import { checkCommand } from "../functions/functions";
+    import { onMount } from "svelte";
 
-    let name = "";
-    let gid = "";
+    let name: string = "";
+    let gid: string = "";
+
+    onMount(async () => {
+        await checkCommand("groupadd");
+    });
 
     async function modifyGroup() {
         if (!name || !gid) {

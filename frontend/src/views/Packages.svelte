@@ -4,7 +4,7 @@
     ListPackages,
     RemovePackage,
     InstallPackage,
-  } from '../../wailsjs/go/backend/Backend.js';
+  } from '../../wailsjs/go/backend/Backend';
   import deleteIcon from "../assets/images/delete.png";
 
   let packages: string[] = [];
