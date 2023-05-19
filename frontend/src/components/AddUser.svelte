@@ -1,11 +1,36 @@
 <script lang="ts">
-    import { CreateUser } from '../../wailsjs/go/backend/Backend.js';
+    import {
+        CreateUser,
+        CommandExists,
+    } from "../../wailsjs/go/backend/Backend.js";
+    import { onMount } from "svelte";
 
-    let username = "";
-    let password = "";
-    let uid = "";
-    let gid = "";
-    let shell = "/bin/bash";
+    let username: string = "";
+    let password: string = "";
+    let uid: string = "";
+    let gid: string = "";
+    let shell: string = "/bin/bash";
+
+    async function checkCommand(command: string) {
+        try {
+            const commandExists = await CommandExists(command);
+            if (!commandExists) {
+                alert(
+                    `System command '${command}' required for this operation is not installed.` +
+                        ` Please install it and try again.`
+                );
+            }
+        } catch (err) {
+            console.error(err);
+            alert(
+                `Failed to check if system command '${command}' is installed: ${err.message}`
+            );
+        }
+    }
+
+    onMount(async () => {
+        await checkCommand("useradd");
+    });
 
     async function createUser() {
         // Check if required fields are empty
@@ -38,7 +63,6 @@
             alert("Failed to create user");
         }
     }
-
 </script>
 
 <form on:submit|preventDefault={createUser}>

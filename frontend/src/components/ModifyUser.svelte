@@ -1,14 +1,40 @@
 <script lang="ts">
-    import { ModifyUser } from '../../wailsjs/go/backend/Backend.js';
+    import {
+        ModifyUser,
+        CommandExists,
+    } from "../../wailsjs/go/backend/Backend.js";
+    import { onMount } from "svelte";
 
-    let username = "";
-    let password = "";
-    let uid = "";
-    let gid = "";
-    let home = "";
-    let shell = "/bin/bash";
-    let expire = "";
-    let addGroup = "";
+    let username: string = "";
+    let password: string = "";
+    let uid: string = "";
+    let gid: string = "";
+    let home: string = "";
+    let shell: string = "/bin/bash";
+    let expire: string = "";
+    let addGroup: string = "";
+
+
+    async function checkCommand(command: string) {
+        try {
+            const commandExists = await CommandExists(command);
+            if (!commandExists) {
+                alert(
+                    `System command '${command}' required for this operation is not installed.` +
+                        ` Please install it and try again.`
+                );
+            }
+        } catch (err) {
+            console.error(err);
+            alert(
+                `Failed to check if system command '${command}' is installed: ${err.message}`
+            );
+        }
+    }
+
+    onMount(async () => {
+        await checkCommand("usermod");
+    });
 
     async function modifyUser() {
         // Check if required fields are empty
