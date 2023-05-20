@@ -18,3 +18,19 @@ export async function checkCommand(command: string) {
     }
 }
 
+export function openDialog(dialog: { showDialog: boolean, dialogTitle: string, dialogMessage: string }, title: string, message: string) {
+    dialog.dialogTitle = title;
+    dialog.dialogMessage = message;
+    dialog.showDialog = true;
+    return dialog;
+}
+
+export function closeDialog(dialog: { showDialog: boolean, dialogTitle: string, dialogMessage: string }) {
+    dialog.dialogTitle = '';
+    dialog.dialogMessage = '';
+    dialog.showDialog = false;
+    return dialog;
+}
+
+
+
