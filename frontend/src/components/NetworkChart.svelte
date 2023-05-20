@@ -8,6 +8,9 @@
         LinearScale,
         PointElement,
         LineElement,
+        Tooltip,
+        Title,
+        Legend,
     } from "chart.js";
 
     Chart.register(
@@ -15,14 +18,17 @@
         CategoryScale,
         LinearScale,
         PointElement,
-        LineElement
+        LineElement,
+        Tooltip,
+        Title,
+        Legend
     );
 
     let chart: Chart;
     let intervalId: number;
     let canvas: HTMLCanvasElement;
 
-    const MAX_HISTORY = 300; // Keep data for the last 60 seconds
+    const MAX_HISTORY = 300;
 
     onMount(async () => {
         const ctx = canvas.getContext("2d");
@@ -30,37 +36,48 @@
             type: "line",
             data: {
                 labels: Array(MAX_HISTORY).fill(""),
-                datasets: [{
-                    label: `MB Sent/s`,
-                    data: Array(MAX_HISTORY).fill(null),
-                    borderColor: 'blue',
-                    borderWidth: 1,
-                    fill: false,
-                    tension: 0.1,
-                    pointRadius: 0,
-                }, {
-                    label: `MB Received/s`,
-                    data: Array(MAX_HISTORY).fill(null),
-                    borderColor: 'red',
-                    borderWidth: 1,
-                    fill: false,
-                    tension: 0.1,
-                    pointRadius: 0,
-                }],
+                datasets: [
+                    {
+                        label: `MB Sent/s`,
+                        data: Array(MAX_HISTORY).fill(null),
+                        borderColor: "blue",
+                        borderWidth: 1,
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                    },
+                    {
+                        label: `MB Received/s`,
+                        data: Array(MAX_HISTORY).fill(null),
+                        borderColor: "red",
+                        borderWidth: 1,
+                        fill: false,
+                        tension: 0.1,
+                        pointRadius: 0,
+                    },
+                ],
             },
             options: {
+                responsive: true,
                 animation: false,
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                    },
+                    title: {
+                        display: true,
+                        text: "Network Usage",
+                    },
+                    legend: {
+                        position: "top",
+                    },
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
                             stepSize: 20,
                         },
-                    },
-                },
-                plugins: {
-                    tooltip: {
-                        enabled: true,
                     },
                 },
             },
@@ -78,11 +95,15 @@
 
         chart.data.datasets[0].data.shift();
         chart.data.datasets[0].data.push(newNetworkUsage.bytes_sent);
-        chart.data.datasets[0].label = `MB Sent/s (${newNetworkUsage.bytes_sent.toFixed(2)})`;
+        chart.data.datasets[0].label = `MB Sent/s (${newNetworkUsage.bytes_sent.toFixed(
+            2
+        )})`;
 
         chart.data.datasets[1].data.shift();
         chart.data.datasets[1].data.push(newNetworkUsage.bytes_received);
-        chart.data.datasets[1].label = `MB Received/s (${newNetworkUsage.bytes_received.toFixed(2)})`;
+        chart.data.datasets[1].label = `MB Received/s (${newNetworkUsage.bytes_received.toFixed(
+            2
+        )})`;
 
         chart.update();
     }

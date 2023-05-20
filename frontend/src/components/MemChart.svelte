@@ -22,7 +22,7 @@
     let intervalId: number;
     let canvas: HTMLCanvasElement;
 
-    const MAX_HISTORY = 300; // Keep data for the last 60 seconds
+    const MAX_HISTORY = 300;
 
     onMount(async () => {
         const ctx = canvas.getContext("2d");
