@@ -3,7 +3,14 @@
         ModifyUser,
     } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
-    import { checkCommand } from "../functions/functions";
+    import {
+        openDialog,
+        closeDialog,
+        checkCommand,
+    } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let username: string = "";
     let password: string = "";
@@ -14,17 +21,15 @@
     let addGroup: string = "";
 
     onMount(async () => {
-        await checkCommand("usermod");
+        await checkCommand("usermod", dialog);
     });
 
     async function modifyUser() {
-        // Check if required fields are empty
         if (!username) {
-            alert("Please fill out all fields");
+            dialog = openDialog(dialog, "Error", "Username is required");
             return;
         }
 
-        // Create the user object
         const user = {
             username,
             password,
@@ -36,10 +41,8 @@
         };
 
         try {
-            // Call the Modify User function in the Go environment
             await ModifyUser(user.username, user);
-            alert("User modified successfully!");
-            // Clear the form
+            dialog = openDialog(dialog, "Success", `Successfully modified user ${username}`);
             username = "";
             password = "";
             uid = "";
@@ -48,11 +51,18 @@
             shell = "";
             addGroup = "";
         } catch (err) {
-            console.error(err);
-            alert("Failed to modify user");
+            dialog = openDialog(dialog, "Error", `${err}`);
         }
     }
 </script>
+
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title={dialog.dialogTitle}
+    message={dialog.dialogMessage}
+    onClose={() => (dialog = closeDialog(dialog))}
+    confirmButton={false}
+/>
 
 <form on:submit|preventDefault={modifyUser}>
     <label>

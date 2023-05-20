@@ -1,33 +1,45 @@
 <script lang="ts">
     import { DeleteGroup } from '../../wailsjs/go/backend/Backend';
-    import { checkCommand } from "../functions/functions";
     import { onMount } from "svelte";
+    import {
+        openDialog,
+        closeDialog,
+        checkCommand,
+    } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let name: string = "";
 
     onMount(async () => {
-        await checkCommand("groupdel");
+        await checkCommand("groupdel", dialog);
     });
 
     async function deleteGroup() {
-        // Check if required fields are empty
         if (!name) {
-            alert("Please fill out all fields");
+            dialog = openDialog(dialog, "Error", "Group name is required");
             return;
         }
 
-        // Call the CreateGroup function in the Go environment
         try {
             await DeleteGroup(name);
-            alert("Group deleted successfully!");
-            // Clear the form
+            dialog = openDialog(dialog, "Success", `Successfully deleted group ${name}`);
             name = "";
         } catch (err) {
-            console.error(err);
-            alert("Failed to delete group");
+            dialog = openDialog(dialog, "Error", `Failed to delete group: ${name}`);
         }
     }
 </script>
+
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title={dialog.dialogTitle}
+    message={dialog.dialogMessage}
+    onClose={() => (dialog = closeDialog(dialog))}
+    confirmButton={false}
+/>
+
 
 <template>
     <form on:submit|preventDefault={deleteGroup}>

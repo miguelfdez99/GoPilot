@@ -6,7 +6,6 @@
   import AddGroup from "../components/AddGroup.svelte";
   import DelGroup from "../components/DelGroup.svelte";
   import ModifyGroup from "../components/ModifyGroup.svelte";
-  import { CheckAdmin } from "../../wailsjs/go/backend/Backend";
 
   let showUserAdd = false;
   let showUserDel = false;
@@ -82,14 +81,6 @@
     }
   }
 
-  onMount(() => {
-    CheckAdmin().then((result) => {
-      if (result === false) {
-        adminText = "You are not an admin";
-        alert(adminText);
-      }
-    });
-  });
 </script>
 
 <main>

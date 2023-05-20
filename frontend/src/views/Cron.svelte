@@ -4,25 +4,64 @@
         ListCronJobs,
         RemoveAllCronJobs,
         RemoveCronJob,
-    } from '../../wailsjs/go/backend/Backend';
+    } from "../../wailsjs/go/backend/Backend";
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
-    import { checkCommand } from "../functions/functions";
+    import { openDialog, closeDialog, checkCommand  } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    let showDeleteAllDialog: boolean = false;
 
     let jobs = [];
-    let showAddCronJob = false;
+    let showAddCronJob: boolean = false;
+    let showDeleteDialog: boolean = false;
+    let dialogName: string = "";
+
+    function confirmDeleteDialog(name: string) {
+        dialogName = name;
+        showDeleteDialog = true;
+    }
+
+    function onDialogConfirm() {
+        deleteCron(dialogName);
+        showDeleteDialog = false;
+    }
+
+    function onDialogClose() {
+        showDeleteDialog = false;
+    }
+
+    function confirmDeleteAllDialog() {
+    showDeleteAllDialog = true;
+  }
+
+  function onDeleteAllDialogConfirm() {
+    removeAllCronJobs();
+    showDeleteAllDialog = false;
+  }
+
+  function onDeleteAllDialogClose() {
+    showDeleteAllDialog = false;
+  }
 
     async function getCronJobs() {
         jobs = await ListCronJobs();
     }
 
     function removeAllCronJobs() {
-        RemoveAllCronJobs();
+    RemoveAllCronJobs()
+      .then(() => {
+        dialog = openDialog(dialog,'Success', 'Successfully deleted all jobs');
         jobs = [];
-    }
+      })
+      .catch((err) => {
+        dialog = openDialog(dialog,'Error', `Failed to delete all jobs: ${err}`);
+      });
+  }
 
-    onMount(async() => {
-        await checkCommand("crontab");
+    onMount(async () => {
+        await checkCommand("crontab", dialog);
         getCronJobs();
     });
 
@@ -30,26 +69,43 @@
         showAddCronJob = !showAddCronJob;
     }
 
-    function deleteCron(name) {
+    function deleteCron(name: string) {
         RemoveCronJob(name)
             .then(() => {
-                alert(`Successfully deleted ${name}`);
+                dialog = openDialog(dialog,'Success', `Successfully deleted ${name}`);
                 jobs = jobs.filter((job) => job.Command !== name);
             })
             .catch((err) => {
-                alert(`Failed to delete ${name}: ${err}`);
+                dialog = openDialog(dialog,'Error', `Failed to delete ${name}: ${err}`);
             });
     }
 
-    function confirmDelete(name) {
-        if (confirm(`Are you sure you want to delete ${name}?`)) {
-            deleteCron(name);
-        }
-    }
-
-    $: addButtonText = showAddCronJob ? 'Hide Add Cron Job' : 'Add Cron Job';
-
+    $: addButtonText = showAddCronJob ? "Hide Add Cron Job" : "Add Cron Job";
 </script>
+
+<CustomDialog
+    bind:show={showDeleteDialog}
+    title="Delete Cron Job"
+    message={`Are you sure you want to delete ${dialogName}?`}
+    onConfirm={onDialogConfirm}
+    onClose={onDialogClose}
+/>
+
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={() => dialog = closeDialog(dialog)}
+  confirmButton={false}
+/>
+
+<CustomDialog
+  bind:show={showDeleteAllDialog}
+  title="Delete All Cron Jobs"
+  message="Are you sure you want to delete all cron jobs?"
+  onConfirm={onDeleteAllDialogConfirm}
+  onClose={onDeleteAllDialogClose}
+/>
 
 <div class="container">
     <h1>Cron Jobs</h1>
@@ -60,7 +116,7 @@
         <AddCronJob on:cronJobAdded={() => getCronJobs()} />
     {/if}
 
-    <button on:click={removeAllCronJobs}>Remove all cron jobs</button>
+    <button on:click={confirmDeleteAllDialog}>Remove all cron jobs</button>
 
     <h2>Crontab List</h2>
     {#if jobs.length < 1}
@@ -68,28 +124,32 @@
     {:else}
         <ul>
             {#each jobs as job}
-                <li>{job.Schedule} {job.Command}
-                    <button class="delete-btn" on:click={() => confirmDelete(job.Command)}>
-                        <img src={deleteIcon} alt="Delete" class="delete-icon" />
+                <li>
+                    {job.Schedule}
+                    {job.Command}
+                    <button
+                        class="delete-btn"
+                        on:click={() => confirmDeleteDialog(job.Command)}
+                    >
+                        <img
+                            src={deleteIcon}
+                            alt="Delete"
+                            class="delete-icon"
+                        />
                     </button>
                 </li>
             {/each}
         </ul>
     {/if}
-
 </div>
 
-
 <style>
-    /* Reset styles */
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        color: white;
     }
 
-    /* Component styles */
     .container {
         margin: 0 auto;
         padding: 20px;
@@ -101,16 +161,16 @@
     }
 
     ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     li:hover {
         background-color: #d8cf4b;
@@ -135,17 +195,17 @@
     }
 
     .delete-btn {
-    float: right;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: none;
-  }
+        float: right;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        margin: 0;
+        border: none;
+        background: none;
+    }
 
-  .delete-icon {
-    width: 100%;
-    height: 100%;
-  }
+    .delete-icon {
+        width: 100%;
+        height: 100%;
+    }
 </style>

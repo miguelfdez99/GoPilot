@@ -1,25 +1,41 @@
 <script lang="ts">
     import { DeleteUser } from '../../wailsjs/go/backend/Backend.js';
     import { onMount } from 'svelte';
-    import { checkCommand } from "../functions/functions";
+    import {
+        openDialog,
+        closeDialog,
+        checkCommand,
+    } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
 
     let username: string = "";
     let removeHomeDir: boolean = false;
     let forceDelete: boolean = false;
 
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+
     onMount(async () => {
-        await checkCommand("userdel");
+        await checkCommand("userdel", dialog);
     });
 
     async function handleSubmit() {
         try {
             await DeleteUser(username, removeHomeDir, forceDelete);
-            alert("User deleted successfully!");
+            dialog = openDialog(dialog, "Success", `Successfully deleted user ${username}`);
         } catch (err) {
-            alert(err.message);
+            dialog = openDialog(dialog, "Error", `${err}`);
         }
     }
 </script>
+
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title={dialog.dialogTitle}
+    message={dialog.dialogMessage}
+    onClose={() => (dialog = closeDialog(dialog))}
+    confirmButton={false}
+/>
+
 
 <template>
     <form on:submit|preventDefault={handleSubmit}>
