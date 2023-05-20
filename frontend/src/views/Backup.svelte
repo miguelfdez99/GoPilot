@@ -1,7 +1,10 @@
 <script lang="ts">
     import { Backup } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
-    import { checkCommand } from "../functions/functions";
+    import { openDialog, closeDialog, checkCommand } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 
     let options = {
         sourceDir: "",
@@ -21,14 +24,20 @@
     const backup = async () => {
         try {
             await Backup(options);
-            console.log("Backup created successfully");
-            window.alert("Backup created successfully");
+            dialog = openDialog(dialog, "Success", `Backup created successfully`);
         } catch (err) {
-            console.error("Error creating backup:", err.message);
-            window.alert("Error creating backup: " + err.message);
+            dialog = openDialog(dialog, "Error", `Error creating backup: + ${err.message}`);
         }
     };
 </script>
+
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={() => dialog = closeDialog(dialog)}
+  confirmButton={false}
+/>
 
 <div class="grid-container">
     <div class="grid-item">

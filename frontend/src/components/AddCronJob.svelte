@@ -1,6 +1,10 @@
 <script lang="ts">
     import { AddCronJob } from '../../wailsjs/go/backend/Backend';
     import { createEventDispatcher } from 'svelte';
+    import { openDialog, closeDialog } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 
     const dispatch = createEventDispatcher();
 
@@ -39,11 +43,19 @@
             command = '';
             dispatch("cronJobAdded", null);
         } else {
-            alert('Please fill out all fields');
+            dialog = openDialog(dialog,'Error', 'Please fill out all fields or select a quick schedule option');
         }
     }
 
 </script>
+
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={() => dialog = closeDialog(dialog)}
+  confirmButton={false}
+/>
 
 <div class="container">
     <form class="form" on:submit|preventDefault="{onSubmit}">

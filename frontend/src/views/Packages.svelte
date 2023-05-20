@@ -4,13 +4,20 @@
     ListPackages,
     RemovePackage,
     InstallPackage,
-  } from '../../wailsjs/go/backend/Backend';
+  } from "../../wailsjs/go/backend/Backend";
+  import CustomDialog from "../dialogs/CustomDialog.svelte";
+  import { openDialog, closeDialog } from "../functions/functions";
   import deleteIcon from "../assets/images/delete.png";
 
   let packages: string[] = [];
   let filteredPackages: string[] = [];
   let searchInput: string = "";
   let installInput: string = "";
+  let showDeleteDialog: boolean = false;
+  let dialogName: string = "";
+  let showInstallDialog: boolean = false;
+  let installDialogName: string = "";
+  let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 
   function listPackages() {
     ListPackages().then((result) => {
@@ -19,10 +26,32 @@
     });
   }
 
-  function confirmDelete(name: string) {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-      deletePackage(name);
-    }
+  function confirmDeleteDialog(name: string) {
+    dialogName = name;
+    showDeleteDialog = true;
+  }
+
+  function onDialogConfirm() {
+    deletePackage(dialogName);
+    showDeleteDialog = false;
+  }
+
+  function onDialogClose() {
+    showDeleteDialog = false;
+  }
+
+  function confirmInstallDialog(name: string) {
+    installDialogName = name;
+    showInstallDialog = true;
+  }
+
+  function onInstallDialogConfirm() {
+    installPackage(installDialogName);
+    showInstallDialog = false;
+  }
+
+  function onInstallDialogClose() {
+    showInstallDialog = false;
   }
 
   function deletePackage(name: string) {
@@ -30,17 +59,11 @@
       .then(() => {
         packages = packages.filter((pkg) => pkg !== name);
         filteredPackages = filteredPackages.filter((pkg) => pkg !== name);
-        alert(`Successfully deleted ${name}`);
+        dialog = openDialog(dialog, "Success", `Successfully deleted ${name}`);
       })
       .catch((err) => {
-        alert(`Failed to delete ${name}: ${err}`);
+        dialog = openDialog(dialog, "Error", `Failed to delete ${name}: ${err}`);
       });
-  }
-
-  function confirmInstall(name: string) {
-    if (confirm(`Are you sure you want to install ${name}?`)) {
-      installPackage(name);
-    }
   }
 
   function installPackage(name: string) {
@@ -48,10 +71,10 @@
       .then(() => {
         packages.push(name);
         filteredPackages.push(name);
-        alert(`Successfully installed ${name}`);
+        dialog = openDialog(dialog, "Success", `Successfully installed ${name}`);
       })
       .catch((err) => {
-        alert(`Failed to install ${name}: ${err}`);
+        dialog = openDialog(dialog, "Error", `Failed to install ${name}: ${err}`);
       });
   }
 
@@ -60,15 +83,6 @@
     searchInput = target.value.trim();
     filteredPackages = search();
   }
-
-  function handleInstall() {
-  const packageName = installInput.trim();
-  if (packageName !== "") {
-    confirmInstall(packageName);
-    installInput = "";
-  }
-}
-
 
   function search() {
     return packages.filter((pkg) => {
@@ -81,6 +95,30 @@
   });
 </script>
 
+<CustomDialog
+  bind:show={showDeleteDialog}
+  title="Delete Package"
+  message={`Are you sure you want to delete ${dialogName}?`}
+  onConfirm={onDialogConfirm}
+  onClose={onDialogClose}
+/>
+
+<CustomDialog
+  bind:show={showInstallDialog}
+  title="Install Package"
+  message={`Are you sure you want to install ${installDialogName}?`}
+  onConfirm={onInstallDialogConfirm}
+  onClose={onInstallDialogClose}
+/>
+
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={() => dialog = closeDialog(dialog)}
+  confirmButton={false}
+/>
+
 <main>
   <div class="input-box" id="input">
     <h1>Packages</h1>
@@ -91,7 +129,9 @@
         bind:value={installInput}
         placeholder="Enter package name..."
       />
-      <button on:click={handleInstall}>Install</button>
+      <button on:click={() => confirmInstallDialog(installInput)}
+        >Install</button
+      >
     </div>
 
     <div class="search-box">
@@ -107,7 +147,10 @@
           {#each filteredPackages as pkg}
             <li>
               {pkg}
-              <button class="delete-btn" on:click={() => confirmDelete(pkg)}>
+              <button
+                class="delete-btn"
+                on:click={() => confirmDeleteDialog(pkg)}
+              >
                 <img src={deleteIcon} alt="Delete" class="delete-icon" />
               </button>
             </li>
