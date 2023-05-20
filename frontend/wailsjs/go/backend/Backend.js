@@ -62,6 +62,10 @@ export function GetNetworkUsage() {
   return window['go']['backend']['Backend']['GetNetworkUsage']();
 }
 
+export function GetProcessInfo() {
+  return window['go']['backend']['Backend']['GetProcessInfo']();
+}
+
 export function GetSystemInfo() {
   return window['go']['backend']['Backend']['GetSystemInfo']();
 }

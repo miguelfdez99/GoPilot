@@ -32,6 +32,8 @@ export function GetMemoryUsage():Promise<backend.MemoryUsage>;
 
 export function GetNetworkUsage():Promise<backend.NetworkUsage>;
 
+export function GetProcessInfo():Promise<Array<backend.ProcessInfo>>;
+
 export function GetSystemInfo():Promise<string>;
 
 export function InstallPackage(arg1:string):Promise<void>;
