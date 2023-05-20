@@ -22,28 +22,19 @@
     let intervalId: number;
     let canvas: HTMLCanvasElement;
 
-    const MAX_HISTORY = 300; // Keep data for the last 60 seconds
-    const COLORS = [
-        "red",
-        "blue",
-        "green",
-        "yellow",
-        "purple",
-        "cyan",
-        "magenta",
-        "orange",
-        "teal",
-        "pink",
-        "lime",
-        "deepskyblue",
-        "violet",
-        "gold",
-        "darkgreen",
-        "salmon",
-    ];
+    const MAX_HISTORY = 300;
+    let COLORS: string[] = [];
+
+    function generateColor(i: number, max_cpu: number): string {
+        const hue = i * 360 / max_cpu;
+        return `hsl(${hue}, 100%, 50%)`;
+    }
 
     onMount(async () => {
         const ctx = canvas.getContext("2d");
+        const newCpuUsages = await GetCPUUsage();
+        const MAX_CPU = newCpuUsages.length;
+        COLORS = Array.from({length: MAX_CPU}, (_, i) => generateColor(i, MAX_CPU));
         chart = new Chart(ctx, {
             type: "line",
             data: {
