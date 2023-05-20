@@ -31,6 +31,7 @@ export namespace backend {
 	        this.bytes_received = source["bytes_received"];
 	    }
 	}
+	
 
 }
 

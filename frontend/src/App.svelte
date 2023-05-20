@@ -7,6 +7,7 @@
   import Cron from './views/Cron.svelte';
   import Firewall from './views/Firewall.svelte';
   import Backup from './views/Backup.svelte';
+  import Process from './views/ProcInfo.svelte';
 
   let currentView = 'home';
 
@@ -26,6 +27,7 @@
     <button on:click={() => currentView = 'cron'}>Cron</button>
     <button on:click={() => currentView = 'firewall'}>Firewall</button>
     <button on:click={() => currentView = 'backup'}>Backup</button>
+    <button on:click={() => currentView = 'process'}>Processes</button>
   </div>
 
   <div class="main">
@@ -43,6 +45,8 @@
       <Firewall />
     {:else if currentView === 'backup'}
       <Backup />
+    {:else if currentView === 'process'}
+      <Process />
     {/if}
   </div>
 </div>
