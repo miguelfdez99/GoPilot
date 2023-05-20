@@ -5,6 +5,7 @@ import (
 	"goPilot/backend"
 
 	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
@@ -17,7 +18,7 @@ func main() {
 	app := NewApp()
 
 	// Create backend
-	backend := backend.NewBackend()
+	backend := backend.NewBackend(logger.NewDefaultLogger())
 
 	// Create application with options
 	err := wails.Run(&options.App{
