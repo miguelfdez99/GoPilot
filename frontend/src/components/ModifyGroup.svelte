@@ -1,31 +1,46 @@
 <script lang="ts">
     import { ModifyGroup } from '../../wailsjs/go/backend/Backend';
-    import { checkCommand } from "../functions/functions";
     import { onMount } from "svelte";
+    import {
+        openDialog,
+        closeDialog,
+        checkCommand,
+    } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let name: string = "";
     let gid: string = "";
 
     onMount(async () => {
-        await checkCommand("groupadd");
+        await checkCommand("groupadd", dialog);
     });
 
     async function modifyGroup() {
         if (!name || !gid) {
-            alert("Please fill out all fields");
+            dialog = openDialog(dialog, "Error", "Group name and GID are required");
             return;
         }
         try {
             await ModifyGroup(name, parseInt(gid));
-            alert("Group modified successfully!");
+            dialog = openDialog(dialog, "Success", `Successfully modified group ${name}`);
             name = "";
             gid = "";
         } catch (err) {
             console.error(err);
-            alert("Failed to modify group");
+            dialog = openDialog(dialog, "Error", `Failed to modified group: ${err}`);
         }
     }
 </script>
+
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title={dialog.dialogTitle}
+    message={dialog.dialogMessage}
+    onClose={() => (dialog = closeDialog(dialog))}
+    confirmButton={false}
+/>
 
 <template>
     <form on:submit|preventDefault={modifyGroup}>

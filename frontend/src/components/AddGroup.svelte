@@ -1,38 +1,57 @@
 <script lang="ts">
-    import { CreateGroup } from '../../wailsjs/go/backend/Backend';
-    import { checkCommand } from "../functions/functions";
+    import { CreateGroup } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
+    import {
+        openDialog,
+        closeDialog,
+        checkCommand,
+    } from "../functions/functions";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let name: string = "";
     let gid = undefined;
 
     onMount(async () => {
-        await checkCommand("groupadd");
+        await checkCommand("groupadd", dialog);
     });
 
     async function createGroup() {
-        // Check if required fields are empty
         if (!name) {
-            alert("Please fill out all fields");
+            dialog = openDialog(dialog, "Error", "Group name is required");
             return;
         }
 
-        // Call the CreateGroup function in the Go environment
         try {
             await CreateGroup(
                 name,
                 gid !== undefined ? parseInt(gid) : undefined
             );
-            alert("Group created successfully!");
-            // Clear the form
+            dialog = openDialog(
+                dialog,
+                "Success",
+                `Successfully created group ${name}`
+            );
             name = "";
             gid = undefined;
         } catch (err) {
-            console.error(err);
-            alert("Failed to create group");
+            dialog = openDialog(
+                dialog,
+                "Error",
+                `Failed to create group: ${err}`
+            );
         }
     }
 </script>
+
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title={dialog.dialogTitle}
+    message={dialog.dialogMessage}
+    onClose={() => (dialog = closeDialog(dialog))}
+    confirmButton={false}
+/>
 
 <template>
     <form on:submit|preventDefault={createGroup}>

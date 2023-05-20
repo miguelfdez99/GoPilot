@@ -7,8 +7,11 @@
     } from "../../wailsjs/go/backend/Backend";
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
-    import { checkCommand } from "../functions/functions";
+    import { openDialog, closeDialog, checkCommand  } from "../functions/functions";
     import CustomDialog from "../dialogs/CustomDialog.svelte";
+
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    let showDeleteAllDialog: boolean = false;
 
     let jobs = [];
     let showAddCronJob: boolean = false;
@@ -29,17 +32,36 @@
         showDeleteDialog = false;
     }
 
+    function confirmDeleteAllDialog() {
+    showDeleteAllDialog = true;
+  }
+
+  function onDeleteAllDialogConfirm() {
+    removeAllCronJobs();
+    showDeleteAllDialog = false;
+  }
+
+  function onDeleteAllDialogClose() {
+    showDeleteAllDialog = false;
+  }
+
     async function getCronJobs() {
         jobs = await ListCronJobs();
     }
 
     function removeAllCronJobs() {
-        RemoveAllCronJobs();
+    RemoveAllCronJobs()
+      .then(() => {
+        dialog = openDialog(dialog,'Success', 'Successfully deleted all jobs');
         jobs = [];
-    }
+      })
+      .catch((err) => {
+        dialog = openDialog(dialog,'Error', `Failed to delete all jobs: ${err}`);
+      });
+  }
 
     onMount(async () => {
-        await checkCommand("crontab");
+        await checkCommand("crontab", dialog);
         getCronJobs();
     });
 
@@ -50,11 +72,11 @@
     function deleteCron(name: string) {
         RemoveCronJob(name)
             .then(() => {
-                alert(`Successfully deleted ${name}`);
+                dialog = openDialog(dialog,'Success', `Successfully deleted ${name}`);
                 jobs = jobs.filter((job) => job.Command !== name);
             })
             .catch((err) => {
-                alert(`Failed to delete ${name}: ${err}`);
+                dialog = openDialog(dialog,'Error', `Failed to delete ${name}: ${err}`);
             });
     }
 
@@ -69,6 +91,22 @@
     onClose={onDialogClose}
 />
 
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={() => dialog = closeDialog(dialog)}
+  confirmButton={false}
+/>
+
+<CustomDialog
+  bind:show={showDeleteAllDialog}
+  title="Delete All Cron Jobs"
+  message="Are you sure you want to delete all cron jobs?"
+  onConfirm={onDeleteAllDialogConfirm}
+  onClose={onDeleteAllDialogClose}
+/>
+
 <div class="container">
     <h1>Cron Jobs</h1>
 
@@ -78,7 +116,7 @@
         <AddCronJob on:cronJobAdded={() => getCronJobs()} />
     {/if}
 
-    <button on:click={removeAllCronJobs}>Remove all cron jobs</button>
+    <button on:click={confirmDeleteAllDialog}>Remove all cron jobs</button>
 
     <h2>Crontab List</h2>
     {#if jobs.length < 1}

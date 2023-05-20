@@ -18,7 +18,7 @@
     };
 
     onMount(async () => {
-        await checkCommand("rsync");
+        await checkCommand("rsync", dialog);
     });
 
     const backup = async () => {
@@ -26,7 +26,7 @@
             await Backup(options);
             dialog = openDialog(dialog, "Success", `Backup created successfully`);
         } catch (err) {
-            dialog = openDialog(dialog, "Error", `Error creating backup: + ${err.message}`);
+            dialog = openDialog(dialog, "Error", `Error creating backup: ${err.message}`);
         }
     };
 </script>
