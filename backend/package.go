@@ -9,7 +9,7 @@ func (b *Backend) ListPackages() []string {
 
 	distribution, err := getLinuxDistribution()
 	if err != nil {
-		b.logger.WithError(err).Error("Failed to get Linux distribution")
+		b.logger.Error("Failed to get Linux distribution")
 		return nil
 	}
 
@@ -29,7 +29,7 @@ func (b *Backend) ListPackages() []string {
 
 	out, err := cmd.Output()
 	if err != nil {
-		b.logger.WithError(err).Error("Failed to list packages")
+		b.logger.Error("Failed to list packages")
 		return nil
 	}
 	packageNames := ExtractFirstParams(string(out))
@@ -43,7 +43,7 @@ func (b *Backend) ListPackages() []string {
 func (b *Backend) RemovePackage(pkgName string) error {
 	distribution, err := getLinuxDistribution()
 	if err != nil {
-		b.logger.WithError(err).Error("Failed to get Linux distribution")
+		b.logger.Error("Failed to get Linux distribution")
 		return err
 	}
 
@@ -61,11 +61,11 @@ func (b *Backend) RemovePackage(pkgName string) error {
 	}
 
 	if err := cmd.Run(); err != nil {
-		b.logger.WithError(err).Error("Failed to remove package")
+		b.logger.Error("Failed to remove package")
 		return err
 	}
 
-	b.logger.Infof("Package %s removed successfully", pkgName)
+	b.logger.Info(fmt.Sprintf("Package %s removed successfully", pkgName))
 
 	return nil
 }
@@ -73,7 +73,7 @@ func (b *Backend) RemovePackage(pkgName string) error {
 func (b *Backend) InstallPackage(pkgName string) error {
 	distribution, err := getLinuxDistribution()
 	if err != nil {
-		b.logger.WithError(err).Error("Failed to get Linux distribution")
+		b.logger.Error("Failed to get Linux distribution")
 		return err
 	}
 
@@ -91,11 +91,11 @@ func (b *Backend) InstallPackage(pkgName string) error {
 	}
 
 	if err := cmd.Run(); err != nil {
-		b.logger.WithError(err).Error("Failed to install package")
+		b.logger.Error("Failed to install package")
 		return err
 	}
 
-	b.logger.Infof("Package %s installed successfully", pkgName)
+	b.logger.Info(fmt.Sprintf("Package %s installed successfully", pkgName))
 
 	return nil
 }
@@ -103,7 +103,7 @@ func (b *Backend) InstallPackage(pkgName string) error {
 func (b *Backend) GetDistribution() string {
 	distribution, err := getLinuxDistribution()
 	if err != nil {
-		b.logger.WithError(err).Error("Failed to get distribution")
+		b.logger.Error("Failed to get distribution")
 		return ""
 	}
 	return distribution

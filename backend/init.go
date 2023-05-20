@@ -2,28 +2,18 @@ package backend
 
 import (
 	"context"
-	"os"
 
-	"github.com/sirupsen/logrus"
+	"github.com/wailsapp/wails/v2/pkg/logger"
 )
 
 type Backend struct {
 	ctx    context.Context
-	logger *logrus.Logger
+	logger logger.Logger
 }
 
-func NewBackend() *Backend {
-	logger := logrus.New()
-	logger.Out = os.Stdout
-
-	// Set log level, e.g. logrus.DebugLevel, logrus.InfoLevel, logrus.WarnLevel, logrus.ErrorLevel
-	logger.SetLevel(logrus.InfoLevel)
-
-	// Use JSONFormatter for structured logging
-	logger.SetFormatter(&logrus.JSONFormatter{})
-
+func NewBackend(l logger.Logger) *Backend {
 	return &Backend{
-		logger: logger,
+		logger: l,
 	}
 }
 

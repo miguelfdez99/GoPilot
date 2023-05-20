@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/shirou/gopsutil v3.21.11+incompatible
-	github.com/sirupsen/logrus v1.9.0
 	github.com/wailsapp/wails/v2 v2.5.0
 )
 
