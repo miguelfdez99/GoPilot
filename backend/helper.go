@@ -204,6 +204,36 @@ func getUptime() (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
+func getMemory() (string, error) {
+	cmd := exec.Command("free", "-h")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	lines := strings.Split(string(out), "\n")
+	if len(lines) < 2 {
+		return "", fmt.Errorf("unable to parse memory info")
+	}
+
+	return strings.TrimSpace(lines[1]), nil
+}
+
+func getDesktopEnv() string {
+	if desktopEnv := os.Getenv("XDG_CURRENT_DESKTOP"); desktopEnv != "" {
+		return desktopEnv
+	}
+	if desktopEnv := os.Getenv("DESKTOP_SESSION"); desktopEnv != "" {
+		return desktopEnv
+	}
+
+	if desktopEnv := os.Getenv("GDMSESSION"); desktopEnv != "" {
+		return desktopEnv
+	}
+
+	return "Not Found"
+}
+
 func (b *Backend) CommandExists(cmd string) (bool, string) {
 	_, err := exec.LookPath(cmd)
 	if err != nil {
