@@ -8,7 +8,7 @@
   import Firewall from './views/Firewall.svelte';
   import Backup from './views/Backup.svelte';
   import Process from './views/ProcInfo.svelte';
-
+  import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
   onMount(() => {
@@ -52,7 +52,6 @@
 </div>
 
 <style>
-  @import url("https://unpkg.com/picocss@4.1.1/dist/pico.min.css");
 
   .container {
     display: flex;

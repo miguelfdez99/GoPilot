@@ -1,16 +1,13 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import "@picocss/pico/css/pico.css"
-
+  import SystemSummary from '../components/SystemSummary.svelte';
 </script>
 
-<h1 class="text-2xl font-bold">Home</h1>
+<h1 class="text-2xl font-bold">Welcome to GoPilot</h1>
 
-<p class="text-lg">This is the Home view.</p>
+<div class="conatiner">
+  <SystemSummary />
+</div>
 
-<h1 class="text-3xl font-bold underline">
-  Hello world!
-</h1>
 
 <style>
 * {
