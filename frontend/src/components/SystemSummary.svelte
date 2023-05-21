@@ -68,7 +68,7 @@
             <tr><th>Kernel Version</th><td>{systemInfo.kernelVer}</td></tr>
             <tr><th>Uptime</th><td>{systemInfo.uptime}</td></tr>
             <tr><th>Hostname</th><td>{systemInfo.hostname}</td></tr>
-            <tr><th>Desktop Environment</th><td>{systemInfo.desktopEnv}</td></tr>
+            <tr><th>DE</th><td>{systemInfo.desktopEnv}</td></tr>
             <tr><th>User</th><td>{systemInfo.currentUsername}</td></tr>
             <tr><th>Memory</th><td>{systemInfo.memory}</td></tr>
         </table>
