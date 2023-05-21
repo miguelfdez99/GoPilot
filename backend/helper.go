@@ -221,8 +221,9 @@ func getMemory() (string, error) {
 
 func getDesktopEnv() string {
 	if desktopEnv := os.Getenv("XDG_CURRENT_DESKTOP"); desktopEnv != "" {
-		return desktopEnv
+		return strings.Split(desktopEnv, ":")[1]
 	}
+
 	if desktopEnv := os.Getenv("DESKTOP_SESSION"); desktopEnv != "" {
 		return desktopEnv
 	}
@@ -231,7 +232,29 @@ func getDesktopEnv() string {
 		return desktopEnv
 	}
 
+	if desktopEnv, err := getDesktopEnvFromXprop(); err == nil {
+		return desktopEnv
+	}
+
 	return "Not Found"
+}
+
+func getDesktopEnvFromXprop() (string, error) {
+	cmd := exec.Command("xprop", "-root")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	for _, line := range strings.Split(string(output), "\n") {
+		if strings.Contains(line, "_DT_SAVE_MODE") {
+			return "Xfce", nil
+		} else if strings.Contains(line, "MUFFIN") {
+			return "Cinnamon", nil
+		}
+	}
+
+	return "", fmt.Errorf("could not determine desktop environment from xprop")
 }
 
 func (b *Backend) CommandExists(cmd string) (bool, string) {

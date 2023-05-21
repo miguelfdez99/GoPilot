@@ -3,7 +3,9 @@ package backend
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
+	"os/user"
 	"strings"
 	"time"
 
@@ -55,33 +57,52 @@ func (b *Backend) GetLSCPU() string {
 		fmt.Println(err)
 		return ""
 	}
-	fmt.Println(string(jsonData))
 	return string(jsonData)
 }
 
+type SystemInfo struct {
+	OsName          string `json:"osName"`
+	KernelVer       string `json:"kernelVer"`
+	Uptime          string `json:"uptime"`
+	Hostname        string `json:"hostname"`
+	DesktopEnv      string `json:"desktopEnv"`
+	CurrentUsername string `json:"currentUsername"`
+	Memory          string `json:"memory"`
+}
+
 func (b *Backend) GetSystemInfo() (string, error) {
-	osName, err := getOSName()
-	if err != nil {
+	var sysInfo SystemInfo
+	var err error
+
+	if sysInfo.OsName, err = getOSName(); err != nil {
 		return "", fmt.Errorf("error obtaining operating system name: %v", err)
 	}
 
-	kernelVer, err := getKernelVersion()
-	if err != nil {
+	if sysInfo.KernelVer, err = getKernelVersion(); err != nil {
 		return "", fmt.Errorf("error obtaining kernel version: %v", err)
 	}
 
-	uptime, err := getUptime()
-	if err != nil {
+	if sysInfo.Uptime, err = getUptime(); err != nil {
 		return "", fmt.Errorf("error obtaining system uptime: %v", err)
 	}
 
-	data := map[string]string{
-		"osName":    osName,
-		"kernelVer": kernelVer,
-		"uptime":    uptime,
+	if sysInfo.Hostname, err = os.Hostname(); err != nil {
+		return "", fmt.Errorf("error obtaining system hostname: %v", err)
 	}
 
-	jsonData, err := json.Marshal(data)
+	sysInfo.DesktopEnv = getDesktopEnv()
+
+	if currentUser, err := user.Current(); err == nil {
+		sysInfo.CurrentUsername = currentUser.Username
+	} else {
+		return "", fmt.Errorf("error obtaining current user: %v", err)
+	}
+
+	if sysInfo.Memory, err = getMemory(); err != nil {
+		return "", fmt.Errorf("error obtaining memory info: %v", err)
+	}
+
+	jsonData, err := json.Marshal(sysInfo)
 	if err != nil {
 		return "", fmt.Errorf("error converting system info to JSON: %v", err)
 	}
