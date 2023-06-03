@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount } from 'svelte';
   import Home from './views/Home.svelte';
   import Users from './views/Users.svelte';
   import Packages from './views/Packages.svelte';
@@ -11,43 +11,39 @@
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
+  const views = {
+    'home': Home,
+    'users': Users,
+    'packages': Packages,
+    'monitoring': Monitor,
+    'cron': Cron,
+    'firewall': Firewall,
+    'backup': Backup,
+    'process': Process
+  };
+
+  let CurrentComponent = views[currentView];
+
   onMount(() => {
     const event = new CustomEvent('changeView', { detail: currentView });
     dispatchEvent(event);
   });
-
 </script>
 
 <div class="container">
   <div class="sidebar">
-    <button on:click={() => currentView = 'home'}>Home</button>
-    <button on:click={() => currentView = 'users'}>Users</button>
-    <button on:click={() => currentView = 'packages'}>Packages</button>
-    <button on:click={() => currentView = 'monitoring'}>Monitoring</button>
-    <button on:click={() => currentView = 'cron'}>Cron</button>
-    <button on:click={() => currentView = 'firewall'}>Firewall</button>
-    <button on:click={() => currentView = 'backup'}>Backup</button>
-    <button on:click={() => currentView = 'process'}>Processes</button>
+    <button on:click={() => (currentView = 'home', CurrentComponent = views[currentView])}>Home</button>
+    <button on:click={() => (currentView = 'users', CurrentComponent = views[currentView])}>Users</button>
+    <button on:click={() => (currentView = 'packages', CurrentComponent = views[currentView])}>Packages</button>
+    <button on:click={() => (currentView = 'monitoring', CurrentComponent = views[currentView])}>Monitoring</button>
+    <button on:click={() => (currentView = 'cron', CurrentComponent = views[currentView])}>Cron</button>
+    <button on:click={() => (currentView = 'firewall', CurrentComponent = views[currentView])}>Firewall</button>
+    <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
+    <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
   </div>
 
   <div class="main">
-    {#if currentView === 'home'}
-      <Home />
-    {:else if currentView === 'users'}
-      <Users />
-    {:else if currentView === 'packages'}
-      <Packages />
-    {:else if currentView === 'monitoring'}
-      <Monitor />
-    {:else if currentView === 'cron'}
-      <Cron />
-    {:else if currentView === 'firewall'}
-      <Firewall />
-    {:else if currentView === 'backup'}
-      <Backup />
-    {:else if currentView === 'process'}
-      <Process />
-    {/if}
+    <svelte:component this={CurrentComponent} />
   </div>
 </div>
 
@@ -81,7 +77,7 @@
     color: #f1f1f1;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all;
   }
 
   .sidebar button:hover {
