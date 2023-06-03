@@ -132,14 +132,16 @@ func (b *Backend) AddCronJob(schedule string, command string) error {
 	defer os.Remove(tmpfile.Name())
 
 	cmd := exec.Command("crontab", "-l")
-	output, err := cmd.Output()
-	if err != nil {
+	output, err := cmd.CombinedOutput()
+	if err != nil && !strings.Contains(string(output), "no crontab for") {
 		return err
 	}
 
-	_, err = tmpfile.Write(output)
-	if err != nil {
-		return err
+	if err == nil {
+		_, err = tmpfile.Write(output)
+		if err != nil {
+			return err
+		}
 	}
 
 	_, err = fmt.Fprintf(tmpfile, "%s %s\n", schedule, command)
