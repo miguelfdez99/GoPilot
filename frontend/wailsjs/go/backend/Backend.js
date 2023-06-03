@@ -109,3 +109,7 @@ export function RemoveFirewallRule(arg1) {
 export function RemovePackage(arg1) {
   return window['go']['backend']['Backend']['RemovePackage'](arg1);
 }
+
+export function TerminateProcess(arg1) {
+  return window['go']['backend']['Backend']['TerminateProcess'](arg1);
+}

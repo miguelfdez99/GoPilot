@@ -55,3 +55,5 @@ export function RemoveCronJob(arg1:string):Promise<void>;
 export function RemoveFirewallRule(arg1:string):Promise<void>;
 
 export function RemovePackage(arg1:string):Promise<void>;
+
+export function TerminateProcess(arg1:number):Promise<void>;

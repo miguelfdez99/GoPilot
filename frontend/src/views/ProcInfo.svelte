@@ -1,6 +1,11 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetProcessInfo } from "../../wailsjs/go/backend/Backend";
+    import {
+        GetProcessInfo,
+        TerminateProcess,
+    } from "../../wailsjs/go/backend/Backend";
+    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import { openDialog, closeDialog } from "../functions/functions";
 
     let processInfo: string[] = [];
     let filteredProcessInfo = [];
@@ -13,32 +18,37 @@
     let iconAsc = "↑";
     let iconDesc = "↓";
 
+    let processList = [];
+    let showKillDialog: boolean = false;
+    let dialogPid: number = 0;
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+
     let currentIcon = {
-        User: '',
-        Pid: '',
-        CpuPercent: '',
-        MemPercent: '',
-        VMS: '',
-        RSS: '',
-        TTY: '',
-        Status: '',
-        StartTime: '',
-        Cmdline: ''
+        User: "",
+        Pid: "",
+        CpuPercent: "",
+        MemPercent: "",
+        VMS: "",
+        RSS: "",
+        TTY: "",
+        Status: "",
+        StartTime: "",
+        Cmdline: "",
     };
 
     const sortTable = (key) => {
         if (sortBy === key) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            sortDirection = sortDirection === "asc" ? "desc" : "asc";
         } else {
             sortBy = key;
-            sortDirection = 'asc';
+            sortDirection = "asc";
         }
 
         for (let column in currentIcon) {
-            currentIcon[column] = '';
+            currentIcon[column] = "";
         }
 
-        currentIcon[key] = sortDirection === 'asc' ? iconAsc : iconDesc;
+        currentIcon[key] = sortDirection === "asc" ? iconAsc : iconDesc;
 
         if (sortBy) {
             processInfo = sortProcessInfo(processInfo, sortBy, sortDirection);
@@ -66,6 +76,39 @@
         );
     };
 
+    function confirmKillDialog(pid: number) {
+        dialogPid = pid;
+        showKillDialog = true;
+    }
+
+    function onDialogConfirm() {
+        killProcess(dialogPid);
+        showKillDialog = false;
+    }
+
+    function onDialogClose() {
+        showKillDialog = false;
+    }
+
+    function killProcess(pid: number) {
+        TerminateProcess(pid)
+            .then(() => {
+                processList = processList.filter((proc) => proc.Pid !== pid);
+                dialog = openDialog(
+                    dialog,
+                    "Success",
+                    `Successfully killed process ${pid}`
+                );
+            })
+            .catch((err) => {
+                dialog = openDialog(
+                    dialog,
+                    "Error",
+                    `Failed to kill process ${pid}: ${err}`
+                );
+            });
+    }
+
     onMount(() => {
         interval = setInterval(async () => {
             processInfo = await GetProcessInfo();
@@ -89,6 +132,14 @@
     }
 </script>
 
+<CustomDialog
+    bind:show={showKillDialog}
+    title="Kill Process"
+    message={`Are you sure you want to kill process ${dialogPid}?`}
+    onConfirm={onDialogConfirm}
+    onClose={onDialogClose}
+/>
+
 <div class="search-container">
     <input type="text" bind:value={searchTerm} placeholder="Search..." />
 </div>
@@ -96,16 +147,26 @@
 <table>
     <thead>
         <tr>
-            <th on:click={() => sortTable('User')}>USER {currentIcon.User}</th>
-            <th on:click={() => sortTable('Pid')}>PID {currentIcon.Pid}</th>
-            <th on:click={() => sortTable("CpuPercent")}>%CPU {currentIcon.CpuPercent}</th>
-            <th on:click={() => sortTable("MemPercent")}>%MEM {currentIcon.MemPercent}</th>
+            <th on:click={() => sortTable("User")}>USER {currentIcon.User}</th>
+            <th on:click={() => sortTable("Pid")}>PID {currentIcon.Pid}</th>
+            <th on:click={() => sortTable("CpuPercent")}
+                >%CPU {currentIcon.CpuPercent}</th
+            >
+            <th on:click={() => sortTable("MemPercent")}
+                >%MEM {currentIcon.MemPercent}</th
+            >
             <th on:click={() => sortTable("VMS")}>VSZ {currentIcon.VMS}</th>
             <th on:click={() => sortTable("RSS")}>RSS {currentIcon.RSS}</th>
             <th on:click={() => sortTable("TTY")}>TTY {currentIcon.TTY}</th>
-            <th on:click={() => sortTable("Status")}>STAT {currentIcon.Status}</th>
-            <th on:click={() => sortTable("StartTime")}>START {currentIcon.StartTime}</th>
-            <th on:click={() => sortTable("Cmdline")}>COMMAND {currentIcon.Cmdline}</th>
+            <th on:click={() => sortTable("Status")}
+                >STAT {currentIcon.Status}</th
+            >
+            <th on:click={() => sortTable("StartTime")}
+                >START {currentIcon.StartTime}</th
+            >
+            <th on:click={() => sortTable("Cmdline")}
+                >COMMAND {currentIcon.Cmdline}</th
+            >
         </tr>
     </thead>
     <tbody>
@@ -113,14 +174,19 @@
             <tr>
                 <td>{proc.User}</td>
                 <td>{proc.Pid}</td>
-                <td>{proc.CpuPercent}</td>
-                <td>{proc.MemPercent}</td>
+                <td>{proc.CpuPercent.toFixed(2)}</td>
+                <td>{proc.MemPercent.toFixed(2)}</td>
                 <td>{proc.VMS}</td>
                 <td>{proc.RSS}</td>
                 <td>{proc.TTY}</td>
                 <td>{proc.Status}</td>
                 <td>{new Date(proc.StartTime).toLocaleString()}</td>
                 <td class="command">{proc.Cmdline}</td>
+                <td>
+                    <button on:click={() => confirmKillDialog(proc.Pid)}
+                        >Terminate</button
+                    >
+                </td>
             </tr>
         {/each}
     </tbody>
@@ -128,22 +194,24 @@
 
 <style>
     .command {
-        max-width: 10%;
+        max-width: 400px;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: normal;
+        word-wrap: break-word;
     }
     .search-container {
-		padding-bottom: 1rem;
-	}
+        padding-bottom: 1rem;
+    }
 
-	input[type="text"] {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 0.25rem;
-	}
+    input[type="text"] {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+    }
     table {
+        table-layout: auto;
         width: 100%;
         border-collapse: collapse;
         margin: 1rem 0;
@@ -157,7 +225,8 @@
         color: #ffffff;
         text-align: left;
     }
-    th, td {
+    th,
+    td {
         padding: 12px 15px;
         width: 10%;
         overflow: hidden;
@@ -173,4 +242,3 @@
         border-bottom: 2px solid #009879;
     }
 </style>
-

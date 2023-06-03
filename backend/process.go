@@ -1,7 +1,11 @@
 package backend
 
 import (
+	"fmt"
+	"math"
+	"os"
 	"runtime"
+	"syscall"
 
 	"github.com/shirou/gopsutil/process"
 )
@@ -33,6 +37,7 @@ func (b *Backend) GetProcessInfo() ([]ProcessInfo, error) {
 		cmdline, _ := proc.Cmdline()
 		cpuPercent, _ := proc.CPUPercent()
 		cpuPercent = cpuPercent / numCPU
+		cpuPercent = math.Round(cpuPercent*100) / 100
 		memPercent, _ := proc.MemoryPercent()
 		vms, _ := proc.MemoryInfo()
 		status, _ := proc.Status()
@@ -54,4 +59,20 @@ func (b *Backend) GetProcessInfo() ([]ProcessInfo, error) {
 	}
 
 	return procInfos, nil
+}
+
+func (b *Backend) TerminateProcess(pid int32) error {
+	process, err := os.FindProcess(int(pid))
+	if err != nil {
+		return err
+	}
+
+	err = process.Signal(syscall.SIGKILL)
+	if err != nil {
+		return err
+	}
+
+	b.logger.Info(fmt.Sprintf("Terminated process %d", pid))
+
+	return nil
 }
