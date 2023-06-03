@@ -1,6 +1,8 @@
 package backend
 
 import (
+	"runtime"
+
 	"github.com/shirou/gopsutil/process"
 )
 
@@ -23,12 +25,14 @@ func (b *Backend) GetProcessInfo() ([]ProcessInfo, error) {
 		return nil, err
 	}
 
+	numCPU := float64(runtime.NumCPU())
 	procInfos := make([]ProcessInfo, 0, len(procs))
 
 	for _, proc := range procs {
 		name, _ := proc.Username()
 		cmdline, _ := proc.Cmdline()
 		cpuPercent, _ := proc.CPUPercent()
+		cpuPercent = cpuPercent / numCPU
 		memPercent, _ := proc.MemoryPercent()
 		vms, _ := proc.MemoryInfo()
 		status, _ := proc.Status()
