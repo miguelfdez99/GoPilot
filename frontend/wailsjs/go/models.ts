@@ -17,6 +17,7 @@ export namespace backend {
 	        this.swap = source["swap"];
 	    }
 	}
+	
 	export class NetworkUsage {
 	    bytes_sent: number;
 	    bytes_received: number;
