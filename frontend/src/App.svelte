@@ -8,6 +8,7 @@
   import Firewall from './views/Firewall.svelte';
   import Backup from './views/Backup.svelte';
   import Process from './views/ProcInfo.svelte';
+  import Networking from './views/Networking.svelte';
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
@@ -19,7 +20,8 @@
     'cron': Cron,
     'firewall': Firewall,
     'backup': Backup,
-    'process': Process
+    'process': Process,
+    'networking': Networking,
   };
 
   let CurrentComponent = views[currentView];
@@ -30,7 +32,7 @@
   });
 </script>
 
-<div class="container">
+<div>
   <div class="sidebar">
     <button on:click={() => (currentView = 'home', CurrentComponent = views[currentView])}>Home</button>
     <button on:click={() => (currentView = 'users', CurrentComponent = views[currentView])}>Users</button>
@@ -40,6 +42,7 @@
     <button on:click={() => (currentView = 'firewall', CurrentComponent = views[currentView])}>Firewall</button>
     <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
     <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
+    <button on:click={() => (currentView = 'networking', CurrentComponent = views[currentView])}>Networking</button>
   </div>
 
   <div class="main">
@@ -49,10 +52,10 @@
 
 <style>
 
-  .container {
+  /* .container {
     display: flex;
     height: 100vh;
-  }
+  } */
 
   .sidebar {
     position: fixed;
@@ -86,7 +89,7 @@
 
   .main {
     flex: 1;
-    padding: 1rem;
+    padding: 2rem;
     margin-left: 200px;
     color: white;
   }

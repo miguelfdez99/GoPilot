@@ -58,6 +58,10 @@ export function GetMemoryUsage() {
   return window['go']['backend']['Backend']['GetMemoryUsage']();
 }
 
+export function GetNetworkInterfaces() {
+  return window['go']['backend']['Backend']['GetNetworkInterfaces']();
+}
+
 export function GetNetworkUsage() {
   return window['go']['backend']['Backend']['GetNetworkUsage']();
 }
@@ -108,6 +112,10 @@ export function RemoveFirewallRule(arg1) {
 
 export function RemovePackage(arg1) {
   return window['go']['backend']['Backend']['RemovePackage'](arg1);
+}
+
+export function SetInterfaceStatus(arg1, arg2) {
+  return window['go']['backend']['Backend']['SetInterfaceStatus'](arg1, arg2);
 }
 
 export function TerminateProcess(arg1) {
