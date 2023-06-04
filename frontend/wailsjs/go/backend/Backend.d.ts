@@ -30,6 +30,8 @@ export function GetLSCPU():Promise<string>;
 
 export function GetMemoryUsage():Promise<backend.MemoryUsage>;
 
+export function GetNetworkInterfaces():Promise<Array<backend.NetworkInterface>>;
+
 export function GetNetworkUsage():Promise<backend.NetworkUsage>;
 
 export function GetProcessInfo():Promise<Array<backend.ProcessInfo>>;
@@ -55,5 +57,7 @@ export function RemoveCronJob(arg1:string):Promise<void>;
 export function RemoveFirewallRule(arg1:string):Promise<void>;
 
 export function RemovePackage(arg1:string):Promise<void>;
+
+export function SetInterfaceStatus(arg1:string,arg2:string):Promise<void>;
 
 export function TerminateProcess(arg1:number):Promise<void>;
