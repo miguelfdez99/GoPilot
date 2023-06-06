@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetMemoryUsage } from "../../wailsjs/go/backend/Backend.js";
+    import { GetMemoryUsage } from "../../../wailsjs/go/backend/Backend";
     import {
         Chart,
         LineController,
@@ -64,6 +64,12 @@
                     },
                 },
                 plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: "white",
+                        }
+                    },
                     tooltip: {
                         enabled: true,
                     },

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import AddUser from "../components/AddUser.svelte";
-  import DelUser from "../components/DelUser.svelte";
-  import ModifyUser from "../components/ModifyUser.svelte";
-  import AddGroup from "../components/AddGroup.svelte";
-  import DelGroup from "../components/DelGroup.svelte";
-  import ModifyGroup from "../components/ModifyGroup.svelte";
+  import AddUser from "../components/users/AddUser.svelte";
+  import DelUser from "../components/users/DelUser.svelte";
+  import ModifyUser from "../components/users/ModifyUser.svelte";
+  import AddGroup from "../components/groups/AddGroup.svelte";
+  import DelGroup from "../components/groups/DelGroup.svelte";
+  import ModifyGroup from "../components/groups/ModifyGroup.svelte";
 
   let showUserAdd = false;
   let showUserDel = false;
@@ -13,7 +13,6 @@
   let showGroupAdd = false;
   let showGroupDel = false;
   let showGroupMod = false;
-  let adminText: string;
 
   function toggleAddUser(): void {
     showUserAdd = !showUserAdd;

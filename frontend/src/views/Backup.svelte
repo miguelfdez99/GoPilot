@@ -2,7 +2,7 @@
     import { Backup } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
     import { openDialog, closeDialog, checkCommand } from "../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 

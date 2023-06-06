@@ -1,8 +1,8 @@
 <script lang="ts">
-  import CpuChart from "../components/CpuChart.svelte";
-  import DiskChart from "../components/DiskChart.svelte";
-  import MemChart from "../components/MemChart.svelte";
-  import NetworkChart from "../components/NetworkChart.svelte";
+  import CpuChart from "../components/charts/CpuChart.svelte";
+  import DiskChart from "../components/charts/DiskChart.svelte";
+  import MemChart from "../components/charts/MemChart.svelte";
+  import NetworkChart from "../components/charts/NetworkChart.svelte";
 
   import dropdownIcon from "../assets/images/dropdown.png";
 
@@ -89,6 +89,7 @@
     margin: 0;
     line-height: 24px;
     padding: 10px;
+    color: white;
   }
 
   .dropdown-btn {

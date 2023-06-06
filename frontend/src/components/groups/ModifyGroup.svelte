@@ -1,33 +1,35 @@
 <script lang="ts">
-    import { DeleteGroup } from '../../wailsjs/go/backend/Backend';
+    import { ModifyGroup } from '../../../wailsjs/go/backend/Backend';
     import { onMount } from "svelte";
     import {
         openDialog,
         closeDialog,
         checkCommand,
-    } from "../functions/functions";
+    } from "../../functions/functions";
     import CustomDialog from "../dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let name: string = "";
+    let gid: string = "";
 
     onMount(async () => {
-        await checkCommand("groupdel", dialog);
+        await checkCommand("groupadd", dialog);
     });
 
-    async function deleteGroup() {
-        if (!name) {
-            dialog = openDialog(dialog, "Error", "Group name is required");
+    async function modifyGroup() {
+        if (!name || !gid) {
+            dialog = openDialog(dialog, "Error", "Group name and GID are required");
             return;
         }
-
         try {
-            await DeleteGroup(name);
-            dialog = openDialog(dialog, "Success", `Successfully deleted group ${name}`);
+            await ModifyGroup(name, parseInt(gid));
+            dialog = openDialog(dialog, "Success", `Successfully modified group ${name}`);
             name = "";
+            gid = "";
         } catch (err) {
-            dialog = openDialog(dialog, "Error", `Failed to delete group: ${name}`);
+            console.error(err);
+            dialog = openDialog(dialog, "Error", `Failed to modified group: ${err}`);
         }
     }
 </script>
@@ -40,14 +42,17 @@
     confirmButton={false}
 />
 
-
 <template>
-    <form on:submit|preventDefault={deleteGroup}>
+    <form on:submit|preventDefault={modifyGroup}>
       <label>
         <span>Group name:</span>
         <input type="text" bind:value={name} required />
       </label>
-      <button type="submit">Delete Group</button>
+      <label>
+        <span>Group ID (GID):</span>
+        <input type="text" bind:value={gid} />
+      </label>
+      <button type="submit">Modify Group</button>
     </form>
   </template>
 <style>

@@ -5,7 +5,7 @@
     RemovePackage,
     InstallPackage,
   } from "../../wailsjs/go/backend/Backend";
-  import CustomDialog from "../dialogs/CustomDialog.svelte";
+  import CustomDialog from "../components/dialogs/CustomDialog.svelte";
   import { openDialog, closeDialog } from "../functions/functions";
   import deleteIcon from "../assets/images/delete.png";
 

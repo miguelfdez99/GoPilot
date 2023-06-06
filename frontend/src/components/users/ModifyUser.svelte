@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { CreateUser } from "../../wailsjs/go/backend/Backend";
+    import {
+        ModifyUser,
+    } from "../../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
     import {
         openDialog,
         closeDialog,
         checkCommand,
-    } from "../functions/functions";
+    } from "../../functions/functions";
     import CustomDialog from "../dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
@@ -14,13 +16,15 @@
     let password: string = "";
     let uid: string = "";
     let gid: string = "";
+    let home: string = "";
     let shell: string = "/bin/bash";
+    let addGroup: string = "";
 
     onMount(async () => {
-        await checkCommand("useradd", dialog);
+        await checkCommand("usermod", dialog);
     });
 
-    async function createUser() {
+    async function modifyUser() {
         if (!username) {
             dialog = openDialog(dialog, "Error", "Username is required");
             return;
@@ -31,27 +35,23 @@
             password,
             uid: parseInt(uid),
             gid: parseInt(gid),
+            homeDirectory: home,
+            groups: addGroup ? [addGroup] : [],
             shell,
         };
 
         try {
-            await CreateUser(user);
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Successfully created user ${username}`
-            );
+            await ModifyUser(user.username, user);
+            dialog = openDialog(dialog, "Success", `Successfully modified user ${username}`);
             username = "";
             password = "";
             uid = "";
             gid = "";
+            home = "";
             shell = "";
+            addGroup = "";
         } catch (err) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                `${err}`
-            );
+            dialog = openDialog(dialog, "Error", `${err}`);
         }
     }
 </script>
@@ -64,10 +64,10 @@
     confirmButton={false}
 />
 
-<form on:submit|preventDefault={createUser}>
+<form on:submit|preventDefault={modifyUser}>
     <label>
         <span>Username:</span>
-        <input type="text" bind:value={username} />
+        <input type="text" bind:value={username} required />
     </label>
     <label>
         <span>Password:</span>
@@ -82,6 +82,14 @@
         <input type="text" bind:value={gid} />
     </label>
     <label>
+        <span>Home directory:</span>
+        <input type="text" bind:value={home} />
+    </label>
+    <label>
+        <span>Add to group:</span>
+        <input type="text" bind:value={addGroup} />
+    </label>
+    <label>
         <span>Login shell:</span>
         <select bind:value={shell}>
             <option value="/bin/bash">/bin/bash</option>
@@ -89,7 +97,7 @@
             <option value="/usr/bin/zsh">/usr/bin/zsh</option>
         </select>
     </label>
-    <button type="submit">Create user</button>
+    <button type="submit">Modify user</button>
 </form>
 
 <style>

@@ -8,7 +8,7 @@
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
     import { openDialog, closeDialog, checkCommand  } from "../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
     let showDeleteAllDialog: boolean = false;
@@ -158,6 +158,11 @@
     h1 {
         font-size: 32px;
         margin-bottom: 20px;
+        color: white;
+    }
+
+    h2, p {
+        color: white;
     }
 
     ul {
@@ -170,6 +175,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        color: white;
     }
 
     li:hover {

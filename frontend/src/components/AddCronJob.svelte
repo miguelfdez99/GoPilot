@@ -2,7 +2,7 @@
     import { AddCronJob } from '../../wailsjs/go/backend/Backend';
     import { createEventDispatcher } from 'svelte';
     import { openDialog, closeDialog } from "../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import CustomDialog from "./dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 
@@ -150,6 +150,10 @@ h2 {
     background-color: #333;
     color: #fff;
     border-radius: 4px;
+}
+
+.form-select {
+    color: white;
 }
 
 .form-title {

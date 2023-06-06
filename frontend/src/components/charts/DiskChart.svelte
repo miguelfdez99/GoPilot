@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { GetDiskUsage } from "../../wailsjs/go/backend/Backend.js";
+    import { GetDiskUsage } from "../../../wailsjs/go/backend/Backend";
     import {
         Chart,
         DoughnutController,
@@ -44,9 +44,16 @@
                 animation: false,
                 responsive: true,
                 plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: "white",
+                        }
+                    },
                     title: {
                         display: true,
                         text: "Disk Usage (GB)",
+                        color: "white"
                     },
                     tooltip: {
                         callbacks: {
