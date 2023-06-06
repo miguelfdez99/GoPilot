@@ -1,46 +1,33 @@
 <script lang="ts">
-    import { CreateGroup } from "../../wailsjs/go/backend/Backend";
+    import { DeleteGroup } from '../../../wailsjs/go/backend/Backend';
     import { onMount } from "svelte";
     import {
         openDialog,
         closeDialog,
         checkCommand,
-    } from "../functions/functions";
+    } from "../../functions/functions";
     import CustomDialog from "../dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let name: string = "";
-    let gid = undefined;
 
     onMount(async () => {
-        await checkCommand("groupadd", dialog);
+        await checkCommand("groupdel", dialog);
     });
 
-    async function createGroup() {
+    async function deleteGroup() {
         if (!name) {
             dialog = openDialog(dialog, "Error", "Group name is required");
             return;
         }
 
         try {
-            await CreateGroup(
-                name,
-                gid !== undefined ? parseInt(gid) : undefined
-            );
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Successfully created group ${name}`
-            );
+            await DeleteGroup(name);
+            dialog = openDialog(dialog, "Success", `Successfully deleted group ${name}`);
             name = "";
-            gid = undefined;
         } catch (err) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                `Failed to create group: ${err}`
-            );
+            dialog = openDialog(dialog, "Error", `Failed to delete group: ${name}`);
         }
     }
 </script>
@@ -53,20 +40,16 @@
     confirmButton={false}
 />
 
-<template>
-    <form on:submit|preventDefault={createGroup}>
-        <label>
-            <span>Group name:</span>
-            <input type="text" bind:value={name} required />
-        </label>
-        <label>
-            <span>Group ID (GID):</span>
-            <input type="text" bind:value={gid} />
-        </label>
-        <button type="submit">Create Group</button>
-    </form>
-</template>
 
+<template>
+    <form on:submit|preventDefault={deleteGroup}>
+      <label>
+        <span>Group name:</span>
+        <input type="text" bind:value={name} required />
+      </label>
+      <button type="submit">Delete Group</button>
+    </form>
+  </template>
 <style>
     form {
         display: flex;

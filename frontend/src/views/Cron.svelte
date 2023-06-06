@@ -8,7 +8,7 @@
     import AddCronJob from "../components/AddCronJob.svelte";
     import deleteIcon from "../assets/images/delete.png";
     import { openDialog, closeDialog, checkCommand  } from "../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
     let showDeleteAllDialog: boolean = false;

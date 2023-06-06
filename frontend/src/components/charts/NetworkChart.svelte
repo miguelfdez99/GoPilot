@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetNetworkUsage } from "../../wailsjs/go/backend/Backend.js";
+    import { GetNetworkUsage } from "../../../wailsjs/go/backend/Backend";
     import {
         Chart,
         LineController,

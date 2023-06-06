@@ -3,7 +3,7 @@
     import {
         GetLSCPU,
         GetSystemInfo,
-    } from "../../wailsjs/go/backend/Backend";
+    } from "../../../wailsjs/go/backend/Backend";
 
     let cpuInfo = {
         architecture: "",

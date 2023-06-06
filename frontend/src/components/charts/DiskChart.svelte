@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { GetDiskUsage } from "../../wailsjs/go/backend/Backend.js";
+    import { GetDiskUsage } from "../../../wailsjs/go/backend/Backend";
     import {
         Chart,
         DoughnutController,

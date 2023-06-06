@@ -2,7 +2,7 @@
     import { AddCronJob } from '../../wailsjs/go/backend/Backend';
     import { createEventDispatcher } from 'svelte';
     import { openDialog, closeDialog } from "../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import CustomDialog from "./dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 

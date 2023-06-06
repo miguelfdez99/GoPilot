@@ -4,8 +4,8 @@
         GetProcessInfo,
         TerminateProcess,
     } from "../../wailsjs/go/backend/Backend";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
-    import { openDialog, closeDialog } from "../functions/functions";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
+    import { openDialog  } from "../functions/functions";
 
     let processInfo: string[] = [];
     let filteredProcessInfo = [];

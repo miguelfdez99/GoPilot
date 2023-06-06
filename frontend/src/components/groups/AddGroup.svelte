@@ -1,35 +1,46 @@
 <script lang="ts">
-    import { ModifyGroup } from '../../wailsjs/go/backend/Backend';
+    import { CreateGroup } from "../../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
     import {
         openDialog,
         closeDialog,
         checkCommand,
-    } from "../functions/functions";
+    } from "../../functions/functions";
     import CustomDialog from "../dialogs/CustomDialog.svelte";
 
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let name: string = "";
-    let gid: string = "";
+    let gid = undefined;
 
     onMount(async () => {
         await checkCommand("groupadd", dialog);
     });
 
-    async function modifyGroup() {
-        if (!name || !gid) {
-            dialog = openDialog(dialog, "Error", "Group name and GID are required");
+    async function createGroup() {
+        if (!name) {
+            dialog = openDialog(dialog, "Error", "Group name is required");
             return;
         }
+
         try {
-            await ModifyGroup(name, parseInt(gid));
-            dialog = openDialog(dialog, "Success", `Successfully modified group ${name}`);
+            await CreateGroup(
+                name,
+                gid !== undefined ? parseInt(gid) : undefined
+            );
+            dialog = openDialog(
+                dialog,
+                "Success",
+                `Successfully created group ${name}`
+            );
             name = "";
-            gid = "";
+            gid = undefined;
         } catch (err) {
-            console.error(err);
-            dialog = openDialog(dialog, "Error", `Failed to modified group: ${err}`);
+            dialog = openDialog(
+                dialog,
+                "Error",
+                `Failed to create group: ${err}`
+            );
         }
     }
 </script>
@@ -43,18 +54,19 @@
 />
 
 <template>
-    <form on:submit|preventDefault={modifyGroup}>
-      <label>
-        <span>Group name:</span>
-        <input type="text" bind:value={name} required />
-      </label>
-      <label>
-        <span>Group ID (GID):</span>
-        <input type="text" bind:value={gid} />
-      </label>
-      <button type="submit">Modify Group</button>
+    <form on:submit|preventDefault={createGroup}>
+        <label>
+            <span>Group name:</span>
+            <input type="text" bind:value={name} required />
+        </label>
+        <label>
+            <span>Group ID (GID):</span>
+            <input type="text" bind:value={gid} />
+        </label>
+        <button type="submit">Create Group</button>
     </form>
-  </template>
+</template>
+
 <style>
     form {
         display: flex;
