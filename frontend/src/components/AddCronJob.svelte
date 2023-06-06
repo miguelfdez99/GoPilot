@@ -152,6 +152,10 @@ h2 {
     border-radius: 4px;
 }
 
+.form-select {
+    color: white;
+}
+
 .form-title {
     font-size: 24px;
     margin-bottom: 10px;

@@ -209,6 +209,7 @@
         padding: 0.5rem;
         border: 1px solid #ccc;
         border-radius: 0.25rem;
+        color: white;
     }
     table {
         table-layout: auto;
@@ -231,6 +232,7 @@
         width: 10%;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: white;
     }
     tbody tr {
         border-bottom: 1px solid #dddddd;

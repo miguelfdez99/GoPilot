@@ -64,6 +64,12 @@
                     },
                 },
                 plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: "white",
+                        }
+                    },
                     tooltip: {
                         enabled: true,
                     },

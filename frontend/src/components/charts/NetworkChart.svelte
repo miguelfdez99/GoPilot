@@ -67,9 +67,13 @@
                     title: {
                         display: true,
                         text: "Network Usage",
+                        color: "white"
                     },
                     legend: {
                         position: "top",
+                        labels: {
+                            color: "white",
+                        }
                     },
                 },
                 scales: {

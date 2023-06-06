@@ -158,6 +158,11 @@
     h1 {
         font-size: 32px;
         margin-bottom: 20px;
+        color: white;
+    }
+
+    h2, p {
+        color: white;
     }
 
     ul {
@@ -170,6 +175,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        color: white;
     }
 
     li:hover {

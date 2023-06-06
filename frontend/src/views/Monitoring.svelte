@@ -89,6 +89,7 @@
     margin: 0;
     line-height: 24px;
     padding: 10px;
+    color: white;
   }
 
   .dropdown-btn {

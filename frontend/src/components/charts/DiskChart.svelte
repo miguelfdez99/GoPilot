@@ -44,9 +44,16 @@
                 animation: false,
                 responsive: true,
                 plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: "white",
+                        }
+                    },
                     title: {
                         display: true,
                         text: "Disk Usage (GB)",
+                        color: "white"
                     },
                     tooltip: {
                         callbacks: {
