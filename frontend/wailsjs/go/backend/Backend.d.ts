@@ -28,6 +28,8 @@ export function GetDistribution():Promise<string>;
 
 export function GetLSCPU():Promise<string>;
 
+export function GetLogs(arg1:string):Promise<Array<string>>;
+
 export function GetMemoryUsage():Promise<backend.MemoryUsage>;
 
 export function GetNetworkInterfaces():Promise<Array<backend.NetworkInterface>>;

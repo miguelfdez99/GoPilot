@@ -54,6 +54,10 @@ export function GetLSCPU() {
   return window['go']['backend']['Backend']['GetLSCPU']();
 }
 
+export function GetLogs(arg1) {
+  return window['go']['backend']['Backend']['GetLogs'](arg1);
+}
+
 export function GetMemoryUsage() {
   return window['go']['backend']['Backend']['GetMemoryUsage']();
 }
