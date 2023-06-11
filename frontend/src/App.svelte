@@ -9,6 +9,7 @@
   import Backup from './views/Backup.svelte';
   import Process from './views/ProcInfo.svelte';
   import Networking from './views/Networking.svelte';
+  import Logs from './views/Logs.svelte';
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
@@ -22,6 +23,7 @@
     'backup': Backup,
     'process': Process,
     'networking': Networking,
+    'logs': Logs,
   };
 
   let CurrentComponent = views[currentView];
@@ -43,6 +45,7 @@
     <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
     <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
     <button on:click={() => (currentView = 'networking', CurrentComponent = views[currentView])}>Networking</button>
+    <button on:click={() => (currentView = 'logs', CurrentComponent = views[currentView])}>Logs</button>
   </div>
 
   <div class="main">
