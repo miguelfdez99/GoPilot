@@ -20,6 +20,8 @@ export function DeleteGroup(arg1:string):Promise<void>;
 
 export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
+export function ExportLogs(arg1:string,arg2:string):Promise<void>;
+
 export function GetCPUUsage():Promise<Array<number>>;
 
 export function GetDiskUsage():Promise<backend.DiskUsage>;
@@ -28,7 +30,7 @@ export function GetDistribution():Promise<string>;
 
 export function GetLSCPU():Promise<string>;
 
-export function GetLogs(arg1:string):Promise<Array<string>>;
+export function GetLogs(arg1:string,arg2:number):Promise<Array<string>>;
 
 export function GetMemoryUsage():Promise<backend.MemoryUsage>;
 
