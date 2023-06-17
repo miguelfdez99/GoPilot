@@ -38,6 +38,10 @@ export function DeleteUser(arg1, arg2, arg3) {
   return window['go']['backend']['Backend']['DeleteUser'](arg1, arg2, arg3);
 }
 
+export function ExportLogs(arg1, arg2) {
+  return window['go']['backend']['Backend']['ExportLogs'](arg1, arg2);
+}
+
 export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }
@@ -52,6 +56,10 @@ export function GetDistribution() {
 
 export function GetLSCPU() {
   return window['go']['backend']['Backend']['GetLSCPU']();
+}
+
+export function GetLogs(arg1, arg2) {
+  return window['go']['backend']['Backend']['GetLogs'](arg1, arg2);
 }
 
 export function GetMemoryUsage() {

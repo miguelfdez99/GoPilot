@@ -1,14 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Home from './views/Home.svelte';
-  import Users from './views/Users.svelte';
-  import Packages from './views/Packages.svelte';
-  import Monitor from './views/Monitoring.svelte';
-  import Cron from './views/Cron.svelte';
-  import Firewall from './views/Firewall.svelte';
-  import Backup from './views/Backup.svelte';
-  import Process from './views/ProcInfo.svelte';
-  import Networking from './views/Networking.svelte';
+  import { Home, Users, Packages, Monitor, Cron, Firewall, Backup, Process, Networking, Logs } from './imports';
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
@@ -22,6 +14,7 @@
     'backup': Backup,
     'process': Process,
     'networking': Networking,
+    'logs': Logs,
   };
 
   let CurrentComponent = views[currentView];
@@ -43,6 +36,7 @@
     <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
     <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
     <button on:click={() => (currentView = 'networking', CurrentComponent = views[currentView])}>Networking</button>
+    <button on:click={() => (currentView = 'logs', CurrentComponent = views[currentView])}>Logs</button>
   </div>
 
   <div class="main">
