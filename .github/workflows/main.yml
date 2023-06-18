@@ -24,9 +24,7 @@ jobs:
           node-version: 16
 
       - name: Install Wails
-        run: |
-          curl -sSL https://install.getwails.app | bash
-          wails update -pre
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
       - name: Install dependencies
         run: |
