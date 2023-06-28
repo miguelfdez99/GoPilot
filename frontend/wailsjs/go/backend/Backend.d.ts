@@ -24,9 +24,13 @@ export function ExportLogs(arg1:string,arg2:string):Promise<void>;
 
 export function GetCPUUsage():Promise<Array<number>>;
 
+export function GetDefaultPolicy(arg1:string):Promise<string>;
+
 export function GetDiskUsage():Promise<backend.DiskUsage>;
 
 export function GetDistribution():Promise<string>;
+
+export function GetFirewallStatus():Promise<string>;
 
 export function GetLSCPU():Promise<string>;
 
@@ -61,6 +65,10 @@ export function RemoveCronJob(arg1:string):Promise<void>;
 export function RemoveFirewallRule(arg1:string):Promise<void>;
 
 export function RemovePackage(arg1:string):Promise<void>;
+
+export function SetDefaultPolicy(arg1:string,arg2:string):Promise<void>;
+
+export function SetFirewallStatus(arg1:string):Promise<void>;
 
 export function SetInterfaceStatus(arg1:string,arg2:string):Promise<void>;
 

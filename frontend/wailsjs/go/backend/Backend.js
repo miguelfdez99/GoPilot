@@ -46,12 +46,20 @@ export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }
 
+export function GetDefaultPolicy(arg1) {
+  return window['go']['backend']['Backend']['GetDefaultPolicy'](arg1);
+}
+
 export function GetDiskUsage() {
   return window['go']['backend']['Backend']['GetDiskUsage']();
 }
 
 export function GetDistribution() {
   return window['go']['backend']['Backend']['GetDistribution']();
+}
+
+export function GetFirewallStatus() {
+  return window['go']['backend']['Backend']['GetFirewallStatus']();
 }
 
 export function GetLSCPU() {
@@ -120,6 +128,14 @@ export function RemoveFirewallRule(arg1) {
 
 export function RemovePackage(arg1) {
   return window['go']['backend']['Backend']['RemovePackage'](arg1);
+}
+
+export function SetDefaultPolicy(arg1, arg2) {
+  return window['go']['backend']['Backend']['SetDefaultPolicy'](arg1, arg2);
+}
+
+export function SetFirewallStatus(arg1) {
+  return window['go']['backend']['Backend']['SetFirewallStatus'](arg1);
 }
 
 export function SetInterfaceStatus(arg1, arg2) {
