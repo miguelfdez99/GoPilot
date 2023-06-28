@@ -2,6 +2,7 @@ package backend
 
 import (
 	"errors"
+	"fmt"
 	"os/exec"
 	"strings"
 )
@@ -171,4 +172,60 @@ func removeFirewalldRule(rule string) error {
 		return err
 	}
 	return nil
+}
+
+func (b *Backend) GetFirewallStatus() (string, error) {
+	cmd := exec.Command("ufw", "status")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	status := strings.Split(string(output), "\n")[0]
+	fmt.Println(status)
+	return status, nil
+}
+
+func (b *Backend) SetFirewallStatus(status string) error {
+	if status != "active" && status != "inactive" {
+		return errors.New("invalid status")
+	}
+
+	var cmd *exec.Cmd
+	if status == "active" {
+		cmd = exec.Command("ufw", "enable")
+	} else {
+		cmd = exec.Command("ufw", "disable")
+	}
+
+	b.logger.Info(fmt.Sprintf("Firewall %s", status))
+
+	return cmd.Run()
+}
+
+func (b *Backend) GetDefaultPolicy(direction string) (string, error) {
+	if direction != "incoming" && direction != "outgoing" {
+		return "", errors.New("invalid direction")
+	}
+
+	cmd := exec.Command("ufw", "default", direction)
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	policy := strings.Split(string(output), " ")[4]
+	return policy, nil
+}
+
+func (b *Backend) SetDefaultPolicy(direction, policy string) error {
+	if direction != "incoming" && direction != "outgoing" {
+		return errors.New("invalid direction")
+	}
+	if policy != "allow" && policy != "deny" {
+		return errors.New("invalid policy")
+	}
+
+	cmd := exec.Command("ufw", "default", policy, direction)
+	return cmd.Run()
 }
