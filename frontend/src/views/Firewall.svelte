@@ -4,13 +4,21 @@
         ListFirewallRules,
         AddFirewallRule,
         RemoveFirewallRule,
-    } from '../../wailsjs/go/backend/Backend.js';
+        GetFirewallStatus, 
+        SetFirewallStatus, 
+        GetDefaultPolicy, 
+        SetDefaultPolicy 
+    } from '../../wailsjs/go/backend/Backend';
 
     let rules = [];
     let error = null;
 
     let port = "";
     let protocol = "";
+
+    let firewallEnabled: boolean;
+    let incomingPolicy: string;
+    let outgoingPolicy: string;
 
     async function addRule() {
         try {
@@ -23,18 +31,29 @@
         }
     }
 
-    async function removeRule(rule: string) {
+    onMount(async () => {
         try {
-            await RemoveFirewallRule(rule);
+            let status = await GetFirewallStatus();
+            firewallEnabled = status === "active";
+            incomingPolicy = await GetDefaultPolicy("incoming");
+            outgoingPolicy = await GetDefaultPolicy("outgoing");
             listFirewallRules();
         } catch (err) {
-            error = err;
+            console.error(err);
+        }
+    });
+
+    // Whenever firewallEnabled changes, this reactive statement will execute
+    $: setFirewallStatus(firewallEnabled), firewallEnabled;
+
+    async function setFirewallStatus(status: boolean) {
+        try {
+            let stringStatus = status ? "active" : "inactive";
+            await SetFirewallStatus(stringStatus);
+        } catch (err) {
+            console.error(err);
         }
     }
-
-    onMount(() => {
-        listFirewallRules();
-    });
 
     async function listFirewallRules() {
         try {
@@ -45,10 +64,47 @@
             error = err;
         }
     }
+
+    async function setDefaultPolicy(direction: string, policy: string) {
+        try {
+            await SetDefaultPolicy(direction, policy);
+            if (direction === "incoming") {
+                incomingPolicy = policy;
+            } else {
+                outgoingPolicy = policy;
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 </script>
 
 <main>
-    <h1>Current Firewall Rules</h1>
+    <h1>Firewall Settings</h1>
+
+    <div>
+        Status: 
+        <label class="switch">
+            <input type="checkbox" bind:checked={firewallEnabled}>
+          <span class="slider round"></span>
+        </label>
+    </div>
+
+    <div>
+        Incoming:
+        <select bind:value={incomingPolicy} on:change={() => setDefaultPolicy('incoming', incomingPolicy)}>
+            <option value="allow">Allow</option>
+            <option value="deny">Deny</option>
+        </select>
+    </div>
+    
+    <div>
+        Outgoing: 
+        <select bind:value={outgoingPolicy} on:change={() => setDefaultPolicy('outgoing', outgoingPolicy)}>
+            <option value="allow">Allow</option>
+            <option value="deny">Deny</option>
+        </select>
+    </div>
 
     {#if error}
         <p class="error">{error.message}</p>
@@ -91,5 +147,60 @@
     h1, h2, label {
         color: white;
     }
+
+    .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 
 </style>
