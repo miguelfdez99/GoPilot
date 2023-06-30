@@ -15,6 +15,13 @@ var distributionsMap = map[string]func(string) error{
 	"debian": addUfwRule,
 }
 
+type TrafficData struct {
+	Netid       string `json:"netid"`
+	LocalAddr   string `json:"localAddr"`
+	PeerAddr    string `json:"peerAddr"`
+	Application string `json:"application"`
+}
+
 func isValidRule(rule string) bool {
 	if rule == "" {
 		return false
@@ -228,4 +235,50 @@ func (b *Backend) SetDefaultPolicy(direction, policy string) error {
 
 	cmd := exec.Command("ufw", "default", policy, direction)
 	return cmd.Run()
+}
+
+func (b *Backend) FetchTrafficData() ([]TrafficData, error) {
+	cmd := exec.Command("ss", "-tunlp")
+
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(string(output))
+
+	lines := strings.Split(string(output), "\n")
+
+	trafficData := make([]TrafficData, 0, len(lines))
+
+	for _, line := range lines[1:] {
+		fields := strings.Fields(line)
+		if len(fields) < 6 {
+			continue
+		}
+
+		netid := fields[0]
+		localAddr := fields[3]
+		peerAddr := fields[4]
+
+		processInfo := fields[5]
+		processSplit := strings.Split(processInfo, "\"")
+		application := ""
+		if len(processSplit) > 1 {
+			application = processSplit[1]
+		}
+
+		if netid == "" || localAddr == "" || peerAddr == "" {
+			continue
+		}
+
+		trafficData = append(trafficData, TrafficData{
+			Netid:       netid,
+			LocalAddr:   localAddr,
+			PeerAddr:    peerAddr,
+			Application: application,
+		})
+	}
+
+	return trafficData, nil
 }

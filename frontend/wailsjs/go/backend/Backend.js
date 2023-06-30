@@ -42,6 +42,10 @@ export function ExportLogs(arg1, arg2) {
   return window['go']['backend']['Backend']['ExportLogs'](arg1, arg2);
 }
 
+export function FetchTrafficData() {
+  return window['go']['backend']['Backend']['FetchTrafficData']();
+}
+
 export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }

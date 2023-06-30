@@ -22,6 +22,8 @@ export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
 export function ExportLogs(arg1:string,arg2:string):Promise<void>;
 
+export function FetchTrafficData():Promise<Array<backend.TrafficData>>;
+
 export function GetCPUUsage():Promise<Array<number>>;
 
 export function GetDefaultPolicy(arg1:string):Promise<string>;
