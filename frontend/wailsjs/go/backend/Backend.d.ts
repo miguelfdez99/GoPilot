@@ -4,8 +4,6 @@ import {backend} from '../models';
 
 export function AddCronJob(arg1:string,arg2:string):Promise<void>;
 
-export function AddFirewallRule(arg1:string):Promise<void>;
-
 export function Backup(arg1:backend.BackupOptions):Promise<void>;
 
 export function CheckAdmin():Promise<boolean>;
@@ -52,9 +50,9 @@ export function InstallPackage(arg1:string):Promise<void>;
 
 export function ListCronJobs():Promise<Array<backend.CronJob>>;
 
-export function ListFirewallRules():Promise<Array<string>>;
-
 export function ListPackages():Promise<Array<string>>;
+
+export function ListUfw():Promise<Array<string>>;
 
 export function ModifyGroup(arg1:string,arg2:number):Promise<void>;
 
@@ -63,8 +61,6 @@ export function ModifyUser(arg1:string,arg2:backend.User):Promise<void>;
 export function RemoveAllCronJobs():Promise<void>;
 
 export function RemoveCronJob(arg1:string):Promise<void>;
-
-export function RemoveFirewallRule(arg1:string):Promise<void>;
 
 export function RemovePackage(arg1:string):Promise<void>;
 

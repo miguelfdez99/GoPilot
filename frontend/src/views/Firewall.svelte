@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { writable } from "svelte/store";
     import {
-        ListFirewallRules,
-        AddFirewallRule,
+        ListUfw,
         GetFirewallStatus,
         SetFirewallStatus,
         GetDefaultPolicy,
@@ -10,44 +10,34 @@
         FetchTrafficData,
     } from "../../wailsjs/go/backend/Backend";
 
+    export const firewallEnabled = writable(false);
+
     let rules = [];
-    let error = null;
-
-    let port = "";
-    let protocol = "";
-
-    let firewallEnabled: boolean;
+    let error: Error | null = null;
     let incomingPolicy: string;
     let outgoingPolicy: string;
-
     let trafficData = undefined;
-
-    async function addRule() {
-        try {
-            await AddFirewallRule(port, protocol);
-            listFirewallRules();
-            port = "";
-            protocol = "";
-        } catch (err) {
-            error = err;
-        }
-    }
+    let shouldSync = false;
 
     onMount(async () => {
         try {
-            // incomingPolicy = await GetDefaultPolicy("incoming");
-            // outgoingPolicy = await GetDefaultPolicy("outgoing");
             trafficData = await FetchTrafficData();
-            let status = "inactive"; // await GetFirewallStatus();
-            firewallEnabled = status === "active";
+            let stringStatus = await GetFirewallStatus();
+            firewallEnabled.set(stringStatus.toLowerCase() === "active");
             listFirewallRules();
+
+            shouldSync = true;
         } catch (err) {
             console.error(err);
             error = err;
         }
     });
 
-    $: setFirewallStatus(firewallEnabled), firewallEnabled;
+    firewallEnabled.subscribe((value) => {
+        if (shouldSync) {
+            setFirewallStatus(value);
+        }
+    });
 
     async function setFirewallStatus(status: boolean) {
         try {
@@ -60,7 +50,7 @@
 
     async function listFirewallRules() {
         try {
-            rules = await ListFirewallRules();
+            rules = await ListUfw();
             error = null;
         } catch (err) {
             rules = [];
@@ -90,7 +80,7 @@
             <label
                 >Status:
                 <div class="switch">
-                    <input type="checkbox" bind:checked={firewallEnabled} />
+                    <input type="checkbox" bind:checked={$firewallEnabled} />
                     <span class="slider round" />
                 </div>
             </label>
@@ -137,7 +127,7 @@
         <p>No firewall rules found.</p>
     {/if}
 
-    <form on:submit|preventDefault={addRule} class="form">
+    <!-- <form on:submit|preventDefault={addRule} class="form">
         <h2>Add Firewall Rule</h2>
         <label>
             Port:
@@ -162,7 +152,7 @@
         <button type="submit" disabled={!firewallEnabled} class="btn"
             >Add Rule</button
         >
-    </form>
+    </form> -->
 
     {#if trafficData === undefined}
         <p>Loading data...</p>
@@ -214,7 +204,6 @@
     }
 
     h1,
-    h2,
     p,
     label,
     td,
@@ -235,8 +224,7 @@
         flex: 1 1 200px;
     }
 
-    .select,
-    .input {
+    .select {
         display: block;
         width: 100%;
         padding: 10px;
@@ -248,10 +236,10 @@
         color: white;
     }
 
-    .form {
+    /* .form {
         width: 100%;
         max-width: 400px;
-    }
+    } */
 
     .btn {
         display: inline-block;
