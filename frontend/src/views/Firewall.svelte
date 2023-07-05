@@ -23,7 +23,7 @@
         try {
             trafficData = await FetchTrafficData();
             let stringStatus = await GetFirewallStatus();
-            firewallEnabled.set(stringStatus.toLowerCase() === "active");
+            firewallEnabled.set(stringStatus.toLowerCase().includes("active"));
             listFirewallRules();
 
             shouldSync = true;
