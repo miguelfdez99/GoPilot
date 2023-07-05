@@ -33,6 +33,24 @@ export namespace backend {
 	    }
 	}
 	
+	export class TrafficData {
+	    netid: string;
+	    localAddr: string;
+	    peerAddr: string;
+	    application: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new TrafficData(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.netid = source["netid"];
+	        this.localAddr = source["localAddr"];
+	        this.peerAddr = source["peerAddr"];
+	        this.application = source["application"];
+	    }
+	}
 
 }
 

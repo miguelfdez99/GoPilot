@@ -6,10 +6,6 @@ export function AddCronJob(arg1, arg2) {
   return window['go']['backend']['Backend']['AddCronJob'](arg1, arg2);
 }
 
-export function AddFirewallRule(arg1) {
-  return window['go']['backend']['Backend']['AddFirewallRule'](arg1);
-}
-
 export function Backup(arg1) {
   return window['go']['backend']['Backend']['Backup'](arg1);
 }
@@ -42,8 +38,16 @@ export function ExportLogs(arg1, arg2) {
   return window['go']['backend']['Backend']['ExportLogs'](arg1, arg2);
 }
 
+export function FetchTrafficData() {
+  return window['go']['backend']['Backend']['FetchTrafficData']();
+}
+
 export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
+}
+
+export function GetDefaultPolicy(arg1) {
+  return window['go']['backend']['Backend']['GetDefaultPolicy'](arg1);
 }
 
 export function GetDiskUsage() {
@@ -52,6 +56,10 @@ export function GetDiskUsage() {
 
 export function GetDistribution() {
   return window['go']['backend']['Backend']['GetDistribution']();
+}
+
+export function GetFirewallStatus() {
+  return window['go']['backend']['Backend']['GetFirewallStatus']();
 }
 
 export function GetLSCPU() {
@@ -90,12 +98,12 @@ export function ListCronJobs() {
   return window['go']['backend']['Backend']['ListCronJobs']();
 }
 
-export function ListFirewallRules() {
-  return window['go']['backend']['Backend']['ListFirewallRules']();
-}
-
 export function ListPackages() {
   return window['go']['backend']['Backend']['ListPackages']();
+}
+
+export function ListUfw() {
+  return window['go']['backend']['Backend']['ListUfw']();
 }
 
 export function ModifyGroup(arg1, arg2) {
@@ -114,12 +122,16 @@ export function RemoveCronJob(arg1) {
   return window['go']['backend']['Backend']['RemoveCronJob'](arg1);
 }
 
-export function RemoveFirewallRule(arg1) {
-  return window['go']['backend']['Backend']['RemoveFirewallRule'](arg1);
-}
-
 export function RemovePackage(arg1) {
   return window['go']['backend']['Backend']['RemovePackage'](arg1);
+}
+
+export function SetDefaultPolicy(arg1, arg2) {
+  return window['go']['backend']['Backend']['SetDefaultPolicy'](arg1, arg2);
+}
+
+export function SetFirewallStatus(arg1) {
+  return window['go']['backend']['Backend']['SetFirewallStatus'](arg1);
 }
 
 export function SetInterfaceStatus(arg1, arg2) {
