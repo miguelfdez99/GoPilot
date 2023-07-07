@@ -29,7 +29,7 @@
 <div>
   <div class="sidebar">
     <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
-    <button on:click={() => (currentView = 'certs', CurrentComponent = views[currentView])}>Certificates</button>
+    <button on:click={() => (currentView = 'certs', CurrentComponent = views[currentView])}>Certs & Keys</button>
     <button on:click={() => (currentView = 'cron', CurrentComponent = views[currentView])}>Cron</button>
     <button on:click={() => (currentView = 'firewall', CurrentComponent = views[currentView])}>Firewall</button>
     <button on:click={() => (currentView = 'home', CurrentComponent = views[currentView])}>Home</button>
