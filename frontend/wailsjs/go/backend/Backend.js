@@ -42,6 +42,14 @@ export function FetchTrafficData() {
   return window['go']['backend']['Backend']['FetchTrafficData']();
 }
 
+export function GenerateKeys(arg1, arg2, arg3, arg4) {
+  return window['go']['backend']['Backend']['GenerateKeys'](arg1, arg2, arg3, arg4);
+}
+
+export function GenerateSelfSignedCertificate(arg1) {
+  return window['go']['backend']['Backend']['GenerateSelfSignedCertificate'](arg1);
+}
+
 export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }
