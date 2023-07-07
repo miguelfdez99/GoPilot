@@ -8,5 +8,6 @@ import Backup from './views/Backup.svelte';
 import Process from './views/ProcInfo.svelte';
 import Networking from './views/Networking.svelte';
 import Logs from './views/Logs.svelte';
+import Certs from './views/Certs.svelte';
 
-export { Home, Users, Packages, Monitor, Cron, Firewall, Backup, Process, Networking, Logs };
+export { Home, Users, Packages, Monitor, Cron, Firewall, Backup, Process, Networking, Logs, Certs };

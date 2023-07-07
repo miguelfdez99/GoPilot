@@ -22,6 +22,10 @@ export function ExportLogs(arg1:string,arg2:string):Promise<void>;
 
 export function FetchTrafficData():Promise<Array<backend.TrafficData>>;
 
+export function GenerateKeys(arg1:string,arg2:string,arg3:string,arg4:boolean):Promise<string>;
+
+export function GenerateSelfSignedCertificate(arg1:string):Promise<string>;
+
 export function GetCPUUsage():Promise<Array<number>>;
 
 export function GetDefaultPolicy(arg1:string):Promise<string>;
