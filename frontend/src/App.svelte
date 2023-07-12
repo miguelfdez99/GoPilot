@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs} from './imports';
+  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs, Alerts} from './imports';
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
   const views = {
+  'alerts': Alerts,
   'backup': Backup,
   'certs': Certs,
   'cron': Cron,
@@ -26,6 +27,7 @@
 
 <div>
   <div class="sidebar">
+    <button on:click={() => (currentView = 'alerts', CurrentComponent = views[currentView])}>Alerts</button>
     <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
     <button on:click={() => (currentView = 'certs', CurrentComponent = views[currentView])}>Certs & Keys</button>
     <button on:click={() => (currentView = 'cron', CurrentComponent = views[currentView])}>Cron</button>

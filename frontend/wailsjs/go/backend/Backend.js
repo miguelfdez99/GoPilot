@@ -102,6 +102,14 @@ export function ModifyUser(arg1, arg2) {
   return window['go']['backend']['Backend']['ModifyUser'](arg1, arg2);
 }
 
+export function MonitorDir(arg1) {
+  return window['go']['backend']['Backend']['MonitorDir'](arg1);
+}
+
+export function MonitorFile(arg1) {
+  return window['go']['backend']['Backend']['MonitorFile'](arg1);
+}
+
 export function RemoveAllCronJobs() {
   return window['go']['backend']['Backend']['RemoveAllCronJobs']();
 }
