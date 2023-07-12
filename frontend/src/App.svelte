@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Home, Users, Packages, Monitor, Cron, Firewall, Backup, Process, Networking, Logs , Certs} from './imports';
+  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs} from './imports';
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
@@ -8,11 +8,9 @@
   'backup': Backup,
   'certs': Certs,
   'cron': Cron,
-  'firewall': Firewall,
   'home': Home,
   'logs': Logs,
   'monitoring': Monitor,
-  'networking': Networking,
   'packages': Packages,
   'process': Process,
   'users': Users,
@@ -31,11 +29,9 @@
     <button on:click={() => (currentView = 'backup', CurrentComponent = views[currentView])}>Backup</button>
     <button on:click={() => (currentView = 'certs', CurrentComponent = views[currentView])}>Certs & Keys</button>
     <button on:click={() => (currentView = 'cron', CurrentComponent = views[currentView])}>Cron</button>
-    <button on:click={() => (currentView = 'firewall', CurrentComponent = views[currentView])}>Firewall</button>
     <button on:click={() => (currentView = 'home', CurrentComponent = views[currentView])}>Home</button>
     <button on:click={() => (currentView = 'logs', CurrentComponent = views[currentView])}>Logs</button>
     <button on:click={() => (currentView = 'monitoring', CurrentComponent = views[currentView])}>Monitoring</button>
-    <button on:click={() => (currentView = 'networking', CurrentComponent = views[currentView])}>Networking</button>
     <button on:click={() => (currentView = 'packages', CurrentComponent = views[currentView])}>Packages</button>
     <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
     <button on:click={() => (currentView = 'users', CurrentComponent = views[currentView])}>Users</button>
