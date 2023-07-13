@@ -110,6 +110,10 @@ export function MonitorFile(arg1) {
   return window['go']['backend']['Backend']['MonitorFile'](arg1);
 }
 
+export function MonitorSystemStats(arg1) {
+  return window['go']['backend']['Backend']['MonitorSystemStats'](arg1);
+}
+
 export function RemoveAllCronJobs() {
   return window['go']['backend']['Backend']['RemoveAllCronJobs']();
 }
@@ -124,4 +128,8 @@ export function RemovePackage(arg1) {
 
 export function TerminateProcess(arg1) {
   return window['go']['backend']['Backend']['TerminateProcess'](arg1);
+}
+
+export function WatchList() {
+  return window['go']['backend']['Backend']['WatchList']();
 }
