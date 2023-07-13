@@ -2,13 +2,15 @@ package backend
 
 import (
 	"context"
+	"sync"
 
 	"github.com/wailsapp/wails/v2/pkg/logger"
 )
 
 type Backend struct {
-	ctx    context.Context
-	logger logger.Logger
+	ctx       context.Context
+	logger    logger.Logger
+	watchList sync.Map
 }
 
 func NewBackend(l logger.Logger) *Backend {

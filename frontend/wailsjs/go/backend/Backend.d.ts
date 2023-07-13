@@ -52,6 +52,12 @@ export function ModifyGroup(arg1:string,arg2:number):Promise<void>;
 
 export function ModifyUser(arg1:string,arg2:backend.User):Promise<void>;
 
+export function MonitorDir(arg1:string):Promise<void>;
+
+export function MonitorFile(arg1:string):Promise<void>;
+
+export function MonitorSystemStats(arg1:backend.SystemStatThresholds):Promise<void>;
+
 export function RemoveAllCronJobs():Promise<void>;
 
 export function RemoveCronJob(arg1:string):Promise<void>;
@@ -59,3 +65,5 @@ export function RemoveCronJob(arg1:string):Promise<void>;
 export function RemovePackage(arg1:string):Promise<void>;
 
 export function TerminateProcess(arg1:number):Promise<void>;
+
+export function WatchList():Promise<{[key: string]: string}>;

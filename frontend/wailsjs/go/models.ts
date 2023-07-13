@@ -32,6 +32,22 @@ export namespace backend {
 	    }
 	}
 	
+	export class SystemStatThresholds {
+	    CPU: number;
+	    Memory: number;
+	    Disk: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SystemStatThresholds(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.CPU = source["CPU"];
+	        this.Memory = source["Memory"];
+	        this.Disk = source["Disk"];
+	    }
+	}
 
 }
 
