@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Backup } from "../../wailsjs/go/backend/Backend";
+    import { Backup, ScheduleBackup } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
     import { openDialog, closeDialog, checkCommand } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
@@ -13,8 +13,8 @@
         compressData: false,
         linksOption: "",
         verify: false,
-        schedule: "",
         compressFile: false,
+        schedule: "",
     };
 
     onMount(async () => {
@@ -27,6 +27,15 @@
             dialog = openDialog(dialog, "Success", `Backup created successfully`);
         } catch (err) {
             dialog = openDialog(dialog, "Error", `Error creating backup: ${err.message}`);
+        }
+    };
+
+    const scheduleBackup = async () => {
+        try {
+            await ScheduleBackup(options, options.schedule);
+            dialog = openDialog(dialog, "Success", `Backup scheduled successfully`);
+        } catch (err) {
+            dialog = openDialog(dialog, "Error", `Error scheduling backup: ${err.message}`);
         }
     };
 </script>
@@ -90,13 +99,6 @@
     </div>
 
     <div class="grid-item">
-        <label for="schedule">Schedule Backup (in seconds):</label>
-    </div>
-    <div class="grid-item">
-        <input type="text" bind:value={options.schedule} />
-    </div>
-
-    <div class="grid-item">
         <label for="compressFile">Create a compress file:</label>
     </div>
     <div class="grid-item">
@@ -104,7 +106,18 @@
     </div>
 
     <div class="grid-item">
-        <button on:click={backup}>Backup</button>
+        <label for="schedule">Schedule:</label>
+    </div>
+    <div class="grid-item">
+        <input type="text" bind:value={options.schedule} placeholder="Cron schedule (e.g., * * * * *)"/>
+    </div>
+
+
+    <div class="grid-item">
+        <button on:click={backup}>Backup Now</button>
+    </div>
+    <div class="grid-item">
+        <button on:click={scheduleBackup}>Schedule Backup</button>
     </div>
 </div>
 
