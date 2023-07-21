@@ -14,6 +14,10 @@ export function CheckAdmin() {
   return window['go']['backend']['Backend']['CheckAdmin']();
 }
 
+export function CleanCachePackages() {
+  return window['go']['backend']['Backend']['CleanCachePackages']();
+}
+
 export function CommandExists(arg1) {
   return window['go']['backend']['Backend']['CommandExists'](arg1);
 }
@@ -30,8 +34,16 @@ export function DeleteGroup(arg1) {
   return window['go']['backend']['Backend']['DeleteGroup'](arg1);
 }
 
+export function DeleteTempFiles(arg1, arg2) {
+  return window['go']['backend']['Backend']['DeleteTempFiles'](arg1, arg2);
+}
+
 export function DeleteUser(arg1, arg2, arg3) {
   return window['go']['backend']['Backend']['DeleteUser'](arg1, arg2, arg3);
+}
+
+export function DuplicatedFiles(arg1) {
+  return window['go']['backend']['Backend']['DuplicatedFiles'](arg1);
 }
 
 export function ExportLogs(arg1, arg2) {
@@ -122,8 +134,16 @@ export function RemoveCronJob(arg1) {
   return window['go']['backend']['Backend']['RemoveCronJob'](arg1);
 }
 
+export function RemoveOldLogs(arg1) {
+  return window['go']['backend']['Backend']['RemoveOldLogs'](arg1);
+}
+
 export function RemovePackage(arg1) {
   return window['go']['backend']['Backend']['RemovePackage'](arg1);
+}
+
+export function RemoveUnusedPackages() {
+  return window['go']['backend']['Backend']['RemoveUnusedPackages']();
 }
 
 export function TerminateProcess(arg1) {
