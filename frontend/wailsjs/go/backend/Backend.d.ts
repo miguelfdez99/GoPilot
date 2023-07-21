@@ -4,7 +4,7 @@ import {backend} from '../models';
 
 export function AddCronJob(arg1:string,arg2:string):Promise<void>;
 
-export function Backup(arg1:backend.BackupOptions):Promise<void>;
+export function Backup(arg1:backend.BackupOptions):Promise<string>;
 
 export function CheckAdmin():Promise<boolean>;
 
@@ -73,6 +73,8 @@ export function RemoveOldLogs(arg1:string):Promise<void>;
 export function RemovePackage(arg1:string):Promise<void>;
 
 export function RemoveUnusedPackages():Promise<void>;
+
+export function ScheduleBackup(arg1:backend.BackupOptions,arg2:string):Promise<void>;
 
 export function TerminateProcess(arg1:number):Promise<void>;
 

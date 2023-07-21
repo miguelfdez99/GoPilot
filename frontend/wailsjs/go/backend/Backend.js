@@ -146,6 +146,10 @@ export function RemoveUnusedPackages() {
   return window['go']['backend']['Backend']['RemoveUnusedPackages']();
 }
 
+export function ScheduleBackup(arg1, arg2) {
+  return window['go']['backend']['Backend']['ScheduleBackup'](arg1, arg2);
+}
+
 export function TerminateProcess(arg1) {
   return window['go']['backend']['Backend']['TerminateProcess'](arg1);
 }

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os/exec"
 	"path/filepath"
-	"time"
+	"strings"
 )
 
 type BackupOptions struct {
@@ -15,11 +15,10 @@ type BackupOptions struct {
 	CompressData bool
 	LinksOption  string
 	Verify       bool
-	Schedule     string
 	CompressFile bool
 }
 
-func (b *Backend) Backup(options BackupOptions) error {
+func (b *Backend) Backup(options BackupOptions) (string, error) {
 	args := []string{"-av", "--delete"}
 
 	if options.CompressData {
@@ -36,12 +35,14 @@ func (b *Backend) Backup(options BackupOptions) error {
 
 	args = append(args, options.SourceDir, options.DestDir)
 
+	cmdString := fmt.Sprintf("rsync %s", strings.Join(args, " "))
+
 	cmd := exec.Command("rsync", args...)
 	output, err := cmd.CombinedOutput()
 
 	if err != nil {
 		log.Println("Error creating backup:", err)
-		return fmt.Errorf("error creating backup: %s", string(output))
+		return "", fmt.Errorf("error creating backup: %s", string(output))
 	}
 
 	log.Println("Backup created successfully:\n", string(output))
@@ -56,27 +57,10 @@ func (b *Backend) Backup(options BackupOptions) error {
 
 		if err != nil {
 			log.Println("Backup verification failed:", err)
-			return fmt.Errorf("backup verification failed: %s", string(output))
+			return "", fmt.Errorf("backup verification failed: %s", string(output))
 		}
 
 		log.Println("Backup verified successfully:\n", string(output))
-	}
-
-	if options.Schedule != "" {
-		duration, err := time.ParseDuration(options.Schedule)
-		if err != nil {
-			log.Println("Invalid schedule duration:", err)
-			return fmt.Errorf("invalid schedule duration: %s", options.Schedule)
-		}
-
-		time.AfterFunc(duration, func() {
-			err := b.Backup(options)
-			if err != nil {
-				log.Println("Scheduled backup failed:", err)
-			}
-		})
-
-		log.Println("Next backup scheduled in", duration)
 	}
 
 	if options.CompressFile {
@@ -85,11 +69,20 @@ func (b *Backend) Backup(options BackupOptions) error {
 
 		if err != nil {
 			log.Println("Error compressing backup:", err)
-			return fmt.Errorf("error compressing backup: %s", string(output))
+			return "", fmt.Errorf("error compressing backup: %s", string(output))
 		}
 
 		log.Println("Backup compressed successfully:\n", string(output))
 	}
 
-	return nil
+	return cmdString, nil
+}
+
+func (b *Backend) ScheduleBackup(options BackupOptions, schedule string) error {
+	cmdString, err := b.Backup(options)
+	if err != nil {
+		return err
+	}
+
+	return b.AddCronJob(schedule, cmdString)
 }
