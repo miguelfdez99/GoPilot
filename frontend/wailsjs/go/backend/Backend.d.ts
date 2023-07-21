@@ -8,6 +8,8 @@ export function Backup(arg1:backend.BackupOptions):Promise<void>;
 
 export function CheckAdmin():Promise<boolean>;
 
+export function CleanCachePackages():Promise<void>;
+
 export function CommandExists(arg1:string):Promise<boolean|string>;
 
 export function CreateGroup(arg1:string,arg2:any):Promise<void>;
@@ -16,7 +18,11 @@ export function CreateUser(arg1:backend.User):Promise<void>;
 
 export function DeleteGroup(arg1:string):Promise<void>;
 
+export function DeleteTempFiles(arg1:string,arg2:number):Promise<void>;
+
 export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
+
+export function DuplicatedFiles(arg1:string):Promise<void>;
 
 export function ExportLogs(arg1:string,arg2:string):Promise<void>;
 
@@ -62,7 +68,11 @@ export function RemoveAllCronJobs():Promise<void>;
 
 export function RemoveCronJob(arg1:string):Promise<void>;
 
+export function RemoveOldLogs(arg1:string):Promise<void>;
+
 export function RemovePackage(arg1:string):Promise<void>;
+
+export function RemoveUnusedPackages():Promise<void>;
 
 export function TerminateProcess(arg1:number):Promise<void>;
 
