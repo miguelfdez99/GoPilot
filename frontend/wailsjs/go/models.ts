@@ -32,6 +32,7 @@ export namespace backend {
 	    }
 	}
 	
+	
 	export class SystemStatThresholds {
 	    CPU: number;
 	    Memory: number;

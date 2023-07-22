@@ -22,13 +22,19 @@ export function DeleteTempFiles(arg1:string,arg2:number):Promise<void>;
 
 export function DeleteUser(arg1:string,arg2:boolean,arg3:boolean):Promise<void>;
 
+export function DisableService(arg1:string):Promise<void>;
+
 export function DuplicatedFiles(arg1:string):Promise<void>;
+
+export function EnableService(arg1:string):Promise<void>;
 
 export function ExportLogs(arg1:string,arg2:string):Promise<void>;
 
 export function GenerateKeys(arg1:string,arg2:string,arg3:string,arg4:boolean):Promise<string>;
 
 export function GenerateSelfSignedCertificate(arg1:string):Promise<string>;
+
+export function GetAllServices():Promise<Array<backend.Service>>;
 
 export function GetCPUUsage():Promise<Array<number>>;
 
@@ -75,6 +81,10 @@ export function RemovePackage(arg1:string):Promise<void>;
 export function RemoveUnusedPackages():Promise<void>;
 
 export function ScheduleBackup(arg1:backend.BackupOptions,arg2:string):Promise<void>;
+
+export function StartService(arg1:string):Promise<void>;
+
+export function StopService(arg1:string):Promise<void>;
 
 export function TerminateProcess(arg1:number):Promise<void>;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs, Alerts, Optimization} from './imports';
+  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs, Alerts, Optimization, Services} from './imports';
   import "@picocss/pico/css/pico.css"
   let currentView = 'home';
 
@@ -15,6 +15,7 @@
   'optimization': Optimization,
   'packages': Packages,
   'process': Process,
+  'services': Services,
   'users': Users,
 };
 
@@ -38,6 +39,7 @@
     <button on:click={() => (currentView = 'optimization', CurrentComponent = views[currentView])}>Optimization</button>
     <button on:click={() => (currentView = 'packages', CurrentComponent = views[currentView])}>Packages</button>
     <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
+    <button on:click={() => (currentView = 'services', CurrentComponent = views[currentView])}>Services</button>
     <button on:click={() => (currentView = 'users', CurrentComponent = views[currentView])}>Users</button>
   </div>
 
