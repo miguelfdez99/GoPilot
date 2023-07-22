@@ -71,6 +71,8 @@
     confirmButton={false}
 />
 
+<div class="form-container">
+    <h2>Generate Keys</h2>
 <form on:submit|preventDefault={generateKeys}>
     <label class="input-field">
         <span>Key Type:</span>
@@ -100,9 +102,12 @@
 
     <button class="submit-button" type="submit">Generate Keys</button>
 </form>
+</div>
 
 <hr>
 
+<div class="form-container">
+    <h2>Generate Self-Signed Certificate</h2>
 <form on:submit|preventDefault={generateCertificate}>
   <label class="input-field">
       <span>Private Key Path:</span>
@@ -111,61 +116,64 @@
 
   <button class="submit-button" type="submit">Generate Self-Signed Certificate</button>
 </form>
+</div>
 
 <style>
-    form {
-        display: flex;
-        flex-direction: column;
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .input-field {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 15px;
-    }
-
-    .input-field span {
-        font-size: 14px;
-        color: #555;
-        margin-bottom: 5px;
-        color: white;
-    }
-
-    .input-field input,
-    .input-field select {
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
+    .form-container {
+        width: 90%;
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2rem;
+        background: #282828;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
         border-radius: 5px;
-        color: #333;
-        outline: none;
-        color: white;
+    }
+
+    .input-field, .checkbox-field {
+        margin-bottom: 1.5rem;
+    }
+
+    .input-field > span, .checkbox-field > span {
+        font-weight: 500;
+        color: #ddd;
+        margin-bottom: .5rem;
+    }
+
+    .input-field > input, .input-field > select {
+        padding: .7em;
+        border: 0;
+        border-radius: 4px;
+        background: #333;
+        color: #fff;
     }
 
     .checkbox-field {
+        display: flex;
         align-items: center;
+        color: #ddd;
     }
 
-    .checkbox-field input {
-        width: auto;
-        margin-left: 5px;
+    .checkbox-field > input {
+        margin-left: 1rem;
     }
 
     .submit-button {
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #007bff;
-        color: #fff;
+        padding: .8em 1em;
         border: none;
-        border-radius: 5px;
+        border-radius: 4px;
+        background: #1abc9c;
+        color: #fff;
         cursor: pointer;
         transition: background-color 0.3s;
     }
 
     .submit-button:hover {
-        background-color: #0056b3;
+        background-color: #16a085;
+    }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background: #444;
     }
 </style>

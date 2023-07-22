@@ -181,7 +181,13 @@
     width: 80px;
     height: 30px;
     font-size: 14px;
+    background: #1abc9c;
   }
+
+  button:hover {
+        background-color: #16a085;
+  }
+
   .delete-btn {
     float: right;
     width: 24px;

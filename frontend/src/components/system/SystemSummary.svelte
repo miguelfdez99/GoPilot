@@ -90,7 +90,7 @@
 <style>
     :root {
         --main-color: #414a4c;
-        --secondary-color: #1966da;
+        --secondary-color: #1abc9c;
         --font-family: "Roboto", sans-serif;
     }
 
