@@ -144,64 +144,61 @@
 </div>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     .container {
-        margin: 0 auto;
-        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        max-width: 95%;
+        margin: 2rem auto;
+        background-color: #282828;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        color: #ddd;
+        padding: 1rem;
     }
 
-    h1 {
-        font-size: 32px;
-        margin-bottom: 20px;
-        color: white;
-    }
-
-    h2, p {
-        color: white;
+    h1, h2, p {
+        color: #ddd;
+        margin-bottom: 1em;
     }
 
     ul {
         list-style: none;
         padding: 0;
-        margin: 0;
+        border: 1px solid #333;
+        border-radius: 4px;
+        margin-bottom: 1em;
+        background: #333;
     }
 
     li {
+        padding: .8em;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: white;
+        border-bottom: 1px solid #444;
     }
 
-    li:hover {
-        background-color: #d8cf4b;
+    li:last-child {
+        border-bottom: none;
     }
 
     button {
-        display: inline-block;
-        padding: 8px 16px;
-        background-color: #007bff;
-        color: #fff;
+        padding: .8em 1em;
         border: none;
         border-radius: 4px;
+        background: #1abc9c;
+        color: #fff;
         cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.2s;
-        margin-bottom: 20px;
-        margin-top: 10px;
+        transition: background-color 0.3s;
+        width: 100%;
+        margin-bottom: 1em;
     }
 
     button:hover {
-        background-color: #0056b3;
+        background-color: #16a085;
     }
 
     .delete-btn {
-        float: right;
         width: 24px;
         height: 24px;
         padding: 0;
@@ -215,3 +212,4 @@
         height: 100%;
     }
 </style>
+

@@ -48,6 +48,7 @@
   confirmButton={false}
 />
 
+<h1>Backups</h1>
 <div class="grid-container">
     <div class="grid-item">
         <label for="sourceDir">Source Directory:</label>
@@ -124,21 +125,27 @@
 <style>
     .grid-container {
         display: grid;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 0.5rem;
-        grid-template-columns: max-content 1fr;
+        gap: 1.5rem;
+        padding: 2rem;
+        background: #282828;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        border-radius: 5px;
+        grid-template-columns: 1fr 1fr;
+        color: #ddd;
+        width: 90%;
+        max-width: 600px;
+        margin: 2rem auto;
     }
 
     .grid-item {
-        display: grid;
-        grid-template-columns: max-content;
-        align-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
     }
 
     label {
-        font-weight: bold;
+        font-weight: 500;
+        margin-bottom: 0.5em;
     }
 
     input[type="checkbox"] {
@@ -147,27 +154,29 @@
 
     input[type="text"],
     select {
-        padding: 0.75rem;
-        border: 1px solid #ccc;
-        border-radius: 0.25rem;
-        color: white;
+        padding: .7em;
+        border: 0;
+        border-radius: 4px;
+        background: #333;
+        color: #fff;
         width: 100%;
         box-sizing: border-box;
     }
 
     button {
-        padding: 0.75rem;
+        padding: .8em 1em;
         border: none;
-        background-color: #4caf50;
-        color: white;
-        border-radius: 0.25rem;
+        border-radius: 4px;
+        background: #1abc9c;
+        color: #fff;
         cursor: pointer;
+        transition: background-color 0.3s;
         width: 100%;
         margin: 0 auto;
         grid-column: span 2;
     }
 
     button:hover {
-        background-color: #3e8e41;
+        background-color: #16a085;
     }
 </style>

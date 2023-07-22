@@ -5,7 +5,8 @@
         TerminateProcess,
     } from "../../wailsjs/go/backend/Backend";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import { openDialog  } from "../functions/functions";
+    import { openDialog } from "../functions/functions";
+    import terminateIcon from "../assets/images/terminate.png";
 
     let processInfo: string[] = [];
     let filteredProcessInfo = [];
@@ -183,9 +184,11 @@
                 <td>{new Date(proc.StartTime).toLocaleString()}</td>
                 <td class="command">{proc.Cmdline}</td>
                 <td>
-                    <button on:click={() => confirmKillDialog(proc.Pid)}
-                        >Terminate</button
-                    >
+                    <button 
+                    class="terminate-btn"
+                    on:click={() => confirmKillDialog(proc.Pid)}>
+                        <img src={terminateIcon} alt="Terminate" class="terminate-icon" />
+                    </button>
                 </td>
             </tr>
         {/each}
@@ -243,4 +246,21 @@
     tbody tr:last-of-type {
         border-bottom: 2px solid #009879;
     }
+
+    .terminate-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    background: #1abc9c;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+
+.terminate-icon {
+    width: 16px;
+    height: 16px;
+}
 </style>

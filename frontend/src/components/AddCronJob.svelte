@@ -187,7 +187,7 @@ h2 {
 .form-button {
     display: inline-block;
     padding: 8px 16px;
-    background-color: #007bff;
+    background-color: #1abc9c;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -197,7 +197,7 @@ h2 {
 }
 
 .form-button:hover {
-    background-color: #0056b3;
+    background-color: #16a085;
 }
 
 .input-container {
