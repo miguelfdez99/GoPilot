@@ -102,6 +102,10 @@ export function GetProcessInfo() {
   return window['go']['backend']['Backend']['GetProcessInfo']();
 }
 
+export function GetRunningServices() {
+  return window['go']['backend']['Backend']['GetRunningServices']();
+}
+
 export function GetSystemInfo() {
   return window['go']['backend']['Backend']['GetSystemInfo']();
 }

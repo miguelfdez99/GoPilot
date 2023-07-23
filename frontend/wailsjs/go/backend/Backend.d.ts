@@ -52,6 +52,8 @@ export function GetNetworkUsage():Promise<backend.NetworkUsage>;
 
 export function GetProcessInfo():Promise<Array<backend.ProcessInfo>>;
 
+export function GetRunningServices():Promise<Array<backend.RunningService>>;
+
 export function GetSystemInfo():Promise<string>;
 
 export function InstallPackage(arg1:string):Promise<void>;

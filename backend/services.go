@@ -11,7 +11,12 @@ import (
 type Service struct {
 	Name          string
 	StartupStatus string
-	RunningStatus string
+}
+
+type RunningService struct {
+	Name        string
+	ActiveState string
+	Description string
 }
 
 func (b *Backend) GetAllServices() ([]Service, error) {
@@ -33,7 +38,6 @@ func (b *Backend) GetAllServices() ([]Service, error) {
 			services = append(services, Service{
 				Name:          fields[0],
 				StartupStatus: fields[1],
-				RunningStatus: fields[2],
 			})
 		}
 	}
@@ -42,6 +46,50 @@ func (b *Backend) GetAllServices() ([]Service, error) {
 		b.logger.Error(fmt.Sprint("Failed to scan command output: ", err))
 		return nil, err
 	}
+
+	return services, nil
+}
+
+func (b *Backend) GetRunningServices() ([]RunningService, error) {
+	cmd := exec.Command("systemctl", "--type=service", "--all", "--no-legend")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		b.logger.Error(fmt.Sprintf("Failed to list running services: %v", err))
+		return nil, err
+	}
+
+	var services []RunningService
+	scanner := bufio.NewScanner(&out)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(line, "@") {
+			continue
+		}
+
+		if strings.Contains(line, "●") {
+			continue
+		}
+
+		fields := strings.Fields(line)
+		if len(fields) >= 4 {
+			description := strings.Join(fields[4:], " ")
+
+			services = append(services, RunningService{
+				Name:        fields[0],
+				ActiveState: fields[2],
+				Description: description,
+			})
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		b.logger.Error(fmt.Sprintf("Failed to scan command output: %v", err))
+		return nil, err
+	}
+
+	fmt.Println(services)
 
 	return services, nil
 }
