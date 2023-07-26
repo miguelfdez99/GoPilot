@@ -42,8 +42,16 @@ export function DeleteUser(arg1, arg2, arg3) {
   return window['go']['backend']['Backend']['DeleteUser'](arg1, arg2, arg3);
 }
 
+export function DisableService(arg1) {
+  return window['go']['backend']['Backend']['DisableService'](arg1);
+}
+
 export function DuplicatedFiles(arg1) {
   return window['go']['backend']['Backend']['DuplicatedFiles'](arg1);
+}
+
+export function EnableService(arg1) {
+  return window['go']['backend']['Backend']['EnableService'](arg1);
 }
 
 export function ExportLogs(arg1, arg2) {
@@ -56,6 +64,10 @@ export function GenerateKeys(arg1, arg2, arg3, arg4) {
 
 export function GenerateSelfSignedCertificate(arg1) {
   return window['go']['backend']['Backend']['GenerateSelfSignedCertificate'](arg1);
+}
+
+export function GetAllServices() {
+  return window['go']['backend']['Backend']['GetAllServices']();
 }
 
 export function GetCPUUsage() {
@@ -88,6 +100,10 @@ export function GetNetworkUsage() {
 
 export function GetProcessInfo() {
   return window['go']['backend']['Backend']['GetProcessInfo']();
+}
+
+export function GetRunningServices() {
+  return window['go']['backend']['Backend']['GetRunningServices']();
 }
 
 export function GetSystemInfo() {
@@ -148,6 +164,14 @@ export function RemoveUnusedPackages() {
 
 export function ScheduleBackup(arg1, arg2) {
   return window['go']['backend']['Backend']['ScheduleBackup'](arg1, arg2);
+}
+
+export function StartService(arg1) {
+  return window['go']['backend']['Backend']['StartService'](arg1);
+}
+
+export function StopService(arg1) {
+  return window['go']['backend']['Backend']['StopService'](arg1);
 }
 
 export function TerminateProcess(arg1) {
