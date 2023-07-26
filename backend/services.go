@@ -89,8 +89,6 @@ func (b *Backend) GetRunningServices() ([]RunningService, error) {
 		return nil, err
 	}
 
-	fmt.Println(services)
-
 	return services, nil
 }
 
