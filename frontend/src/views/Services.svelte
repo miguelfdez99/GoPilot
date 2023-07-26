@@ -1,23 +1,28 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
-    import { GetAllServices, EnableService, DisableService, StartService, StopService } from "../../wailsjs/go/backend/Backend";
+    import { GetAllServices, GetRunningServices, EnableService, DisableService, StartService, StopService } from "../../wailsjs/go/backend/Backend";
 
     let serviceStore = writable([]);
+    let runningServiceStore = writable([]);
     let error: Error | null = null;
+    let selectedTable = "all";
 
     onMount(async () => {
         try {
             const services = await GetAllServices();
-            serviceStore.set(services.map(service => {
-                return {
-                    service,
-                    startupStatus: service.StartupStatus === "enabled",
-                    startupStatusChanged: false,
-                    runningStatus: service.RunningStatus === "enabled",
-                    runningStatusChanged: false
-                };
-            }));
+            serviceStore.set(services.map(service => ({
+                service,
+                startupStatus: service.StartupStatus === "enabled",
+                startupStatusChanged: false
+            })));
+
+            const runningServices = await GetRunningServices();
+            runningServiceStore.set(runningServices.map(service => ({
+                service,
+                activeState: service.ActiveState === "active",
+                activeStateChanged: false
+            })));
         } catch (err) {
             console.error(err);
             error = err;
@@ -34,14 +39,18 @@
                 }
                 service.startupStatusChanged = false;
             }
+        }
+    });
 
-            if (service.runningStatusChanged) {
-                if (service.runningStatus) {
+    runningServiceStore.subscribe(async (services) => {
+        for (let service of services) {
+            if (service.activeStateChanged) {
+                if (service.activeState) {
                     await StartService(service.service.Name);
                 } else {
                     await StopService(service.service.Name);
                 }
-                service.runningStatusChanged = false;
+                service.activeStateChanged = false;
             }
         }
     });
@@ -50,49 +59,74 @@
 <div>
     <h1>Services</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Startup Status</th>
-                <th>Running Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {#each $serviceStore as serviceObject (serviceObject.service.Name)}
+    <select bind:value={selectedTable}>
+        <option value="all">Startup Services</option>
+        <option value="running">Running Services</option>
+    </select>
+
+    {#if selectedTable === 'all'}
+        <table>
+            <thead>
                 <tr>
-                    <td>{serviceObject.service.Name}</td>
-                    <td>
-                        <label class="switch">
-                            <input
-                                type="checkbox"
-                                bind:checked={serviceObject.startupStatus}
-                                on:change={() =>
-                                    (serviceObject.startupStatusChanged = true)}
-                            />
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                    <td>
-                        <label class="switch">
-                            <input
-                                type="checkbox"
-                                bind:checked={serviceObject.runningStatus}
-                                on:change={() =>
-                                    (serviceObject.runningStatusChanged = true)}
-                            />
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
+                    <th>Name</th>
+                    <th>Startup Status</th>
                 </tr>
-            {/each}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {#each $serviceStore as serviceObject (serviceObject.service.Name)}
+                    <tr>
+                        <td>{serviceObject.service.Name}</td>
+                        <td>
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    bind:checked={serviceObject.startupStatus}
+                                    on:change={() =>
+                                        (serviceObject.startupStatusChanged = true)}
+                                />
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    {:else}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Active State</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each $runningServiceStore as serviceObject (serviceObject.service.Name)}
+                    <tr>
+                        <td>{serviceObject.service.Name}</td>
+                        <td>
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    bind:checked={serviceObject.activeState}
+                                    on:change={() =>
+                                        (serviceObject.activeStateChanged = true)}
+                                />
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td>{serviceObject.service.Description}</td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    {/if}
 
     {#if error}
         <p class="error">{error.message}</p>
     {/if}
 </div>
+
 
 <style>
     div {
@@ -172,5 +206,9 @@
     }
     .slider.round:before {
         border-radius: 50%;
+    }
+
+    h1, option {
+        color: white;
     }
 </style>
