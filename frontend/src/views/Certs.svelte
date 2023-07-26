@@ -176,4 +176,8 @@
         height: 1px;
         background: #444;
     }
+
+    h2 {
+        color: white;
+    }
 </style>

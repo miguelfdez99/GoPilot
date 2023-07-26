@@ -133,7 +133,7 @@
         grid-template-columns: 1fr 1fr;
         color: #ddd;
         width: 90%;
-        max-width: 600px;
+        max-width: 800px;
         margin: 2rem auto;
     }
 
@@ -179,4 +179,9 @@
     button:hover {
         background-color: #16a085;
     }
+
+    h1 {
+        color: white;
+    }
 </style>
+

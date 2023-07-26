@@ -13,6 +13,8 @@
     let loading = writable(false);
     let searchString = writable("");
     let bootNumber = writable(0);
+    const ActiveComponent = { NONE: 0, SEARCH: 1, EXPORT: 2, BOOT_NUMBER: 3 };
+    let activeComponent = ActiveComponent.NONE;
 
     let fetchLogs = async (type, boot) => {
     loading.set(true);
@@ -82,30 +84,37 @@
 <div class="cont">
     <div class="control-buttons">
         <button
-            on:click={() => (showSearch = !showSearch)}
+            on:click={() => activeComponent = activeComponent !== ActiveComponent.SEARCH ? ActiveComponent.SEARCH : ActiveComponent.NONE}
             title="Toggle search">🔍</button
         >
         <button
-            on:click={() => (showExport = !showExport)}
+            on:click={() => activeComponent = activeComponent !== ActiveComponent.EXPORT ? ActiveComponent.EXPORT : ActiveComponent.NONE}
             title="Toggle export">💾</button
         >
         <button
-            on:click={() => (showBootNumber = !showBootNumber)}
+            on:click={() => activeComponent = activeComponent !== ActiveComponent.BOOT_NUMBER ? ActiveComponent.BOOT_NUMBER : ActiveComponent.NONE}
             title="Toggle boot number">🔢</button
         >
     </div>
 
     <h1>Log viewer</h1>
 
-    {#if showSearch}
+    {#if activeComponent === ActiveComponent.SEARCH}
+    <label >
+        Search:
         <input bind:value={$searchString} placeholder="Search logs..." />
+    </label>
     {/if}
 
-    {#if showExport}
+    {#if activeComponent === ActiveComponent.EXPORT}
+    <label>
+        <p>Export:</p>
         <button on:click={exportLogs}>Export Logs</button>
+    </label>
+    
     {/if}
 
-    {#if showBootNumber}
+    {#if activeComponent === ActiveComponent.BOOT_NUMBER}
         <label>
             Boot number:
             <input type="number" bind:value={$bootNumber} />
@@ -156,6 +165,11 @@
         border-color: #030303fa;
     }
 
+    label p {
+        color: white;
+    }
+
+
     .cont {
         position: relative;
     }
@@ -174,6 +188,7 @@
         background-color: #030303fa;
         color: #070303;
         text-align: left;
+        overflow: auto;
     }
 
     .logs pre {
