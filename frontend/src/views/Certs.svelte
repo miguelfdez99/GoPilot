@@ -214,6 +214,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        border-color: #333;
     }
 
     button.open-btn:hover {
