@@ -1,30 +1,42 @@
 <script lang="ts">
+    import { onMount, onDestroy } from 'svelte';
+    import { writable } from 'svelte/store';
     import {
         MonitorFile,
         MonitorDir,
         WatchList,
         MonitorSystemStats,
     } from "../../wailsjs/go/backend/Backend";
-    import { onMount } from "svelte";
+
+    interface WatchItem {
+        path: string;
+        type: string;
+    }
 
     let filepath: string = "";
     let dirpath: string = "";
-    let watchList = {};
+    let watchListStore = writable<Array<WatchItem>>([]);
     let cpuThreshold: number;
     let ramThreshold: number;
     let diskThreshold: number;
+    let pollingInterval;
 
     onMount(async () => {
-        watchList = await WatchList();
+        fetchWatchList();
+        pollingInterval = setInterval(fetchWatchList, 1000);
     });
 
-    const startMonitoringFile = () => {
-        MonitorFile(filepath);
+    onDestroy(() => {
+        clearInterval(pollingInterval);
+    });
+
+    const startMonitoringFile = async () => {
+        await MonitorFile(filepath);
         fetchWatchList();
     };
 
-    const startMonitoringDir = () => {
-        MonitorDir(dirpath);
+    const startMonitoringDir = async () => {
+        await MonitorDir(dirpath);
         fetchWatchList();
     };
 
@@ -37,10 +49,12 @@
         MonitorSystemStats(thresholds);
     };
 
-
     async function fetchWatchList() {
-        watchList = await WatchList();
+        const newWatchList: { [key: string]: string } = await WatchList();
+        const transformedWatchList: Array<WatchItem> = Object.entries(newWatchList).map(([path, type]) => ({ path, type }));
+        watchListStore.set(transformedWatchList);
     }
+
 </script>
 
 
@@ -73,10 +87,12 @@
     
         <h2>Watch List</h2>
         <ul>
-            {#each Object.entries(watchList) as [path, type]}
+            {#each $watchListStore as { path, type }}
                 <li><strong>{type}</strong>: {path}</li>
             {/each}
         </ul>
+        
+        
     </div>
 
 </div>
