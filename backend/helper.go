@@ -132,43 +132,48 @@ func getMemory() (string, error) {
 	return strings.TrimSpace(lines[1]), nil
 }
 
-// func getDesktopEnv() string {
-// 	if desktopEnv := os.Getenv("XDG_CURRENT_DESKTOP"); desktopEnv != "" {
-// 		return strings.Split(desktopEnv, ":")[1]
-// 	}
+func getDesktopEnv() (string, error) {
+	if desktopEnv := os.Getenv("XDG_CURRENT_DESKTOP"); desktopEnv != "" {
+		splitEnv := strings.Split(desktopEnv, ":")
+		if len(splitEnv) > 1 {
+			return splitEnv[1], nil
+		} else {
+			return splitEnv[0], nil
+		}
+	}
 
-// 	if desktopEnv := os.Getenv("DESKTOP_SESSION"); desktopEnv != "" {
-// 		return desktopEnv
-// 	}
+	if desktopEnv := os.Getenv("DESKTOP_SESSION"); desktopEnv != "" {
+		return desktopEnv, nil
+	}
 
-// 	if desktopEnv := os.Getenv("GDMSESSION"); desktopEnv != "" {
-// 		return desktopEnv
-// 	}
+	if desktopEnv := os.Getenv("GDMSESSION"); desktopEnv != "" {
+		return desktopEnv, nil
+	}
 
-// 	if desktopEnv, err := getDesktopEnvFromXprop(); err == nil {
-// 		return desktopEnv
-// 	}
+	if desktopEnv, err := getDesktopEnvFromXprop(); err == nil {
+		return desktopEnv, nil
+	}
 
-// 	return "Not Found"
-// }
+	return "Not Found", nil
+}
 
-// func getDesktopEnvFromXprop() (string, error) {
-// 	cmd := exec.Command("xprop", "-root")
-// 	output, err := cmd.Output()
-// 	if err != nil {
-// 		return "", err
-// 	}
+func getDesktopEnvFromXprop() (string, error) {
+	cmd := exec.Command("xprop", "-root")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
 
-// 	for _, line := range strings.Split(string(output), "\n") {
-// 		if strings.Contains(line, "_DT_SAVE_MODE") {
-// 			return "Xfce", nil
-// 		} else if strings.Contains(line, "MUFFIN") {
-// 			return "Cinnamon", nil
-// 		}
-// 	}
+	for _, line := range strings.Split(string(output), "\n") {
+		if strings.Contains(line, "_DT_SAVE_MODE") {
+			return "Xfce", nil
+		} else if strings.Contains(line, "MUFFIN") {
+			return "Cinnamon", nil
+		}
+	}
 
-// 	return "", fmt.Errorf("could not determine desktop environment from xprop")
-// }
+	return "", fmt.Errorf("could not determine desktop environment from xprop")
+}
 
 func (b *Backend) CommandExists(cmd string) (bool, string) {
 	_, err := exec.LookPath(cmd)

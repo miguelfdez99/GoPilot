@@ -90,7 +90,9 @@ func (b *Backend) GetSystemInfo() (string, error) {
 		return "", fmt.Errorf("error obtaining system hostname: %v", err)
 	}
 
-	sysInfo.DesktopEnv = "xfce"
+	if sysInfo.DesktopEnv, err = getDesktopEnv(); err != nil {
+		return "", fmt.Errorf("error obtaining desktop environment: %v", err)
+	}
 
 	if currentUser, err := user.Current(); err == nil {
 		sysInfo.CurrentUsername = currentUser.Username

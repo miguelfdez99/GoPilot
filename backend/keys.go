@@ -2,7 +2,6 @@ package backend
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -37,7 +36,7 @@ func (b *Backend) GenerateKeys(keyType, keyName, outputPath string, overwrite bo
 
 	_, err = exec.Command("ssh-keygen", "-t", keyType, "-f", privateKeyPath, "-N", "").Output()
 	if err != nil {
-		log.Fatal(err)
+		return "", "", fmt.Errorf("failed to generate keys: %w", err)
 	}
 	return
 }

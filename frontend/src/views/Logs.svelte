@@ -38,7 +38,7 @@
         loading.set(true);
         try {
             const filepath = "/tmp/prueba-logs.txt";
-            await ExportLogs($selectedLogType, filepath, $bootNumber);
+            await ExportLogs($selectedLogType, $bootNumber, filepath);
             dialog = openDialog(
                 dialog,
                 "Success",

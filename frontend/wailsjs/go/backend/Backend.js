@@ -54,8 +54,8 @@ export function EnableService(arg1) {
   return window['go']['backend']['Backend']['EnableService'](arg1);
 }
 
-export function ExportLogs(arg1, arg2) {
-  return window['go']['backend']['Backend']['ExportLogs'](arg1, arg2);
+export function ExportLogs(arg1, arg2, arg3) {
+  return window['go']['backend']['Backend']['ExportLogs'](arg1, arg2, arg3);
 }
 
 export function GenerateKeys(arg1, arg2, arg3, arg4) {
