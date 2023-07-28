@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"goPilot/backend"
 
@@ -33,7 +34,10 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+		OnStartup: func(ctx context.Context) {
+			app.startup(ctx)
+			backend.Startup(ctx)
+		},
 		Bind: []interface{}{
 			app,
 			backend,
