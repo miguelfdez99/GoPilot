@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { writable } from "svelte/store";
   import {
     ListPackages,
     RemovePackage,
@@ -17,14 +18,22 @@
   let dialogName: string = "";
   let showInstallDialog: boolean = false;
   let installDialogName: string = "";
+  let loading = writable(false);
   let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 
-  function listPackages() {
-    ListPackages().then((result) => {
-      packages = result;
-      filteredPackages = packages;
-    });
-  }
+  async function listPackages() {
+    loading.set(true);
+    try {
+        const result = await ListPackages();
+        packages = result;
+        filteredPackages = packages;
+    } catch (error) {
+        dialog = openDialog(dialog, "Error", `Failed to list packages: ${error}`);
+    } finally {
+        loading.set(false);
+    }
+}
+
 
   function confirmDeleteDialog(name: string) {
     dialogName = name;
@@ -141,6 +150,12 @@
         on:input={handleSearch}
       />
     </div>
+    {#if $loading}
+        <div class="loading">
+            <p>Loading...</p>
+            <div class="spinner" />
+        </div>
+    {:else}
     <div>
       {#if filteredPackages.length > 0}
         <ul>
@@ -156,10 +171,9 @@
             </li>
           {/each}
         </ul>
-      {:else}
-        <p>No packages found</p>
       {/if}
     </div>
+    {/if}
   </div>
 </main>
 
@@ -226,4 +240,33 @@
   p {
     color: white;
   }
+
+  .loading {
+        text-align: center;
+    }
+
+    .loading p {
+        color: white;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 </style>

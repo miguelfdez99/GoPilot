@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
+    import { writable } from "svelte/store";
     import {
         GetProcessInfo,
         TerminateProcess,
@@ -23,6 +24,8 @@
     let showKillDialog: boolean = false;
     let dialogPid: number = 0;
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+
+    let loading = writable(false);
 
     let currentIcon = {
         User: "",
@@ -110,7 +113,9 @@
             });
     }
 
-    onMount(() => {
+    onMount(async () => {
+    loading.set(true);
+    try {
         interval = setInterval(async () => {
             processInfo = await GetProcessInfo();
             if (sortBy) {
@@ -121,8 +126,18 @@
                 );
             }
             filterProcesses();
+            loading.set(false);
         }, 1000);
-    });
+    } catch (err) {
+        dialog = openDialog(
+            dialog,
+            "Error",
+            `Failed to get process info: ${err}`
+        );
+        loading.set(false);
+    }
+});
+
 
     onDestroy(() => {
         clearInterval(interval);
@@ -144,6 +159,13 @@
 <div class="search-container">
     <input type="text" bind:value={searchTerm} placeholder="Search..." />
 </div>
+
+{#if $loading}
+        <div class="loading">
+            <p>Loading...</p>
+            <div class="spinner" />
+        </div>
+    {:else}
 
 <table>
     <thead>
@@ -194,7 +216,7 @@
         {/each}
     </tbody>
 </table>
-
+{/if}
 <style>
     .command {
         max-width: 400px;
@@ -263,4 +285,33 @@
     width: 16px;
     height: 16px;
 }
+
+.loading {
+        text-align: center;
+    }
+
+    .loading p {
+        color: white;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 </style>
