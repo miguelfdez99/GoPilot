@@ -28,7 +28,7 @@ export function DuplicatedFiles(arg1:string):Promise<void>;
 
 export function EnableService(arg1:string):Promise<void>;
 
-export function ExportLogs(arg1:string,arg2:string):Promise<void>;
+export function ExportLogs(arg1:string,arg2:number,arg3:string):Promise<void>;
 
 export function GenerateKeys(arg1:string,arg2:string,arg3:string,arg4:boolean):Promise<string>;
 

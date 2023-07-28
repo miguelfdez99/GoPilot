@@ -57,20 +57,20 @@ func (b *Backend) GetLogs(logType string, boot int) ([]string, error) {
 	return logLines, nil
 }
 
-func (b *Backend) ExportLogs(logType string, filepath string) error {
+func (b *Backend) ExportLogs(logType string, boot int, filepath string) error {
+	bootFlag := fmt.Sprintf("-b %d", boot)
 	var command *exec.Cmd
-
 	switch logType {
 	case "all":
-		command = exec.Command("journalctl", "--no-pager")
+		command = exec.Command("journalctl", "--no-pager", bootFlag)
 	case "system":
-		command = exec.Command("journalctl", "--no-pager", "-k")
+		command = exec.Command("journalctl", "--no-pager", "-k", bootFlag)
 	case "hardware":
-		command = exec.Command("journalctl", "--no-pager", "_SYSLOG_IDENTIFIER=kernel")
+		command = exec.Command("sh", "-c", "journalctl --no-pager -k "+bootFlag+" | grep -iE 'usb|pci|hdmi|hid|eth|wlan|bluetooth'")
 	case "application":
-		command = exec.Command("journalctl", "--no-pager")
+		command = exec.Command("sh", "-c", fmt.Sprintf("journalctl --no-pager %s | grep -v 'kernel\\|systemd'", bootFlag))
 	case "important":
-		command = exec.Command("journalctl", "--no-pager", "-p", "err")
+		command = exec.Command("journalctl", "--no-pager", "-p", "err", bootFlag)
 	default:
 		return nil
 	}
