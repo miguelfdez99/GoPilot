@@ -1,12 +1,11 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetLogs, ExportLogs } from "../../wailsjs/go/backend/Backend";
+    import { GetLogs, ExportLogs, OpenFile } from "../../wailsjs/go/backend/Backend";
     import { openDialog } from "../functions/functions";
     import { writable } from "svelte/store";
+    import openIcon from "../assets/images/open.png";
 
-    let showSearch = false;
-    let showExport = false;
-    let showBootNumber = false;
+    let filepath: string = "";
     let logs = writable([]);
     let selectedLogType = writable("all");
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
@@ -37,7 +36,6 @@
     let exportLogs = async () => {
         loading.set(true);
         try {
-            const filepath = "/tmp/prueba-logs.txt";
             await ExportLogs($selectedLogType, $bootNumber, filepath);
             dialog = openDialog(
                 dialog,
@@ -63,7 +61,6 @@
         }
     });
 
-    // Call fetchLogs when selectedLogType or bootNumber changes
     let unsubscribeSelectedLogType = selectedLogType.subscribe((value) => {
         fetchLogs(value, $bootNumber);
     });
@@ -79,6 +76,11 @@
         unsubscribeSelectedLogType();
         unsubscribeBootNumber();
     });
+
+    const selectFile = async () => {
+        const file = await OpenFile();
+        filepath = file;
+    };
 </script>
 
 <div class="cont">
@@ -109,6 +111,16 @@
     {#if activeComponent === ActiveComponent.EXPORT}
     <label>
         <p>Export:</p>
+        <div class="input-group">
+        <input
+                type="text"
+                bind:value={filepath}
+                placeholder="Enter a file path"
+            />
+        <button class="open-btn" title="Choose File" on:click={selectFile}
+                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
+            >
+        </div>
         <button on:click={exportLogs}>Export Logs</button>
     </label>
     
@@ -167,6 +179,41 @@
 
     label p {
         color: white;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 1em;
+    }
+
+    button.open-btn {
+        background: none;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        margin: 0;
+        margin-left: 10px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    button.open-btn:hover {
+        background-color: #131313;
+    }
+
+    input {
+        padding: 0.7em;
+        border: 0;
+        border-radius: 4px;
+        background: #333;
+        color: #fff;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 0.5em;
     }
 
 
