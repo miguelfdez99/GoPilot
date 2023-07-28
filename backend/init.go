@@ -19,6 +19,6 @@ func NewBackend(l logger.Logger) *Backend {
 	}
 }
 
-func (b *Backend) startup(ctx context.Context) {
+func (b *Backend) Startup(ctx context.Context) {
 	b.ctx = ctx
 }

@@ -142,6 +142,14 @@ export function MonitorSystemStats(arg1) {
   return window['go']['backend']['Backend']['MonitorSystemStats'](arg1);
 }
 
+export function OpenDir() {
+  return window['go']['backend']['Backend']['OpenDir']();
+}
+
+export function OpenFile() {
+  return window['go']['backend']['Backend']['OpenFile']();
+}
+
 export function RemoveAllCronJobs() {
   return window['go']['backend']['Backend']['RemoveAllCronJobs']();
 }
@@ -168,6 +176,10 @@ export function ScheduleBackup(arg1, arg2) {
 
 export function StartService(arg1) {
   return window['go']['backend']['Backend']['StartService'](arg1);
+}
+
+export function Startup(arg1) {
+  return window['go']['backend']['Backend']['Startup'](arg1);
 }
 
 export function StopService(arg1) {
