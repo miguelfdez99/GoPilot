@@ -1,14 +1,12 @@
 <script lang="ts">
-    import { CreateUser } from "../../../wailsjs/go/backend/Backend";
-    import { onMount } from "svelte";
     import {
-        openDialog,
-        closeDialog,
-        checkCommand,
-    } from "../../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+        CreateUser,
+        OpenDialogInfo,
+        OpenDialogError,
+    } from "../../../wailsjs/go/backend/Backend";
+    import { createEventDispatcher } from "svelte";
 
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    const dispatch = createEventDispatcher();
 
     let username: string = "";
     let password: string = "";
@@ -16,13 +14,13 @@
     let gid: string = "";
     let shell: string = "/bin/bash";
 
-    onMount(async () => {
-        await checkCommand("useradd", dialog);
-    });
+    function dismiss() {
+        dispatch("dismiss");
+    }
 
     async function createUser() {
         if (!username) {
-            dialog = openDialog(dialog, "Error", "Username is required");
+            await OpenDialogError("Please enter a username");
             return;
         }
 
@@ -36,115 +34,119 @@
 
         try {
             await CreateUser(user);
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Successfully created user ${username}`
-            );
+            await OpenDialogInfo(`Successfully created user ${username}`);
             username = "";
             password = "";
             uid = "";
             gid = "";
             shell = "";
         } catch (err) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                `${err}`
-            );
+            await OpenDialogError(`Failed to create user ${username}: ${err}`);
         }
     }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title={dialog.dialogTitle}
-    message={dialog.dialogMessage}
-    onClose={() => (dialog = closeDialog(dialog))}
-    confirmButton={false}
-/>
-
-<form on:submit|preventDefault={createUser}>
-    <label>
-        <span>Username:</span>
-        <input type="text" bind:value={username} />
-    </label>
-    <label>
-        <span>Password:</span>
-        <input type="password" bind:value={password} />
-    </label>
-    <label>
-        <span>User ID (UID):</span>
-        <input type="text" bind:value={uid} />
-    </label>
-    <label>
-        <span>Group ID (GID):</span>
-        <input type="text" bind:value={gid} />
-    </label>
-    <label>
-        <span>Login shell:</span>
-        <select bind:value={shell}>
-            <option value="/bin/bash">/bin/bash</option>
-            <option value="/bin/sh">/bin/sh</option>
-            <option value="/usr/bin/zsh">/usr/bin/zsh</option>
-        </select>
-    </label>
-    <button type="submit">Create user</button>
-</form>
-
-<style>
-    form {
-        display: flex;
-        flex-direction: column;
-        margin: 20px;
-        border: 1px solid #ccc;
-        padding: 20px;
-        border-radius: 5px;
-        color: black;
+<div class="container">
+    <h2>Add User</h2>
+    <form on:submit|preventDefault={createUser} class="form-control">
+        <label class="input-field">
+            <span>Username:</span>
+            <input type="text" bind:value={username} />
+        </label>
+        <label class="input-field">
+            <span>Password:</span>
+            <input type="password" bind:value={password} />
+        </label>
+        <label class="input-field">
+            <span>User ID (UID):</span>
+            <input type="text" bind:value={uid} />
+        </label>
+        <label class="input-field">
+            <span>Group ID (GID):</span>
+            <input type="text" bind:value={gid} />
+        </label>
+        <label class="input-field">
+            <span>Login shell:</span>
+            <select bind:value={shell}>
+                <option value="/bin/bash">/bin/bash</option>
+                <option value="/bin/sh">/bin/sh</option>
+                <option value="/usr/bin/zsh">/usr/bin/zsh</option>
+            </select>
+        </label>
+        <button type="submit" class="submit-button">Create user</button>
+        <button class="back-button" on:click={dismiss}>Back</button>
+    </form>
+  </div>
+  
+  <style>
+    h2 {
+      text-align: center;
+      color: #fff;
     }
-
-    label {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
+    
+    .container {
+      position: relative;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
     }
-
-    label span {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 5px;
+  
+    .back-button {
+      right: 0;
+      padding: 10px 20px;
+      border: none;
+      background-color: #333;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #fff;
+      transition: background-color 0.3s;
     }
-
-    input[type="text"],
-    select {
-        font-size: 16px;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
+  
+    .back-button:hover {
+      background-color: #555;
     }
-
-    input[type="password"],
-    select {
-        font-size: 16px;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
+  
+    .form-control {
+      padding: 30px;
+      background-color: #222;
+      border-radius: 5px;
     }
-
-    button[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        font-size: 16px;
-        padding: 10px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
+  
+    .input-field {
+      margin-bottom: 20px;
     }
-
-    button[type="submit"]:hover {
-        background-color: #0069d9;
+  
+    .input-field span {
+      display: block;
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 5px;
     }
-</style>
+  
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+    }
+  
+    .submit-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #1abc9c;
+      color: white;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    .submit-button:hover {
+        background-color: #16a085;
+    }
+  </style>
