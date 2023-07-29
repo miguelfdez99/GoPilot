@@ -5,12 +5,10 @@
         GenerateSelfSignedCertificate,
         OpenFile,
         OpenDir,
+        OpenDialogInfo,
+        OpenDialogError,
     } from "../../wailsjs/go/backend/Backend";
-    import { openDialog, closeDialog } from "../functions/functions";
-    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
-
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let keyType = "";
     let keyName = "";
@@ -21,42 +19,36 @@
 
     async function generateKeys() {
         if (!keyType || !keyName || !outputPath) {
-            dialog = openDialog(dialog, "Error", "All fields are required");
+            await OpenDialogError("All fields are required");
             return;
         }
 
         try {
             await GenerateKeys(keyType, keyName, outputPath, overwrite);
-            dialog = openDialog(dialog, "Success", `Successfully created keys`);
+            await OpenDialogInfo("Successfully created keys");
             keyType = "";
             keyName = "";
             outputPath = "";
             overwrite = false;
         } catch (err) {
-            dialog = openDialog(dialog, "Error", `${err}`);
+            await OpenDialogError(`Error: ${err}`);
         }
     }
 
     async function generateCertificate() {
         if (!privateKeyPath) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                "Private key path is required"
-            );
+            await OpenDialogError("Private key path is required");
             return;
         }
 
         try {
             await GenerateSelfSignedCertificate(privateKeyPath);
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Successfully created self-signed certificate`
+            await OpenDialogInfo(
+                "Successfully created self-signed certificate"
             );
             privateKeyPath = "";
         } catch (err) {
-            dialog = openDialog(dialog, "Error", `${err}`);
+            await OpenDialogError(`Error: ${err}`);
         }
     }
 
@@ -70,14 +62,6 @@
         outputPath = dir;
     };
 </script>
-
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title={dialog.dialogTitle}
-    message={dialog.dialogMessage}
-    onClose={() => (dialog = closeDialog(dialog))}
-    confirmButton={false}
-/>
 
 <div class="form-container">
     <h2>Generate Keys</h2>
