@@ -1,101 +1,133 @@
 <script lang="ts">
-    import { DeleteUser } from '../../../wailsjs/go/backend/Backend';
-    import { onMount } from 'svelte';
     import {
-        openDialog,
-        closeDialog,
-        checkCommand,
-    } from "../../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+        DeleteUser,
+        OpenDialogInfo,
+        OpenDialogError,
+    } from "../../../wailsjs/go/backend/Backend";
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     let username: string = "";
     let removeHomeDir: boolean = false;
     let forceDelete: boolean = false;
 
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    function dismiss() {
+        dispatch('dismiss');
+    }
 
-    onMount(async () => {
-        await checkCommand("userdel", dialog);
-    });
+    async function deleteUser() {
+        if (!username) {
+            await OpenDialogError("Please enter a username");
+            return;
+        }
 
-    async function handleSubmit() {
         try {
             await DeleteUser(username, removeHomeDir, forceDelete);
-            dialog = openDialog(dialog, "Success", `Successfully deleted user ${username}`);
+            await OpenDialogInfo(`Successfully deleted user ${username}`);
+            username = "";
         } catch (err) {
-            dialog = openDialog(dialog, "Error", `${err}`);
+            await OpenDialogError(`Failed to delete user ${username}: ${err}`);
         }
     }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title={dialog.dialogTitle}
-    message={dialog.dialogMessage}
-    onClose={() => (dialog = closeDialog(dialog))}
-    confirmButton={false}
-/>
-
-
-<template>
-    <form on:submit|preventDefault={handleSubmit}>
-        <label>
+<div class="container">
+    <h2>Delete User</h2>
+    <form on:submit|preventDefault={deleteUser} class="form-control">
+        <label class="input-field">
             <span>Username:</span>
             <input type="text" bind:value={username} required />
         </label>
-        <label>
+        <label class="input-field checkbox-field">
+            <span>Remove home directory:</span>
             <input type="checkbox" bind:checked={removeHomeDir} />
-            <span>Remove home directory</span>
         </label>
-        <label>
+        <label class="input-field checkbox-field">
+            <span>Force delete:</span>
             <input type="checkbox" bind:checked={forceDelete} />
-            <span>Force delete</span>
         </label>
-        <button type="submit">Delete User</button>
+        <button type="submit" class="submit-button">Delete User</button>
+        <button class="back-button" on:click={dismiss}>Back</button>
     </form>
-</template>
+</div>
 
 <style>
-    form {
-        display: flex;
-        flex-direction: column;
-        margin: 20px;
-        border: 1px solid #ccc;
+    h2 {
+      text-align: center;
+      color: #fff;
+    }
+    
+    .container {
+        position: relative;
         padding: 20px;
-        border-radius: 5px;
-        color: black;
         max-width: 400px;
+        margin: 0 auto;
     }
 
-    label {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-    }
-
-    label span {
+    .back-button {
+        right: 0;
+        padding: 10px 20px;
+        border: none;
+        background-color: #333;
+        border-radius: 5px;
         font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 5px;
+        color: #fff;
+        transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+        background-color: #555;
+    }
+
+    .form-control {
+        padding: 30px;
+        background-color: #222;
+        border-radius: 5px;
+    }
+
+    .input-field {
+        margin-bottom: 20px;
+    }
+
+    .input-field.checkbox-field {
+        display: flex;
+        align-items: center;
+    }
+
+    .input-field span, .input-field.checkbox-field span {
+        font-size: 14px;
+        color: #ccc;
+    }
+
+    input[type="text"], input[type="checkbox"] {
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #333;
+        color: #fff;
     }
 
     input[type="checkbox"] {
-        margin-right: 10px;
+        width: auto;
+        margin-left: 15px;
     }
 
-    button[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        font-size: 16px;
+    .submit-button {
+        display: block;
+        width: 100%;
         padding: 10px;
-        border-radius: 5px;
         border: none;
+        background: #c0392b;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s;
-        margin-top: 20px;
     }
 
-    button[type="submit"]:hover {
-        background-color: #0069d9;
+    .submit-button:hover {
+        background-color: #e74c3c;
     }
 </style>

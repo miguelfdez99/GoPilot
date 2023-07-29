@@ -1,99 +1,122 @@
 <script lang="ts">
-    import { ModifyGroup } from '../../../wailsjs/go/backend/Backend';
-    import { onMount } from "svelte";
     import {
-        openDialog,
-        closeDialog,
-        checkCommand,
-    } from "../../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+        ModifyGroup,
+        OpenDialogInfo,
+        OpenDialogError,
+    } from "../../../wailsjs/go/backend/Backend";
+    import { createEventDispatcher } from 'svelte';
 
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    const dispatch = createEventDispatcher();
 
     let name: string = "";
     let gid: string = "";
 
-    onMount(async () => {
-        await checkCommand("groupadd", dialog);
-    });
+    function dismiss() {
+        dispatch('dismiss');
+    }
 
     async function modifyGroup() {
         if (!name || !gid) {
-            dialog = openDialog(dialog, "Error", "Group name and GID are required");
+            await OpenDialogError("Please enter a group name and GID");
             return;
         }
         try {
             await ModifyGroup(name, parseInt(gid));
-            dialog = openDialog(dialog, "Success", `Successfully modified group ${name}`);
+            await OpenDialogInfo(`Successfully modified group: ${name}`);
             name = "";
             gid = "";
         } catch (err) {
             console.error(err);
-            dialog = openDialog(dialog, "Error", `Failed to modified group: ${err}`);
+            await OpenDialogError(`Failed to modify group ${name}: ${err}`);
         }
     }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title={dialog.dialogTitle}
-    message={dialog.dialogMessage}
-    onClose={() => (dialog = closeDialog(dialog))}
-    confirmButton={false}
-/>
-
-<template>
-    <form on:submit|preventDefault={modifyGroup}>
-      <label>
-        <span>Group name:</span>
-        <input type="text" bind:value={name} required />
-      </label>
-      <label>
-        <span>Group ID (GID):</span>
-        <input type="text" bind:value={gid} />
-      </label>
-      <button type="submit">Modify Group</button>
+<div class="container">
+    <h2>Modify Group</h2>
+    <form on:submit|preventDefault={modifyGroup} class="form-control">
+        <label class="input-field">
+            <span>Group name:</span>
+            <input type="text" bind:value={name} required />
+        </label>
+        <label class="input-field">
+            <span>Group ID (GID):</span>
+            <input type="text" bind:value={gid} />
+        </label>
+        <button type="submit" class="submit-button">Modify group</button>
+        <button class="back-button" on:click={dismiss}>Back</button>
     </form>
-  </template>
+</div>
+
 <style>
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 2rem;
-        font-size: 1.2rem;
+    h2 {
+      text-align: center;
+      color: #fff;
+    }
+    
+    .container {
+      position: relative;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
     }
 
-    label {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 1rem;
-        color: black;
+    .back-button {
+      right: 0;
+      padding: 10px 20px;
+      border: none;
+      background-color: #333;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #fff;
+      transition: background-color 0.3s;
     }
 
-    span {
-        margin-bottom: 0.5rem;
+    .back-button:hover {
+      background-color: #555;
     }
 
-    input {
-        padding: 0.5rem;
-        font-size: 1rem;
-        border-radius: 0.25rem;
-        border: 1px solid #ccc;
+    .form-control {
+      padding: 30px;
+      background-color: #222;
+      border-radius: 5px;
     }
 
-    button {
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        border-radius: 0.25rem;
-        border: none;
-        background-color: #007bff;
-        color: #fff;
-        cursor: pointer;
+    .input-field {
+      margin-bottom: 20px;
     }
 
-    button:hover {
-        background-color: #0069d9;
+    .input-field span {
+      display: block;
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .submit-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #1abc9c;
+      color: white;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+        background-color: #16a085;
     }
 </style>

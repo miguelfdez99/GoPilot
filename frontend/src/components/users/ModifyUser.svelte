@@ -1,16 +1,12 @@
 <script lang="ts">
     import {
         ModifyUser,
+        OpenDialogInfo,
+        OpenDialogError,
     } from "../../../wailsjs/go/backend/Backend";
-    import { onMount } from "svelte";
-    import {
-        openDialog,
-        closeDialog,
-        checkCommand,
-    } from "../../functions/functions";
-    import CustomDialog from "../dialogs/CustomDialog.svelte";
+    import { createEventDispatcher } from 'svelte';
 
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    const dispatch = createEventDispatcher();
 
     let username: string = "";
     let password: string = "";
@@ -20,13 +16,13 @@
     let shell: string = "/bin/bash";
     let addGroup: string = "";
 
-    onMount(async () => {
-        await checkCommand("usermod", dialog);
-    });
+    function dismiss() {
+        dispatch('dismiss');
+    }
 
     async function modifyUser() {
         if (!username) {
-            dialog = openDialog(dialog, "Error", "Username is required");
+            await OpenDialogError("Please enter a username");
             return;
         }
 
@@ -42,7 +38,7 @@
 
         try {
             await ModifyUser(user.username, user);
-            dialog = openDialog(dialog, "Success", `Successfully modified user ${username}`);
+            await OpenDialogInfo(`Successfully modified user ${username}`);
             username = "";
             password = "";
             uid = "";
@@ -51,108 +47,120 @@
             shell = "";
             addGroup = "";
         } catch (err) {
-            dialog = openDialog(dialog, "Error", `${err}`);
+            await OpenDialogError(`Failed to modify user ${username}: ${err}`);
         }
     }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title={dialog.dialogTitle}
-    message={dialog.dialogMessage}
-    onClose={() => (dialog = closeDialog(dialog))}
-    confirmButton={false}
-/>
-
-<form on:submit|preventDefault={modifyUser}>
-    <label>
-        <span>Username:</span>
-        <input type="text" bind:value={username} required />
-    </label>
-    <label>
-        <span>Password:</span>
-        <input type="password" bind:value={password} />
-    </label>
-    <label>
-        <span>User ID (UID):</span>
-        <input type="text" bind:value={uid} />
-    </label>
-    <label>
-        <span>Group ID (GID):</span>
-        <input type="text" bind:value={gid} />
-    </label>
-    <label>
-        <span>Home directory:</span>
-        <input type="text" bind:value={home} />
-    </label>
-    <label>
-        <span>Add to group:</span>
-        <input type="text" bind:value={addGroup} />
-    </label>
-    <label>
-        <span>Login shell:</span>
-        <select bind:value={shell}>
-            <option value="/bin/bash">/bin/bash</option>
-            <option value="/bin/sh">/bin/sh</option>
-            <option value="/usr/bin/zsh">/usr/bin/zsh</option>
-        </select>
-    </label>
-    <button type="submit">Modify user</button>
-</form>
+<div class="container">
+    <h2>Modify User</h2>
+    <form on:submit|preventDefault={modifyUser} class="form-control">
+        <label class="input-field">
+            <span>Username:</span>
+            <input type="text" bind:value={username} required />
+        </label>
+        <label class="input-field">
+            <span>Password:</span>
+            <input type="password" bind:value={password} />
+        </label>
+        <label class="input-field">
+            <span>User ID (UID):</span>
+            <input type="text" bind:value={uid} />
+        </label>
+        <label class="input-field">
+            <span>Group ID (GID):</span>
+            <input type="text" bind:value={gid} />
+        </label>
+        <label class="input-field">
+            <span>Home directory:</span>
+            <input type="text" bind:value={home} />
+        </label>
+        <label class="input-field">
+            <span>Add to group:</span>
+            <input type="text" bind:value={addGroup} />
+        </label>
+        <label class="input-field">
+            <span>Login shell:</span>
+            <select bind:value={shell}>
+                <option value="/bin/bash">/bin/bash</option>
+                <option value="/bin/sh">/bin/sh</option>
+                <option value="/usr/bin/zsh">/usr/bin/zsh</option>
+            </select>
+        </label>
+        <button type="submit" class="submit-button">Modify user</button>
+        <button class="back-button" on:click={dismiss}>Back</button>
+    </form>
+</div>
 
 <style>
-    form {
-        display: flex;
-        flex-direction: column;
-        margin: 20px;
-        border: 1px solid #ccc;
+    h2 {
+      text-align: center;
+      color: #fff;
+    }
+    
+    .container {
+        position: relative;
         padding: 20px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .back-button {
+        right: 0;
+        padding: 10px 20px;
+        border: none;
+        background-color: #333;
         border-radius: 5px;
-        color: black;
-    }
-
-    label {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-    }
-
-    label span {
         font-size: 16px;
-        font-weight: bold;
+        color: #fff;
+        transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+        background-color: #555;
+    }
+
+    .form-control {
+        padding: 30px;
+        background-color: #222;
+        border-radius: 5px;
+    }
+
+    .input-field {
+        margin-bottom: 20px;
+    }
+
+    .input-field span {
+        display: block;
+        font-size: 14px;
+        color: #ccc;
         margin-bottom: 5px;
     }
 
-    input[type="text"],
-    select {
-        font-size: 16px;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
-    }
-
-    input[type="password"],
-    select {
-        font-size: 16px;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
-    }
-
-    button[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        font-size: 16px;
-        padding: 10px;
-        border-radius: 5px;
+    input[type="text"], input[type="password"], select {
+        width: 100%;
         border: none;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #333;
+        color: #fff;
+    }
+
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #1abc9c;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s;
     }
 
-    button[type="submit"]:hover {
-        background-color: #0069d9;
+    .submit-button:hover {
+        background-color: #16a085;
     }
 </style>
