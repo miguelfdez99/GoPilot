@@ -4,6 +4,26 @@
         GetLSCPU,
         GetSystemInfo,
     } from "../../../wailsjs/go/backend/Backend";
+    import debianIcon from "../../assets/images/debian.png";
+    import archIcon from "../../assets/images/arch.png";
+    import fedoraIcon from "../../assets/images/fedora.png";
+    import ubuntuIcon from "../../assets/images/ubuntu.png";
+    import manjaroIcon from "../../assets/images/manjaro.png";
+    import mintIcon from "../../assets/images/mint.png";
+    import elementaryIcon from "../../assets/images/elementary.png";
+
+    let distroIcons = {
+    "Debian": debianIcon,
+    "Arch": archIcon,
+    "Fedora": fedoraIcon,
+    "Ubuntu": ubuntuIcon,
+    "Manjaro": manjaroIcon,
+    "Mint": mintIcon,
+    "Elementary": elementaryIcon,
+};
+
+let distroIcon: string = "";
+let osName: string = "";
 
     let cpuInfo = {
         architecture: "",
@@ -30,6 +50,7 @@
         cpuInfo = parseResponse(lscpuResponse);
         const systemInfoResponse = await GetSystemInfo();
         systemInfo = parseSystemInfo(systemInfoResponse);
+        osName = systemInfo.osName;
     });
 
     function parseResponse(response: string) {
@@ -57,11 +78,29 @@
             memory: data.memory,
         };
     }
+
+    function findDistroIcon(osName: string): string {
+    for (let distro in distroIcons) {
+        if (osName.toLowerCase().includes(distro.toLowerCase())) {
+            return distroIcons[distro];
+        }
+    }
+    return "";
+}
+
+    $: distroIcon = findDistroIcon(osName);
 </script>
 
 <div class="summary-container">
-    <h2>System Summary</h2>
-    <div>
+    <div class="header-container">
+        {#if distroIcon}
+            <div class="os-info">
+                <img class="os-icon" src={distroIcon} alt="Distro icon" />
+                <h2>{osName}</h2>
+            </div>
+        {/if}
+    </div>
+    <div class="info-tables">
         <h3>System Info</h3>
         <table>
             <tr><th>OS Name</th><td>{systemInfo.osName}</td></tr>
@@ -96,27 +135,45 @@
 
     .summary-container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 2em;
         font-family: var(--font-family);
         color: var(--main-color);
         margin: 2em;
     }
 
-    h2 {
-        grid-column: span 2;
-        border-bottom: 2px solid var(--main-color);
-        padding-bottom: 0.5em;
-        color: white;
+    .header-container {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
-    h3 {
-        color: white;
+    .os-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .os-icon {
+        width: 100px;
+        margin-bottom: 10px;
+        margin-right: 20px;
+    }
+
+    h2 {
+        margin-top: 30px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
+    }
+
+    h2, h3 {
+        color: white;
     }
 
     th,
