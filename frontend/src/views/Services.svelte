@@ -1,31 +1,46 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
-    import { GetAllServices, GetRunningServices, EnableService, DisableService, StartService, StopService } from "../../wailsjs/go/backend/Backend";
+    import {
+        GetAllServices,
+        GetRunningServices,
+        EnableService,
+        DisableService,
+        StartService,
+        StopService,
+    } from "../../wailsjs/go/backend/Backend";
 
     let serviceStore = writable([]);
     let runningServiceStore = writable([]);
     let error: Error | null = null;
     let selectedTable = "all";
+    let loading = writable(false);
 
     onMount(async () => {
+        loading.set(true);
         try {
             const services = await GetAllServices();
-            serviceStore.set(services.map(service => ({
-                service,
-                startupStatus: service.StartupStatus === "enabled",
-                startupStatusChanged: false
-            })));
+            serviceStore.set(
+                services.map((service) => ({
+                    service,
+                    startupStatus: service.StartupStatus === "enabled",
+                    startupStatusChanged: false,
+                }))
+            );
 
             const runningServices = await GetRunningServices();
-            runningServiceStore.set(runningServices.map(service => ({
-                service,
-                activeState: service.ActiveState === "active",
-                activeStateChanged: false
-            })));
+            runningServiceStore.set(
+                runningServices.map((service) => ({
+                    service,
+                    activeState: service.ActiveState === "active",
+                    activeStateChanged: false,
+                }))
+            );
         } catch (err) {
             console.error(err);
             error = err;
+        } finally {
+            loading.set(false);
         }
     });
 
@@ -64,7 +79,12 @@
         <option value="running">Running Services</option>
     </select>
 
-    {#if selectedTable === 'all'}
+    {#if $loading}
+        <div class="loading">
+            <p>Loading...</p>
+            <div class="spinner" />
+        </div>
+    {:else if selectedTable === "all"}
         <table>
             <thead>
                 <tr>
@@ -84,7 +104,7 @@
                                     on:change={() =>
                                         (serviceObject.startupStatusChanged = true)}
                                 />
-                                <span class="slider round"></span>
+                                <span class="slider round" />
                             </label>
                         </td>
                     </tr>
@@ -112,7 +132,7 @@
                                     on:change={() =>
                                         (serviceObject.activeStateChanged = true)}
                                 />
-                                <span class="slider round"></span>
+                                <span class="slider round" />
                             </label>
                         </td>
                         <td>{serviceObject.service.Description}</td>
@@ -126,7 +146,6 @@
         <p class="error">{error.message}</p>
     {/if}
 </div>
-
 
 <style>
     div {
@@ -180,7 +199,7 @@
         right: 0;
         bottom: 0;
         background-color: #ccc;
-        transition: .4s;
+        transition: 0.4s;
     }
     .slider:before {
         position: absolute;
@@ -190,13 +209,13 @@
         left: 4px;
         bottom: 4px;
         background-color: white;
-        transition: .4s;
+        transition: 0.4s;
     }
     input:checked + .slider {
-        background-color: #2196F3;
+        background-color: #2196f3;
     }
     input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3;
+        box-shadow: 0 0 1px #2196f3;
     }
     input:checked + .slider:before {
         transform: translateX(26px);
@@ -208,7 +227,37 @@
         border-radius: 50%;
     }
 
-    h1, option {
+    h1,
+    option {
         color: white;
+    }
+
+    .loading {
+        text-align: center;
+    }
+
+    .loading p {
+        color: white;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 </style>
