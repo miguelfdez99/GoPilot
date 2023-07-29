@@ -4,9 +4,10 @@
     import {
         GetProcessInfo,
         TerminateProcess,
+        OpenDialogInfo,
+        OpenDialogError,
+        OpenDialogQuestion,
     } from "../../wailsjs/go/backend/Backend";
-    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import { openDialog } from "../functions/functions";
     import terminateIcon from "../assets/images/terminate.png";
 
     let processInfo: string[] = [];
@@ -21,9 +22,6 @@
     let iconDesc = "↓";
 
     let processList = [];
-    let showKillDialog: boolean = false;
-    let dialogPid: number = 0;
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let loading = writable(false);
 
@@ -80,63 +78,41 @@
         );
     };
 
-    function confirmKillDialog(pid: number) {
-        dialogPid = pid;
-        showKillDialog = true;
-    }
-
-    function onDialogConfirm() {
-        killProcess(dialogPid);
-        showKillDialog = false;
-    }
-
-    function onDialogClose() {
-        showKillDialog = false;
-    }
-
-    function killProcess(pid: number) {
-        TerminateProcess(pid)
-            .then(() => {
+    async function killProcess(pid: number) {
+        try {
+            const res = await OpenDialogQuestion(`Are you sure you want to kill process ${pid}?`);
+            if (res === "Yes") {
+                await TerminateProcess(pid);
                 processList = processList.filter((proc) => proc.Pid !== pid);
-                dialog = openDialog(
-                    dialog,
-                    "Success",
-                    `Successfully killed process ${pid}`
-                );
-            })
-            .catch((err) => {
-                dialog = openDialog(
-                    dialog,
-                    "Error",
-                    `Failed to kill process ${pid}: ${err}`
-                );
-            });
+                await OpenDialogInfo(`Successfully killed process ${pid}`);
+            } else {
+                await OpenDialogInfo(`Canceled killing process ${pid}`);
+            }
+        } catch (err) {
+            await OpenDialogError(`Failed to kill process ${pid}: ${err}`);
+        }
     }
 
     onMount(async () => {
-    loading.set(true);
-    try {
-        interval = setInterval(async () => {
-            processInfo = await GetProcessInfo();
-            if (sortBy) {
-                processInfo = sortProcessInfo(
-                    processInfo,
-                    sortBy,
-                    sortDirection
-                );
-            }
-            filterProcesses();
+        loading.set(true);
+        try {
+            interval = setInterval(async () => {
+                processInfo = await GetProcessInfo();
+                if (sortBy) {
+                    processInfo = sortProcessInfo(
+                        processInfo,
+                        sortBy,
+                        sortDirection
+                    );
+                }
+                filterProcesses();
+                loading.set(false);
+            }, 1000);
+        } catch (err) {
+            await OpenDialogError(`Failed to get process info: ${err}`);
             loading.set(false);
-        }, 1000);
-    } catch (err) {
-        dialog = openDialog(
-            dialog,
-            "Error",
-            `Failed to get process info: ${err}`
-        );
-        loading.set(false);
-    }
-});
+        }
+    });
 
 
     onDestroy(() => {
@@ -147,14 +123,6 @@
         filterProcesses();
     }
 </script>
-
-<CustomDialog
-    bind:show={showKillDialog}
-    title="Kill Process"
-    message={`Are you sure you want to kill process ${dialogPid}?`}
-    onConfirm={onDialogConfirm}
-    onClose={onDialogClose}
-/>
 
 <div class="search-container">
     <input type="text" bind:value={searchTerm} placeholder="Search..." />
@@ -208,7 +176,7 @@
                 <td>
                     <button 
                     class="terminate-btn"
-                    on:click={() => confirmKillDialog(proc.Pid)}>
+                    on:click={() => killProcess(proc.Pid)}>
                         <img src={terminateIcon} alt="Terminate" class="terminate-icon" />
                     </button>
                 </td>

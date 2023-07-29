@@ -12,8 +12,6 @@
     } from "../functions/functions";
     import openIcon from "../assets/images/open.png";
 
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
-
     let options = {
         sourceDir: "",
         destDir: "",
@@ -26,7 +24,7 @@
     };
 
     onMount(async () => {
-        await checkCommand("rsync", dialog);
+        await checkCommand("rsync");
     });
 
     const backup = async () => {
