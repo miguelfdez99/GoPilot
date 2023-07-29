@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AddCronJob, OpenDialogInfo, OpenDialogError, } from '../../wailsjs/go/backend/Backend';
+    import { AddCronJob, OpenDialogError, } from '../../wailsjs/go/backend/Backend';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
