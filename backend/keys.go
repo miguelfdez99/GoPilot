@@ -38,5 +38,7 @@ func (b *Backend) GenerateKeys(keyType, keyName, outputPath string, overwrite bo
 	if err != nil {
 		return "", "", fmt.Errorf("failed to generate keys: %w", err)
 	}
+
+	b.logger.Info("Keys generated successfully")
 	return
 }

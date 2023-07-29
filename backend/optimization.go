@@ -52,6 +52,7 @@ func (b *Backend) RemoveUnusedPackages() {
 	default:
 		fmt.Println("Unsupported Linux distribution")
 	}
+	b.logger.Info("Unused packages removed")
 }
 
 func (b *Backend) CleanCachePackages() {
@@ -70,6 +71,7 @@ func (b *Backend) CleanCachePackages() {
 	default:
 		fmt.Println("Unsupported Linux distribution")
 	}
+	b.logger.Info("Cache packages cleaned")
 }
 
 func (b *Backend) DuplicatedFiles(dirPath string) {
@@ -96,4 +98,5 @@ func (b *Backend) DuplicatedFiles(dirPath string) {
 
 func (b *Backend) RemoveOldLogs(days string) {
 	exec.Command("journalctl", "--vacuum-time="+days).Run()
+	b.logger.Info(fmt.Sprintf("Removed logs older than %q days", days))
 }
