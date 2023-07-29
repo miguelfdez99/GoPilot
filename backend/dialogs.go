@@ -23,3 +23,41 @@ func (b *Backend) OpenDir() (string, error) {
 	}
 	return selection, nil
 }
+
+func (b *Backend) OpenDialogInfo(msg string) {
+	runtime.MessageDialog(b.ctx, runtime.MessageDialogOptions{
+		Type:    runtime.InfoDialog,
+		Title:   "Info",
+		Message: msg,
+	})
+}
+
+func (b *Backend) OpenDialogError(msg string) {
+	runtime.MessageDialog(b.ctx, runtime.MessageDialogOptions{
+		Type:    runtime.ErrorDialog,
+		Title:   "Error",
+		Message: msg,
+	})
+}
+
+func (b *Backend) OpenDialogWarning(msg string) {
+	runtime.MessageDialog(b.ctx, runtime.MessageDialogOptions{
+		Type:    runtime.WarningDialog,
+		Title:   "Warning",
+		Message: msg,
+	})
+}
+
+func (b *Backend) OpenDialogQuestion(msg string) string {
+	result, err := runtime.MessageDialog(b.ctx, runtime.MessageDialogOptions{
+		Type:          runtime.QuestionDialog,
+		Title:         "Question",
+		Message:       msg,
+		DefaultButton: "No",
+	})
+	if err != nil {
+		return ""
+	}
+
+	return result
+}

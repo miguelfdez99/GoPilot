@@ -3,17 +3,14 @@
         Backup,
         ScheduleBackup,
         OpenDir,
+        OpenDialogInfo, 
+        OpenDialogError,
     } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
     import {
-        openDialog,
-        closeDialog,
         checkCommand,
     } from "../functions/functions";
-    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
-
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let options = {
         sourceDir: "",
@@ -27,40 +24,24 @@
     };
 
     onMount(async () => {
-        await checkCommand("rsync", dialog);
+        await checkCommand("rsync");
     });
 
     const backup = async () => {
         try {
             await Backup(options);
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Backup created successfully`
-            );
+            await OpenDialogInfo("Backup created successfully");
         } catch (err) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                `Error creating backup: ${err.message}`
-            );
+            await OpenDialogError(`Error creating backup: ${err.message}`);
         }
     };
 
     const scheduleBackup = async () => {
         try {
             await ScheduleBackup(options, options.schedule);
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Backup scheduled successfully`
-            );
+            await OpenDialogInfo("Backup scheduled successfully");
         } catch (err) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                `Error scheduling backup: ${err.message}`
-            );
+            await OpenDialogError(`Error scheduling backup: ${err.message}`);
         }
     };
 
@@ -78,14 +59,6 @@
         }
     };
 </script>
-
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title={dialog.dialogTitle}
-    message={dialog.dialogMessage}
-    onClose={() => (dialog = closeDialog(dialog))}
-    confirmButton={false}
-/>
 
 <h1>Backups</h1>
 <div class="grid-container">

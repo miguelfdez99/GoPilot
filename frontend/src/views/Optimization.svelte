@@ -1,5 +1,14 @@
 <script lang="ts">
-    import { DeleteTempFiles, RemoveUnusedPackages, CleanCachePackages, DuplicatedFiles, RemoveOldLogs, OpenDir } from "../../wailsjs/go/backend/Backend";
+    import {
+        DeleteTempFiles,
+        RemoveUnusedPackages,
+        CleanCachePackages,
+        DuplicatedFiles,
+        RemoveOldLogs,
+        OpenDir,
+        OpenDialogInfo,
+        OpenDialogError,
+    } from "../../wailsjs/go/backend/Backend";
     import openIcon from "../assets/images/open.png";
 
     let tempFilesDirPath: string = "";
@@ -8,24 +17,62 @@
     let oldLogsDays: string = "";
 
     const startDeletingTempFiles = () => {
+    if (!tempFilesDirPath || !expireDays) {
+        OpenDialogError("Both directory path and number of days are required.");
+        return;
+    }
+    try {
         DeleteTempFiles(tempFilesDirPath, expireDays);
-    };
+        OpenDialogInfo("Temp files removed successfully");
+    } catch (err) {
+        OpenDialogError(`Error removing temp files: ${err.message}`);
+    }
+};
 
     const startRemovingUnusedPackages = () => {
-        RemoveUnusedPackages();
+        try {
+            RemoveUnusedPackages();
+            OpenDialogInfo("Unused packages removed successfully");
+        } catch (err) {
+            OpenDialogError(`Error removing unused packages: ${err.message}`);
+        }
     };
 
     const startCleaningCachePackages = () => {
-        CleanCachePackages();
+        try {
+            CleanCachePackages();
+            OpenDialogInfo("Cache packages cleaned successfully");
+        } catch (err) {
+            OpenDialogError(`Error cleaning cache packages: ${err.message}`);
+        }
     };
 
     const startDeletingDuplicatedFiles = () => {
-        DuplicatedFiles(duplicatedFilesDirPath);
+        if (!duplicatedFilesDirPath) {
+            OpenDialogError("Directory path is required.");
+            return;
+        }
+        try {
+            DuplicatedFiles(duplicatedFilesDirPath);
+            OpenDialogInfo("Duplicated files removed successfully");
+        } catch (err) {
+            OpenDialogError(`Error removing duplicated files: ${err.message}`);
+        }
     };
 
     const startRemovingOldLogs = () => {
-        RemoveOldLogs(oldLogsDays);
+        if (!oldLogsDays) {
+            OpenDialogError("Number of days is required.");
+            return;
+        }
+        try {
+            RemoveOldLogs(oldLogsDays);
+            OpenDialogInfo("Old logs removed successfully");
+        } catch (err) {
+            OpenDialogError(`Error removing old logs: ${err.message}`);
+        }
     };
+
 
     const selectDir = async () => {
         const dir = await OpenDir();
@@ -40,39 +87,63 @@
             duplicatedFilesDirPath = dir;
         }
     };
-
 </script>
 
 <div class="clean-system-container">
-
     <div class="clean-system-section">
         <h2>Clean System</h2>
 
         <div class="input-group">
             <div class="flex-input">
-                <input type="text" bind:value={tempFilesDirPath} placeholder="Enter a directory path for temporary files" />
-                <button class="open-btn" title="Select Path" on:click={selectDir}>
+                <input
+                    type="text"
+                    bind:value={tempFilesDirPath}
+                    placeholder="Enter a directory path for temporary files"
+                />
+                <button
+                    class="open-btn"
+                    title="Select Path"
+                    on:click={selectDir}
+                >
                     <img src={openIcon} alt="Open Dir" class="open-icon" />
                 </button>
             </div>
-            <input type="number" bind:value={expireDays} placeholder="Enter the number of days to keep temporary files" />
-            <button on:click={startDeletingTempFiles}>Delete Temporary Files</button>
+            <input
+                type="number"
+                bind:value={expireDays}
+                placeholder="Enter the number of days to keep temporary files"
+            />
+            <button on:click={startDeletingTempFiles}
+                >Delete Temporary Files</button
+            >
         </div>
-        
-        
-        <div class="input-group">
-            <div class="flex-input">
-            <input type="text" bind:value={duplicatedFilesDirPath} placeholder="Enter a directory path to find duplicated files" />
-            <button class="open-btn" title="Select Path" on:click={selectPath}>
-                <img src={openIcon} alt="Open Dir" class="open-icon" />
-            </button>
-            </div>
-            <button on:click={startDeletingDuplicatedFiles}>Delete Duplicated Files</button>
-        </div>
-        
 
         <div class="input-group">
-            <input type="text" bind:value={oldLogsDays} placeholder="Enter the number of days to keep old logs" />
+            <div class="flex-input">
+                <input
+                    type="text"
+                    bind:value={duplicatedFilesDirPath}
+                    placeholder="Enter a directory path to find duplicated files"
+                />
+                <button
+                    class="open-btn"
+                    title="Select Path"
+                    on:click={selectPath}
+                >
+                    <img src={openIcon} alt="Open Dir" class="open-icon" />
+                </button>
+            </div>
+            <button on:click={startDeletingDuplicatedFiles}
+                >Delete Duplicated Files</button
+            >
+        </div>
+
+        <div class="input-group">
+            <input
+                type="text"
+                bind:value={oldLogsDays}
+                placeholder="Enter the number of days to keep old logs"
+            />
             <button on:click={startRemovingOldLogs}>Remove Old Logs</button>
         </div>
     </div>
@@ -80,10 +151,13 @@
     <div class="clean-system-section">
         <h2>Package Cleaning</h2>
 
-        <button on:click={startRemovingUnusedPackages}>Remove Unused Packages</button>
-        <button on:click={startCleaningCachePackages}>Clean Cache Packages</button>
+        <button on:click={startRemovingUnusedPackages}
+            >Remove Unused Packages</button
+        >
+        <button on:click={startCleaningCachePackages}
+            >Clean Cache Packages</button
+        >
     </div>
-
 </div>
 
 <style>
@@ -116,7 +190,6 @@
         margin-bottom: 2rem;
     }
 
-
     h2 {
         color: #fff;
     }
@@ -142,9 +215,9 @@
     }
     button:hover {
         background-color: #16a085;
-  }
+    }
 
-  button.open-btn {
+    button.open-btn {
         background: none;
         width: 2.5rem;
         height: 2.5rem;

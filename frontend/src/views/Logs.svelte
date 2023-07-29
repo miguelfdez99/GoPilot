@@ -1,14 +1,12 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { GetLogs, ExportLogs, OpenFile } from "../../wailsjs/go/backend/Backend";
-    import { openDialog } from "../functions/functions";
+    import { GetLogs, ExportLogs, OpenFile, OpenDialogInfo, OpenDialogError } from "../../wailsjs/go/backend/Backend";
     import { writable } from "svelte/store";
     import openIcon from "../assets/images/open.png";
 
     let filepath: string = "";
     let logs = writable([]);
     let selectedLogType = writable("all");
-    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
     let loading = writable(false);
     let searchString = writable("");
     let bootNumber = writable(0);
@@ -16,20 +14,16 @@
     let activeComponent = ActiveComponent.NONE;
 
     let fetchLogs = async (type, boot) => {
-    loading.set(true);
-    try {
-        const result = await GetLogs(type, boot);
-        const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' ')); // Remove the timestamp and hostname
-        logs.set(cleanedLogs.slice().reverse()); // Reverse the logs array1
-    } catch (error) {
-        dialog = openDialog(
-            dialog,
-            "Error",
-            `Failed to get logs: ${error}`
-        );
-    } finally {
-        loading.set(false);
-    }
+        loading.set(true);
+        try {
+            const result = await GetLogs(type, boot);
+            const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' ')); 
+            logs.set(cleanedLogs.slice().reverse()); 
+        } catch (error) {
+            await OpenDialogError(`Failed to fetch logs: ${error}`);
+        } finally {
+            loading.set(false);
+        }
 };
 
 
@@ -37,17 +31,9 @@
         loading.set(true);
         try {
             await ExportLogs($selectedLogType, $bootNumber, filepath);
-            dialog = openDialog(
-                dialog,
-                "Success",
-                `Logs exported to: ${filepath}`
-            );
+            await OpenDialogInfo(`Logs exported successfully to ${filepath}`);
         } catch (error) {
-            dialog = openDialog(
-                dialog,
-                "Error",
-                `Failed to export logs: ${error}`
-            );
+            await OpenDialogError(`Failed to export logs: ${error}`);
         } finally {
             loading.set(false);
         }

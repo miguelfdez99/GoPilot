@@ -73,6 +73,14 @@ export function MonitorFile(arg1:string):Promise<void>;
 
 export function MonitorSystemStats(arg1:backend.SystemStatThresholds):Promise<void>;
 
+export function OpenDialogError(arg1:string):Promise<void>;
+
+export function OpenDialogInfo(arg1:string):Promise<void>;
+
+export function OpenDialogQuestion(arg1:string):Promise<string>;
+
+export function OpenDialogWarning(arg1:string):Promise<void>;
+
 export function OpenDir():Promise<string>;
 
 export function OpenFile():Promise<string>;
