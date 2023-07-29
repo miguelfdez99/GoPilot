@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import AddUser from "../components/users/AddUser.svelte";
   import DelUser from "../components/users/DelUser.svelte";
   import ModifyUser from "../components/users/ModifyUser.svelte";
@@ -7,114 +6,43 @@
   import DelGroup from "../components/groups/DelGroup.svelte";
   import ModifyGroup from "../components/groups/ModifyGroup.svelte";
 
-  let showUserAdd = false;
-  let showUserDel = false;
-  let showUserMod = false;
-  let showGroupAdd = false;
-  let showGroupDel = false;
-  let showGroupMod = false;
+  let viewState = 'default';
 
-  function toggleAddUser(): void {
-    showUserAdd = !showUserAdd;
-    if (showUserAdd) {
-      showUserDel = false;
-      showUserMod = false;
-      showGroupAdd = false;
-      showGroupDel = false;
-      showGroupMod = false;
-    }
+  function setViewState(newViewState: string): void {
+    viewState = newViewState;
   }
-
-  function toggleDelUser(): void {
-    showUserDel = !showUserDel;
-    if (showUserDel) {
-      showUserAdd = false;
-      showUserMod = false;
-      showGroupAdd = false;
-      showGroupDel = false;
-      showGroupMod = false;
-    }
-  }
-
-  function toggleModUser(): void {
-    showUserMod = !showUserMod;
-    if (showUserMod) {
-      showUserAdd = false;
-      showUserDel = false;
-      showGroupAdd = false;
-      showGroupDel = false;
-      showGroupMod = false;
-    }
-  }
-
-  function toggleAddGroup(): void {
-    showGroupAdd = !showGroupAdd;
-    if (showGroupAdd) {
-      showGroupDel = false;
-      showGroupMod = false;
-      showUserAdd = false;
-      showUserDel = false;
-      showUserMod = false;
-    }
-  }
-
-  function toggleDelGroup(): void {
-    showGroupDel = !showGroupDel;
-    if (showGroupDel) {
-      showGroupAdd = false;
-      showGroupMod = false;
-      showUserAdd = false;
-      showUserDel = false;
-      showUserMod = false;
-    }
-  }
-
-  function toggleModGroup(): void {
-    showGroupMod = !showGroupMod;
-    if (showGroupMod) {
-      showGroupAdd = false;
-      showGroupDel = false;
-      showUserAdd = false;
-      showUserDel = false;
-      showUserMod = false;
-    }
-  }
-
 </script>
 
-<main>
-  <div class="section" id="users">
-    <h1>Users</h1>
-    <button class="btn" on:click={toggleAddUser}>Add User</button>
-    <button class="btn" on:click={toggleDelUser}>Delete User</button>
-    <button class="btn" on:click={toggleModUser}>Modify User</button>
-    <div style="display: flex; flex-direction: column-reverse;">
-      {#if showUserAdd}
-        <AddUser on:clickOutside={toggleAddUser} />
-      {:else if showUserDel}
-        <DelUser on:clickOutside={toggleDelUser} />
-      {:else if showUserMod}
-        <ModifyUser on:clickOutside={toggleModUser} />
-      {/if}
+{#if viewState === 'default'}
+  <main>
+    <div class="section" id="users">
+      <h1>Users</h1>
+      <button class="btn" on:click={() => setViewState('addUser')}>Add User</button>
+      <button class="btn" on:click={() => setViewState('delUser')}>Delete User</button>
+      <button class="btn" on:click={() => setViewState('modUser')}>Modify User</button>
     </div>
-  </div>
 
-  <div class="section" id="groups">
-    <h1>Groups</h1>
-    <button class="btn" on:click={toggleAddGroup}>Create Group</button>
-    <button class="btn" on:click={toggleDelGroup}>Delete Group</button>
-    <button class="btn" on:click={toggleModGroup}>Modify Group</button>
-    <div style="display: flex; flex-direction: column-reverse;">
-      {#if showGroupAdd}
-        <AddGroup on:clickOutside={toggleAddGroup} />
-      {:else if showGroupDel}
-        <DelGroup on:clickOutside={toggleDelGroup} />
-      {:else if showGroupMod}
-        <ModifyGroup on:clickOutside={toggleModGroup} />
-      {/if}
+    <div class="section" id="groups">
+      <h1>Groups</h1>
+      <button class="btn" on:click={() => setViewState('addGroup')}>Create Group</button>
+      <button class="btn" on:click={() => setViewState('delGroup')}>Delete Group</button>
+      <button class="btn" on:click={() => setViewState('modGroup')}>Modify Group</button>
     </div>
-  </div>
-</main>
+  </main>
+{:else if viewState === 'addUser'}
+  <AddUser on:dismiss={() => setViewState('default')} />
+{:else if viewState === 'delUser'}
+  <DelUser on:dismiss={() => setViewState('default')} />
+{:else if viewState === 'modUser'}
+  <ModifyUser on:dismiss={() => setViewState('default')} />
+{:else if viewState === 'addGroup'}
+  <AddGroup on:dismiss={() => setViewState('default')} />
+{:else if viewState === 'delGroup'}
+  <DelGroup on:dismiss={() => setViewState('default')} />
+{:else if viewState === 'modGroup'}
+  <ModifyGroup on:dismiss={() => setViewState('default')} />
+{/if}
+
 
 <style>
   main {
