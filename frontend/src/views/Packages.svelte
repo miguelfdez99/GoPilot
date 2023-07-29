@@ -5,21 +5,17 @@
     ListPackages,
     RemovePackage,
     InstallPackage,
+    OpenDialogInfo,
+    OpenDialogError,
+    OpenDialogQuestion,
   } from "../../wailsjs/go/backend/Backend";
-  import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-  import { openDialog, closeDialog } from "../functions/functions";
   import deleteIcon from "../assets/images/delete.png";
 
   let packages: string[] = [];
   let filteredPackages: string[] = [];
   let searchInput: string = "";
   let installInput: string = "";
-  let showDeleteDialog: boolean = false;
-  let dialogName: string = "";
-  let showInstallDialog: boolean = false;
-  let installDialogName: string = "";
   let loading = writable(false);
-  let dialog = { showDialog: false, dialogTitle: '', dialogMessage: '' };
 
   async function listPackages() {
     loading.set(true);
@@ -28,63 +24,42 @@
         packages = result;
         filteredPackages = packages;
     } catch (error) {
-        dialog = openDialog(dialog, "Error", `Failed to list packages: ${error}`);
+        await OpenDialogError(`Failed to list packages: ${error}`);
     } finally {
         loading.set(false);
     }
 }
 
-
-  function confirmDeleteDialog(name: string) {
-    dialogName = name;
-    showDeleteDialog = true;
+  async function deletePackage(name: string) {
+      try {
+          const res = await OpenDialogQuestion(`Are you sure you want to remove ${name}?`);
+          if (res === "Yes") {
+            await RemovePackage(name);
+            packages = packages.filter((pkg) => pkg !== name);
+            filteredPackages = filteredPackages.filter((pkg) => pkg !== name);
+            await OpenDialogInfo(`Successfully deleted ${name}`);
+          } else {
+              await OpenDialogInfo(`Canceled package deletion`);
+          }
+      } catch (err) {
+          await OpenDialogError(`Failed to delete ${name}: ${err}`);
+      }
   }
 
-  function onDialogConfirm() {
-    deletePackage(dialogName);
-    showDeleteDialog = false;
-  }
-
-  function onDialogClose() {
-    showDeleteDialog = false;
-  }
-
-  function confirmInstallDialog(name: string) {
-    installDialogName = name;
-    showInstallDialog = true;
-  }
-
-  function onInstallDialogConfirm() {
-    installPackage(installDialogName);
-    showInstallDialog = false;
-  }
-
-  function onInstallDialogClose() {
-    showInstallDialog = false;
-  }
-
-  function deletePackage(name: string) {
-    RemovePackage(name)
-      .then(() => {
-        packages = packages.filter((pkg) => pkg !== name);
-        filteredPackages = filteredPackages.filter((pkg) => pkg !== name);
-        dialog = openDialog(dialog, "Success", `Successfully deleted ${name}`);
-      })
-      .catch((err) => {
-        dialog = openDialog(dialog, "Error", `Failed to delete ${name}: ${err}`);
-      });
-  }
-
-  function installPackage(name: string) {
-    InstallPackage(name)
-      .then(() => {
-        packages.push(name);
-        filteredPackages.push(name);
-        dialog = openDialog(dialog, "Success", `Successfully installed ${name}`);
-      })
-      .catch((err) => {
-        dialog = openDialog(dialog, "Error", `Failed to install ${name}: ${err}`);
-      });
+  async function installPackage(name: string) {
+      try {
+          const res = await OpenDialogQuestion(`Are you sure you want to install ${name}?`);
+          if (res === "Yes") {
+              await InstallPackage(name);
+              packages.push(name);
+              filteredPackages.push(name);
+              await OpenDialogInfo(`Successfully installed ${name}`);
+          } else {
+              await OpenDialogInfo(`Canceled package installation`);
+          }
+      } catch (err) {
+          await OpenDialogError(`Failed to install ${name}: ${err}`);
+      }
   }
 
   function handleSearch(event: Event) {
@@ -104,30 +79,6 @@
   });
 </script>
 
-<CustomDialog
-  bind:show={showDeleteDialog}
-  title="Delete Package"
-  message={`Are you sure you want to delete ${dialogName}?`}
-  onConfirm={onDialogConfirm}
-  onClose={onDialogClose}
-/>
-
-<CustomDialog
-  bind:show={showInstallDialog}
-  title="Install Package"
-  message={`Are you sure you want to install ${installDialogName}?`}
-  onConfirm={onInstallDialogConfirm}
-  onClose={onInstallDialogClose}
-/>
-
-<CustomDialog
-  bind:show={dialog.showDialog}
-  title={dialog.dialogTitle}
-  message={dialog.dialogMessage}
-  onClose={() => dialog = closeDialog(dialog)}
-  confirmButton={false}
-/>
-
 <main>
   <div class="input-box" id="input">
     <h1>Packages</h1>
@@ -138,7 +89,7 @@
         bind:value={installInput}
         placeholder="Enter package name..."
       />
-      <button on:click={() => confirmInstallDialog(installInput)}
+      <button on:click={() => installPackage(installInput)}
         >Install</button
       >
     </div>
@@ -164,7 +115,7 @@
               {pkg}
               <button
                 class="delete-btn"
-                on:click={() => confirmDeleteDialog(pkg)}
+                on:click={() => deletePackage(pkg)}
               >
                 <img src={deleteIcon} alt="Delete" class="delete-icon" />
               </button>
