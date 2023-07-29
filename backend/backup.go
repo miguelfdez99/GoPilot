@@ -45,7 +45,7 @@ func (b *Backend) Backup(options BackupOptions) (string, error) {
 		return "", fmt.Errorf("error creating backup: %s", string(output))
 	}
 
-	log.Println("Backup created successfully:\n", string(output))
+	b.logger.Info(fmt.Sprintf("Backup created successfully:\n%s", string(output)))
 
 	if options.Verify {
 
@@ -60,7 +60,7 @@ func (b *Backend) Backup(options BackupOptions) (string, error) {
 			return "", fmt.Errorf("backup verification failed: %s", string(output))
 		}
 
-		log.Println("Backup verified successfully:\n", string(output))
+		b.logger.Info(fmt.Sprintf("Backup verified successfully:\n%s", string(output)))
 	}
 
 	if options.CompressFile {
@@ -72,7 +72,7 @@ func (b *Backend) Backup(options BackupOptions) (string, error) {
 			return "", fmt.Errorf("error compressing backup: %s", string(output))
 		}
 
-		log.Println("Backup compressed successfully:\n", string(output))
+		b.logger.Info(fmt.Sprintf("Backup compressed successfully:\n%s", string(output)))
 	}
 
 	return cmdString, nil
@@ -83,6 +83,8 @@ func (b *Backend) ScheduleBackup(options BackupOptions, schedule string) error {
 	if err != nil {
 		return err
 	}
+
+	b.logger.Info(fmt.Sprint("Scheduling backup: ", cmdString))
 
 	return b.AddCronJob(schedule, cmdString)
 }

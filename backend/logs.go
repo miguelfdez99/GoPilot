@@ -53,7 +53,6 @@ func (b *Backend) GetLogs(logType string, boot int) ([]string, error) {
 		return nil, err
 	}
 
-	//fmt.Println(logLines)
 	return logLines, nil
 }
 
@@ -90,6 +89,8 @@ func (b *Backend) ExportLogs(logType string, boot int, filepath string) error {
 	if err := command.Wait(); err != nil {
 		return err
 	}
+
+	b.logger.Info(fmt.Sprintf("Logs exported successfully to %s", filepath))
 
 	return nil
 }
