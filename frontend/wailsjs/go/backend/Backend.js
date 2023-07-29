@@ -142,6 +142,22 @@ export function MonitorSystemStats(arg1) {
   return window['go']['backend']['Backend']['MonitorSystemStats'](arg1);
 }
 
+export function OpenDialogError(arg1) {
+  return window['go']['backend']['Backend']['OpenDialogError'](arg1);
+}
+
+export function OpenDialogInfo(arg1) {
+  return window['go']['backend']['Backend']['OpenDialogInfo'](arg1);
+}
+
+export function OpenDialogQuestion(arg1) {
+  return window['go']['backend']['Backend']['OpenDialogQuestion'](arg1);
+}
+
+export function OpenDialogWarning(arg1) {
+  return window['go']['backend']['Backend']['OpenDialogWarning'](arg1);
+}
+
 export function OpenDir() {
   return window['go']['backend']['Backend']['OpenDir']();
 }
