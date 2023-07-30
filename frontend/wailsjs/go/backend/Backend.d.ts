@@ -85,6 +85,8 @@ export function OpenDir():Promise<string>;
 
 export function OpenFile():Promise<string>;
 
+export function OpenURL(arg1:string):Promise<void>;
+
 export function RemoveAllCronJobs():Promise<void>;
 
 export function RemoveCronJob(arg1:string):Promise<void>;

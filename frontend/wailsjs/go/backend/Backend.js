@@ -166,6 +166,10 @@ export function OpenFile() {
   return window['go']['backend']['Backend']['OpenFile']();
 }
 
+export function OpenURL(arg1) {
+  return window['go']['backend']['Backend']['OpenURL'](arg1);
+}
+
 export function RemoveAllCronJobs() {
   return window['go']['backend']['Backend']['RemoveAllCronJobs']();
 }
