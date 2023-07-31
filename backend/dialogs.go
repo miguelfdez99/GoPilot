@@ -61,3 +61,7 @@ func (b *Backend) OpenDialogQuestion(msg string) string {
 
 	return result
 }
+
+func (b *Backend) OpenURL(url string) {
+	runtime.BrowserOpenURL(b.ctx, url)
+}

@@ -9,7 +9,10 @@
         OpenFile,
         OpenDir,
     } from "../../wailsjs/go/backend/Backend";
+    import { openDialog } from "../functions/functions";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
+    import infoIcon from "../assets/images/info.png";
 
     interface WatchItem {
         path: string;
@@ -23,6 +26,7 @@
     let ramThreshold: number;
     let diskThreshold: number;
     let pollingInterval;
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     onMount(async () => {
         fetchWatchList();
@@ -69,75 +73,136 @@
         const dir = await OpenDir();
         dirpath = dir;
     };
+
+    function openInfo() {
+        dialog = openDialog(
+            dialog,
+            "Info",
+            `
+            <p>This component is used for file, directory, and system stats monitoring.</p>
+            <p>- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
+            <p>- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
+            `
+        );
+    }
+
+    function onDialogClose() {
+        dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    }
 </script>
 
-<div class="monitor-container">
-    <div class="monitor-section">
-        <h1>File System Monitor</h1>
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title="Info"
+    message={dialog.dialogMessage}
+    onClose={onDialogClose}
+/>
 
-        <h2>File Monitor</h2>
-        <div class="input-group">
-            <input
-                type="text"
-                bind:value={filepath}
-                placeholder="Enter a file path"
-            />
-            <button class="open-btn" title="Choose File" on:click={selectFile}
-                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
-            >
-        </div>
-        <button on:click={startMonitoringFile}>Start Monitoring File</button
+<div class="main-container">
+    <button type="button" class="info-button" title="Info" on:click={openInfo}>
+        <img src={infoIcon} alt="Open Info" class="info-icon" />
+    </button>
+
+    <div class="monitor-container">
+        <div class="monitor-section">
+            <h1>File System Monitor</h1>
+
+            <h2>File Monitor</h2>
+            <div class="input-group">
+                <input
+                    type="text"
+                    bind:value={filepath}
+                    placeholder="Enter a file path"
+                />
+                <button
+                    class="open-btn"
+                    title="Choose File"
+                    on:click={selectFile}
+                    ><img
+                        src={openIcon}
+                        alt="Open Dir"
+                        class="open-icon"
+                    /></button
+                >
+            </div>
+            <button on:click={startMonitoringFile}>Start Monitoring File</button
             >
 
-        <h2>Directory Monitor</h2>
-        <div class="input-group">
-            <input
-                type="text"
-                bind:value={dirpath}
-                placeholder="Enter a directory path"
-            />
-            <button class="open-btn" title="Choose Directory" on:click={selectDir}
-                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
-            >
-        </div>
-        <button on:click={startMonitoringDir}
+            <h2>Directory Monitor</h2>
+            <div class="input-group">
+                <input
+                    type="text"
+                    bind:value={dirpath}
+                    placeholder="Enter a directory path"
+                />
+                <button
+                    class="open-btn"
+                    title="Choose Directory"
+                    on:click={selectDir}
+                    ><img
+                        src={openIcon}
+                        alt="Open Dir"
+                        class="open-icon"
+                    /></button
+                >
+            </div>
+            <button on:click={startMonitoringDir}
                 >Start Monitoring Directory</button
             >
-    </div>
-
-    <div class="monitor-section">
-        <h2>System Stats Monitor</h2>
-        <div class="stats-group">
-            <input
-                type="number"
-                bind:value={cpuThreshold}
-                placeholder="Enter CPU threshold (in %)"
-            />
-            <input
-                type="number"
-                bind:value={ramThreshold}
-                placeholder="Enter RAM threshold (in GB)"
-            />
-            <input
-                type="number"
-                bind:value={diskThreshold}
-                placeholder="Enter Disk Space threshold (in GB)"
-            />
         </div>
-        <button on:click={startMonitoringSystemStats}
-            >Start Monitoring System Stats</button
-        >
 
-        <h2>Watch List</h2>
-        <ul>
-            {#each $watchListStore as { path, type }}
-                <li><strong>{type}</strong>: {path}</li>
-            {/each}
-        </ul>
+        <div class="monitor-section">
+            <h2>System Stats Monitor</h2>
+            <div class="stats-group">
+                <input
+                    type="number"
+                    bind:value={cpuThreshold}
+                    placeholder="Enter CPU threshold (in %)"
+                />
+                <input
+                    type="number"
+                    bind:value={ramThreshold}
+                    placeholder="Enter RAM threshold (in GB)"
+                />
+                <input
+                    type="number"
+                    bind:value={diskThreshold}
+                    placeholder="Enter Disk Space threshold (in GB)"
+                />
+            </div>
+            <button on:click={startMonitoringSystemStats}
+                >Start Monitoring System Stats</button
+            >
+
+            <h2>Watch List</h2>
+            <ul>
+                {#each $watchListStore as { path, type }}
+                    <li><strong>{type}</strong>: {path}</li>
+                {/each}
+            </ul>
+        </div>
     </div>
 </div>
 
 <style>
+    .info-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: #5a5858;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .info-icon {
+        max-width: none;
+    }
+
     .monitor-container {
         display: flex;
         justify-content: space-between;
@@ -211,7 +276,6 @@
     button.open-btn:hover {
         background-color: #131313;
     }
-
 
     ul {
         padding: 0;
