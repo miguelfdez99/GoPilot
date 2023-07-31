@@ -9,9 +9,13 @@
         OpenDialogQuestion,
     } from "../../wailsjs/go/backend/Backend";
     import terminateIcon from "../assets/images/terminate.png";
+    import { openDialog } from "../functions/functions";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
+    import infoIcon from "../assets/images/info.png";
 
     let processInfo: string[] = [];
     let filteredProcessInfo = [];
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     let sortBy: string = "null";
     let sortDirection: string = "null";
@@ -122,8 +126,72 @@
     $: if (searchTerm !== "") {
         filterProcesses();
     }
+
+    function openInfo() {
+        dialog = openDialog(
+            dialog,
+            "Info",
+            `
+            <p>
+                This view shows the list of processes running on the system.
+            </p>
+            <p>
+                The process list is updated every second.
+                The process list is sorted by the PID in ascending order by default.
+                Click on a column header to sort the process list by that column.
+            </p>
+            <p>
+                You can terminate a process by clicking on the terminate icon in the last column.
+            </p>
+            <p>
+                <b>USER</b> - The user that started the process.
+            </p>
+            <p>
+                <b>PID</b> - The process ID.
+            </p>
+            <p>
+                <b>%CPU</b> - The percentage of the CPU time used by the process since the last update.
+            </p>
+            <p>
+                <b>%MEM</b> - The percentage of the total RAM used by the process.
+            </p>
+            <p>
+                <b>VSZ</b> - The total amount of virtual memory used by the process.
+            </p>
+            <p>
+                <b>RSS</b> - The total amount of physical memory used by the process.
+            </p>
+            <p>
+                <b>TTY</b> - The controlling terminal for the process.
+            </p>
+            <p>
+                <b>STAT</b> - The state of the process.
+            </p>
+            <p>
+                <b>START</b> - The time the process started.
+            </p>
+            <p>
+                <b>COMMAND</b> - The command that started the process.
+            </p>
+        `
+        );
+    }
+
+    function onDialogClose() {
+        dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    }
 </script>
 
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title="Info"
+    message={dialog.dialogMessage}
+    onClose={onDialogClose}
+/>
+<div class="main-container">
+    <button type="button" class="info-button" title="Info" on:click={openInfo}>
+        <img src={infoIcon} alt="Open Info" class="info-icon" />
+    </button>
 <div class="search-container">
     <input type="text" bind:value={searchTerm} placeholder="Search..." />
 </div>
@@ -185,7 +253,31 @@
     </tbody>
 </table>
 {/if}
+</div>
+
 <style>
+        .info-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: #5a5858;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .info-icon {
+        max-width: none;
+    }
+
+    button:hover {
+        background-color: #16a085;
+    }
+    
     .command {
         max-width: 400px;
         overflow: hidden;
@@ -195,6 +287,7 @@
     }
     .search-container {
         padding-bottom: 1rem;
+        max-width: 98%;
     }
 
     input[type="text"] {

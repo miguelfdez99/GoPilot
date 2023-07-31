@@ -3,14 +3,15 @@
         Backup,
         ScheduleBackup,
         OpenDir,
-        OpenDialogInfo, 
+        OpenDialogInfo,
         OpenDialogError,
     } from "../../wailsjs/go/backend/Backend";
     import { onMount } from "svelte";
-    import {
-        checkCommand,
-    } from "../functions/functions";
+    import { checkCommand } from "../functions/functions";
+    import { openDialog } from "../functions/functions";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
+    import infoIcon from "../assets/images/info.png";
 
     let options = {
         sourceDir: "",
@@ -22,6 +23,7 @@
         compressFile: false,
         schedule: "",
     };
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     onMount(async () => {
         await checkCommand("rsync");
@@ -58,92 +60,169 @@
             options.destDir = dir;
         }
     };
+
+    function openInfo() {
+        dialog = openDialog(
+            dialog,
+            "Info",
+            `
+        Backups are created using the rsync command.
+        <br />
+        <br />
+        <b>Source Directory</b> is the directory to be backed up.
+        <br />
+        <br />
+        <b>Destination Directory</b> is the directory where the backup will be stored.
+        <br />
+        <br />
+        <b>Exclude</b> is a list of files and directories to be excluded from the backup.
+        <br />
+        <br />
+        <b>Compress Data</b> compresses the data before transferring it.
+        <br />
+        <br />
+        <b>Links Option</b> is the option to preserve hard links.
+        <br />
+        <br />
+        <b>Verify</b> verifies the transfer.
+        <br />
+        <br />
+        <b>Compress File</b> compresses the file data during the transfer.
+        <br />
+        <br />
+        <b>Schedule</b> is the schedule for the backup. It uses the cron format.
+        <br />
+        <br />
+        More information about rsync(https://linux.die.net/man/1/rsync)
+        `
+        );
+    }
+
+    function onDialogClose() {
+        dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    }
 </script>
 
-<h1>Backups</h1>
-<div class="grid-container">
-    <div class="grid-item">
-        <label for="sourceDir">Source Directory:</label>
-    </div>
-    <div class="grid-item">
-        <input type="text" bind:value={options.sourceDir} />
-        <button class="open-btn" title="Select Source Directory" on:click={selectDir}
-            ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
-        >
-    </div>
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title="Info"
+    message={dialog.dialogMessage}
+    onClose={onDialogClose}
+/>
 
-    <div class="grid-item">
-        <label for="destDir">Destination Directory:</label>
-    </div>
-    <div class="grid-item">
-        <input type="text" bind:value={options.destDir} />
-        <button class="open-btn"  title="Select Destination Directory" on:click={selectDestDir}
-            ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
-        >
-    </div>
-
-    <div class="grid-item">
-        <label for="exclude">Exclude (comma-separated paths):</label>
-    </div>
-    <div class="grid-item">
-        <input type="text" bind:value={options.exclude} />
-    </div>
-
-    <div class="grid-item">
-        <label for="compressData">Compress Data:</label>
-    </div>
-    <div class="grid-item">
-        <input type="checkbox" bind:checked={options.compressData} />
-    </div>
-
-    <div class="grid-item">
-        <label for="linksOption">Symbolic Links Option:</label>
-    </div>
-    <div class="grid-item">
-        <select bind:value={options.linksOption}>
-            <option value="">Default</option>
-            <option value="-l">-l (copy links as links)</option>
-            <option value="-L"
-                >-L (transform symlink into referent file/dir)</option
+<div class="main-container">
+    <button type="button" class="info-button" title="Info" on:click={openInfo}>
+        <img src={infoIcon} alt="Open Info" class="info-icon" />
+    </button>
+    <h1>Backups</h1>
+    <div class="grid-container">
+        <div class="grid-item">
+            <label for="sourceDir">Source Directory:</label>
+        </div>
+        <div class="grid-item">
+            <input type="text" bind:value={options.sourceDir} />
+            <button
+                class="open-btn"
+                title="Select Source Directory"
+                on:click={selectDir}
+                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
             >
-            <option value="-k">-k (copy symlinks as regular files)</option>
-        </select>
-    </div>
+        </div>
 
-    <div class="grid-item">
-        <label for="verify">Verify Backup:</label>
-    </div>
-    <div class="grid-item">
-        <input type="checkbox" bind:checked={options.verify} />
-    </div>
+        <div class="grid-item">
+            <label for="destDir">Destination Directory:</label>
+        </div>
+        <div class="grid-item">
+            <input type="text" bind:value={options.destDir} />
+            <button
+                class="open-btn"
+                title="Select Destination Directory"
+                on:click={selectDestDir}
+                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
+            >
+        </div>
 
-    <div class="grid-item">
-        <label for="compressFile">Create a compress file:</label>
-    </div>
-    <div class="grid-item">
-        <input type="checkbox" bind:checked={options.compressFile} />
-    </div>
+        <div class="grid-item">
+            <label for="exclude">Exclude (comma-separated paths):</label>
+        </div>
+        <div class="grid-item">
+            <input type="text" bind:value={options.exclude} />
+        </div>
 
-    <div class="grid-item">
-        <label for="schedule">Schedule:</label>
-    </div>
-    <div class="grid-item">
-        <input
-            type="text"
-            bind:value={options.schedule}
-            placeholder="Cron schedule (e.g., * * * * *)"
-        />
-    </div>
+        <div class="grid-item">
+            <label for="compressData">Compress Data:</label>
+        </div>
+        <div class="grid-item">
+            <input type="checkbox" bind:checked={options.compressData} />
+        </div>
 
-    <div class="grid-item">
-        <button on:click={backup}>Backup Now</button>
-    </div>
-    <div class="grid-item">
-        <button on:click={scheduleBackup}>Schedule Backup</button>
+        <div class="grid-item">
+            <label for="linksOption">Symbolic Links Option:</label>
+        </div>
+        <div class="grid-item">
+            <select bind:value={options.linksOption}>
+                <option value="">Default</option>
+                <option value="-l">-l (copy links as links)</option>
+                <option value="-L"
+                    >-L (transform symlink into referent file/dir)</option
+                >
+                <option value="-k">-k (copy symlinks as regular files)</option>
+            </select>
+        </div>
+
+        <div class="grid-item">
+            <label for="verify">Verify Backup:</label>
+        </div>
+        <div class="grid-item">
+            <input type="checkbox" bind:checked={options.verify} />
+        </div>
+
+        <div class="grid-item">
+            <label for="compressFile">Create a compress file:</label>
+        </div>
+        <div class="grid-item">
+            <input type="checkbox" bind:checked={options.compressFile} />
+        </div>
+
+        <div class="grid-item">
+            <label for="schedule">Schedule:</label>
+        </div>
+        <div class="grid-item">
+            <input
+                type="text"
+                bind:value={options.schedule}
+                placeholder="Cron schedule (e.g., * * * * *)"
+            />
+        </div>
+
+        <div class="grid-item">
+            <button on:click={backup}>Backup Now</button>
+        </div>
+        <div class="grid-item">
+            <button on:click={scheduleBackup}>Schedule Backup</button>
+        </div>
     </div>
 </div>
 
 <style>
+    .info-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: #5a5858;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .info-icon {
+        max-width: none;
+    }
+
     .grid-container {
         display: grid;
         gap: 1.5rem;
@@ -174,7 +253,7 @@
 
     input[type="text"],
     select {
-        padding: .7em;
+        padding: 0.7em;
         border: 0;
         border-radius: 4px;
         background: #333;
@@ -184,7 +263,7 @@
     }
 
     button {
-        padding: .8em 1em;
+        padding: 0.8em 1em;
         border: none;
         border-radius: 4px;
         background: #1abc9c;

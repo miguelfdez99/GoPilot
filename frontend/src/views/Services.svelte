@@ -9,12 +9,16 @@
         StartService,
         StopService,
     } from "../../wailsjs/go/backend/Backend";
+    import { openDialog } from "../functions/functions";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
+    import infoIcon from "../assets/images/info.png";
 
     let serviceStore = writable([]);
     let runningServiceStore = writable([]);
     let error: Error | null = null;
     let selectedTable = "all";
     let loading = writable(false);
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     onMount(async () => {
         loading.set(true);
@@ -69,9 +73,36 @@
             }
         }
     });
+
+    function openInfo() {
+        dialog = openDialog(
+            dialog,
+            "Info",
+            `
+            <p>
+                This page allows you to manage the services on your system.
+                You can enable/disable services to start on boot and start/stop
+                services.
+            </p>`
+        );
+    }
+
+    function onDialogClose() {
+        dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    }
 </script>
 
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title="Info"
+    message={dialog.dialogMessage}
+    onClose={onDialogClose}
+/>
+
 <div>
+    <button type="button" class="info-button" title="Info" on:click={openInfo}>
+        <img src={infoIcon} alt="Open Info" class="info-icon" />
+    </button>
     <h1>Services</h1>
 
     <select bind:value={selectedTable}>
@@ -148,6 +179,23 @@
 </div>
 
 <style>
+    .info-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: #5a5858;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .info-icon {
+        max-width: none;
+    }
     div {
         padding-bottom: 1rem;
     }

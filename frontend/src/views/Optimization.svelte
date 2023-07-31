@@ -9,25 +9,31 @@
         OpenDialogInfo,
         OpenDialogError,
     } from "../../wailsjs/go/backend/Backend";
+    import { openDialog } from "../functions/functions";
+    import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
+    import infoIcon from "../assets/images/info.png";
 
     let tempFilesDirPath: string = "";
     let expireDays: number;
     let duplicatedFilesDirPath: string = "";
     let oldLogsDays: string = "";
+    let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     const startDeletingTempFiles = () => {
-    if (!tempFilesDirPath || !expireDays) {
-        OpenDialogError("Both directory path and number of days are required.");
-        return;
-    }
-    try {
-        DeleteTempFiles(tempFilesDirPath, expireDays);
-        OpenDialogInfo("Temp files removed successfully");
-    } catch (err) {
-        OpenDialogError(`Error removing temp files: ${err.message}`);
-    }
-};
+        if (!tempFilesDirPath || !expireDays) {
+            OpenDialogError(
+                "Both directory path and number of days are required."
+            );
+            return;
+        }
+        try {
+            DeleteTempFiles(tempFilesDirPath, expireDays);
+            OpenDialogInfo("Temp files removed successfully");
+        } catch (err) {
+            OpenDialogError(`Error removing temp files: ${err.message}`);
+        }
+    };
 
     const startRemovingUnusedPackages = () => {
         try {
@@ -73,7 +79,6 @@
         }
     };
 
-
     const selectDir = async () => {
         const dir = await OpenDir();
         if (dir) {
@@ -87,9 +92,49 @@
             duplicatedFilesDirPath = dir;
         }
     };
+
+    function openInfo() {
+        dialog = openDialog(
+            dialog,
+            "Info",
+            `
+            <p>
+                This section allows you to clean the system and packages. You can do the following:
+            <p>
+                <b>Remove Unused Packages:</b> Remove unused packages from the system.
+            </p>
+            <p>
+                <b>Clean Cache Packages:</b> Clean cache packages from the system.
+            </p>
+            <p>
+                <b>Delete Temporary Files:</b> Delete temporary files from the system.
+            </p>
+            <p>
+                <b>Delete Duplicated Files:</b> Delete duplicated files from the system.
+            </p>
+            <p>
+                <b>Remove Old Logs:</b> Remove old logs from the system.
+            </p>
+        `
+        );
+    }
+
+    function onDialogClose() {
+        dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    }
 </script>
 
+<CustomDialog
+    bind:show={dialog.showDialog}
+    title="Info"
+    message={dialog.dialogMessage}
+    onClose={onDialogClose}
+/>
+
 <div class="clean-system-container">
+    <button type="button" class="info-button" title="Info" on:click={openInfo}>
+        <img src={infoIcon} alt="Open Info" class="info-icon" />
+    </button>
     <div class="clean-system-section">
         <h2>Clean System</h2>
 
@@ -161,6 +206,23 @@
 </div>
 
 <style>
+    .info-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: #5a5858;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .info-icon {
+        max-width: none;
+    }
     .clean-system-container {
         display: flex;
         justify-content: space-between;
