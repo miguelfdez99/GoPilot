@@ -18,7 +18,6 @@ func (b *Backend) ListCronJobs() ([]CronJob, error) {
 	cmd := exec.Command("crontab", "-l")
 	output, err := cmd.Output()
 	if err != nil {
-		b.logger.Error("Failed to list cron jobs")
 		return nil, err
 	}
 
