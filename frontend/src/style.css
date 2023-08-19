@@ -1,5 +1,9 @@
+:root {
+    --background-color: #1d1d1d;
+}
+
 html {
-    background-color: #1d1d1d;
+    background-color: var(--background-color);
     text-align: center;
     color: #fff;
 }
@@ -15,6 +19,6 @@ body {
 #app {
     height: 100vh;
     text-align: center;
-    background-color: #292929;
+    background-color: var(--background-color);
     overflow-y: scroll;
 }

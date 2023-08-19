@@ -12,6 +12,29 @@
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
     import infoIcon from "../assets/images/info.png";
+    import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+  }
+
 
     let options = {
         sourceDir: "",
@@ -205,6 +228,9 @@
 </div>
 
 <style>
+    .main-container {
+        background-color: var(--main-bg-color);
+    }
     .info-button {
         position: absolute;
         top: 10px;
@@ -235,6 +261,7 @@
         width: 90%;
         max-width: 800px;
         margin: 2rem auto;
+        background-color: var(--main-bg-color2);
     }
 
     .grid-item {

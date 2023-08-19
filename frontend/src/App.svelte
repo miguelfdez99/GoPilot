@@ -1,7 +1,29 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs, Alerts, Optimization, Services} from './imports';
+  import { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs , Certs, Alerts, Optimization, Services, Settings} from './imports';
   import "@picocss/pico/css/pico.css"
+  import { settings } from './stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+  }
   let currentView = 'home';
 
   const views = {
@@ -17,6 +39,7 @@
   'process': Process,
   'services': Services,
   'users': Users,
+  'settings': Settings
 };
 
   let CurrentComponent = views[currentView];
@@ -41,6 +64,7 @@
     <button on:click={() => (currentView = 'process', CurrentComponent = views[currentView])}>Processes</button>
     <button on:click={() => (currentView = 'services', CurrentComponent = views[currentView])}>Services</button>
     <button on:click={() => (currentView = 'users', CurrentComponent = views[currentView])}>Users</button>
+    <button on:click={() => (currentView = 'settings', CurrentComponent = views[currentView])}>Settings</button>
   </div>
 
   <div class="main">
@@ -49,19 +73,14 @@
 </div>
 
 <style>
-
-  /* .container {
-    display: flex;
-    height: 100vh;
-  } */
-
   .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     width: 200px;
-    background-color: #1f1f1f;
+    background-color: var(--main-bg-color2);
+    color: var(--main-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,22 +92,22 @@
   .sidebar button {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background-color: #1f1f1f;
+    background-color: var(--main-bg-color2);
+    color: var(--main-color);
     border: none;
-    color: #f1f1f1;
     font-weight: bold;
     cursor: pointer;
     transition: all;
   }
 
   .sidebar button:hover {
-    background-color: #3d3d3d;
+    background-color: var(--main-bg-color);
   }
 
   .main {
     flex: 1;
     padding: 2rem;
     margin-left: 200px;
-    color: white;
+    background-color: var(--main-bg-color);
   }
 </style>

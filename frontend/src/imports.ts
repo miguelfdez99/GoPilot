@@ -10,5 +10,6 @@ import Certs from './views/Certs.svelte';
 import Alerts from './views/Alerts.svelte';
 import Optimization from './views/Optimization.svelte';
 import Services from './views/Services.svelte';
+import Settings from './Settings.svelte';
 
-export { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs, Certs, Alerts, Optimization, Services };
+export { Home, Users, Packages, Monitor, Cron, Backup, Process, Logs, Certs, Alerts, Optimization, Services, Settings };
