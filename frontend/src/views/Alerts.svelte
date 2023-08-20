@@ -127,6 +127,7 @@
 />
 
 <div class="main-container">
+    <h2>Alerts</h2>
     <button type="button" class="info-button" title="Info" on:click={openInfo}>
         <img src={infoIcon} alt="Open Info" class="info-icon" />
     </button>
@@ -221,7 +222,7 @@
         top: 10px;
         right: 10px;
         border: none;
-        background: #5a5858;
+        background: var(--main-button-color);
         height: 40px;
         width: 40px;
         display: flex;

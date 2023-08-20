@@ -95,7 +95,7 @@
 <style>
     h2 {
       text-align: center;
-      color: #fff;
+      color: var(--main-color);
     }
     
     .container {
@@ -109,20 +109,16 @@
         right: 0;
         padding: 10px 20px;
         border: none;
-        background-color: #333;
+        background: var(--main-button-color);
         border-radius: 5px;
         font-size: 16px;
         color: #fff;
         transition: background-color 0.3s;
     }
 
-    .back-button:hover {
-        background-color: #555;
-    }
-
     .form-control {
         padding: 30px;
-        background-color: #222;
+        background-color: var(--main-bg-color2);
         border-radius: 5px;
     }
 
@@ -133,7 +129,7 @@
     .input-field span {
         display: block;
         font-size: 14px;
-        color: #ccc;
+        color: var(--main-color);
         margin-bottom: 5px;
     }
 
@@ -143,8 +139,8 @@
         padding: 10px;
         border-radius: 5px;
         font-size: 16px;
-        background-color: #333;
-        color: #fff;
+        background: var(--main-input-color);
+        color: var(--main-color);
     }
 
     .submit-button {
@@ -152,7 +148,7 @@
         width: 100%;
         padding: 10px;
         border: none;
-        background: #1abc9c;
+        background: var(--main-button-color);
         color: white;
         border-radius: 5px;
         font-size: 16px;
@@ -160,7 +156,4 @@
         transition: background-color 0.3s;
     }
 
-    .submit-button:hover {
-        background-color: #16a085;
-    }
 </style>

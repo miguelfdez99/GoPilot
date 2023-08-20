@@ -13,6 +13,52 @@
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
     import infoIcon from "../assets/images/info.png";
+    import { settings } from "../stores";
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+        document.documentElement.style.setProperty(
+            "--main-font-size",
+            fontSize
+        );
+        document.documentElement.style.setProperty("--main-color", color);
+        document.documentElement.style.setProperty(
+            "--main-font-family",
+            fontFamily
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color",
+            backgroundColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color2",
+            backgroundColor2
+        );
+        document.documentElement.style.setProperty(
+            "--main-input-color",
+            inputColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-button-color",
+            buttonColor
+        );
+    }
 
     let tempFilesDirPath: string = "";
     let expireDays: number;
@@ -78,7 +124,6 @@
             OpenDialogError(`Error removing old logs: ${err.message}`);
         }
     };
-
 
     const selectDir = async () => {
         const dir = await OpenDir();
@@ -234,7 +279,7 @@
     .clean-system-section {
         flex: 1;
         padding: 1rem;
-        background-color: #282828;
+        background-color: var(--main-bg-color2);
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         color: #ddd;
@@ -254,30 +299,27 @@
     }
 
     h2 {
-        color: #fff;
+        color: var(--main-color);
     }
     input {
         margin-bottom: 10px;
         padding: 10px;
         width: 100%;
         box-sizing: border-box;
-        border: 1px solid #444;
-        background-color: #333;
-        color: #fff;
+        border: 1px solid var(--main-input-color);;
+        background: var(--main-input-color);
+        color: var(--main-color);
         border-radius: 5px;
     }
     button {
         margin-bottom: 10px;
         padding: 10px 20px;
         border: none;
-        background: #1abc9c;
+        background: var(--main-button-color);
         color: white;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s ease;
-    }
-    button:hover {
-        background-color: #16a085;
     }
 
     button.open-btn {

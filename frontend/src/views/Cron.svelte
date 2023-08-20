@@ -14,6 +14,34 @@
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import infoIcon from "../assets/images/info.png";
+    import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
 
     let jobs = [];
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
@@ -175,7 +203,7 @@
         flex-direction: column;
         max-width: 75%;
         margin: 2rem auto;
-        background-color: #282828;
+        background-color: var(--main-bg-color2);
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         color: #ddd;
@@ -187,7 +215,7 @@
         top: 10px;
         right: 10px;
         border: none;
-        background: #5a5858;
+        background: var(--main-button-color);
         height: 40px;
         width: 40px;
         display: flex;
@@ -203,8 +231,10 @@
     h1,
     h2,
     p {
-        color: #ddd;
+        font-size: var(--main-font-size);
+        color: var(--main-color);
         margin-bottom: 1em;
+        font-family: var(--main-font-family);
     }
 
     ul {
@@ -213,7 +243,7 @@
         border: 1px solid #333;
         border-radius: 4px;
         margin-bottom: 1em;
-        background: #333;
+        background-color: var(--main-bg-color);
     }
 
     li {
@@ -232,16 +262,12 @@
         padding: 0.8em 1em;
         border: none;
         border-radius: 4px;
-        background: #1abc9c;
+        background: var(--main-button-color);
         color: #fff;
         cursor: pointer;
         transition: background-color 0.3s;
         width: 100%;
         margin-bottom: 1em;
-    }
-
-    button:hover {
-        background-color: #16a085;
     }
 
     .delete-btn {

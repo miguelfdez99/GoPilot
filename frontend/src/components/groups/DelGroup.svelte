@@ -5,6 +5,34 @@
         OpenDialogError,
     } from "../../../wailsjs/go/backend/Backend";
     import { createEventDispatcher } from "svelte";
+    import { settings } from '../../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+    }
 
     const dispatch = createEventDispatcher();
 
@@ -45,7 +73,7 @@
 <style>
     h2 {
       text-align: center;
-      color: #fff;
+      color: var(--main-color);
     }
     
     .container {
@@ -59,20 +87,16 @@
       right: 0;
       padding: 10px 20px;
       border: none;
-      background-color: #333;
+      background: var(--main-button-color);
       border-radius: 5px;
       font-size: 16px;
       color: #fff;
       transition: background-color 0.3s;
     }
 
-    .back-button:hover {
-      background-color: #555;
-    }
-
     .form-control {
       padding: 30px;
-      background-color: #222;
+      background-color: var(--main-bg-color2);
       border-radius: 5px;
     }
 
@@ -83,7 +107,7 @@
     .input-field span {
       display: block;
       font-size: 14px;
-      color: #ccc;
+      color: var(--main-color);
       margin-bottom: 5px;
     }
 
@@ -93,8 +117,8 @@
       padding: 10px;
       border-radius: 5px;
       font-size: 16px;
-      background-color: #333;
-      color: #fff;
+      background: var(--main-input-color);
+      color: var(--main-color);
     }
 
     .submit-button {
@@ -102,7 +126,7 @@
       width: 100%;
       padding: 10px;
       border: none;
-      background: #c0392b;
+      background: var(--main-button-color);
       color: white;
       border-radius: 5px;
       font-size: 16px;
@@ -110,7 +134,4 @@
       transition: background-color 0.3s;
     }
 
-    .submit-button:hover {
-        background-color: #e74c3c;
-    }
 </style>

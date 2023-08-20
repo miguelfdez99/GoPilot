@@ -19,12 +19,16 @@
     let fontFamily: string;
     let backgroundColor: string;
     let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
     settings.subscribe(($settings) => {
         fontSize = $settings.fontSize;
         color = $settings.color;
         fontFamily = $settings.fontFamily;
         backgroundColor = $settings.backgroundColor;
         backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
     });
 
     $: {
@@ -33,6 +37,8 @@
     document.documentElement.style.setProperty('--main-font-family', fontFamily);
     document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
     document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
   }
 
 
@@ -137,7 +143,7 @@
     <button type="button" class="info-button" title="Info" on:click={openInfo}>
         <img src={infoIcon} alt="Open Info" class="info-icon" />
     </button>
-    <h1>Backups</h1>
+    <h2>Backups</h2>
     <div class="grid-container">
         <div class="grid-item">
             <label for="sourceDir">Source Directory:</label>
@@ -230,13 +236,15 @@
 <style>
     .main-container {
         background-color: var(--main-bg-color);
+        font-size: var(--main-font-size);
+        color: var(--main-color);
     }
     .info-button {
         position: absolute;
         top: 10px;
         right: 10px;
         border: none;
-        background: #5a5858;
+        background: var(--main-button-color);
         height: 40px;
         width: 40px;
         display: flex;
@@ -267,6 +275,7 @@
     .grid-item {
         display: flex;
         align-items: center;
+        color: var(--main-color);
     }
 
     label {
@@ -276,6 +285,7 @@
 
     input[type="checkbox"] {
         margin: 0;
+        background: var(--main-input-color);
     }
 
     input[type="text"],
@@ -283,17 +293,18 @@
         padding: 0.7em;
         border: 0;
         border-radius: 4px;
-        background: #333;
+        background: var(--main-input-color);
         color: #fff;
         width: 100%;
         box-sizing: border-box;
+        color: var(--main-color);
     }
 
     button {
         padding: 0.8em 1em;
         border: none;
         border-radius: 4px;
-        background: #1abc9c;
+        background: var(--main-button-color);
         color: #fff;
         cursor: pointer;
         transition: background-color 0.3s;
@@ -315,15 +326,7 @@
         justify-content: center;
     }
 
-    button.open-btn:hover {
-        background-color: #131313;
-    }
-
-    button:hover {
-        background-color: #16a085;
-    }
-
-    h1 {
-        color: white;
+    h2 {
+        color: var(--main-color);
     }
 </style>

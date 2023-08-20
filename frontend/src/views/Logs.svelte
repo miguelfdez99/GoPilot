@@ -3,6 +3,34 @@
     import { GetLogs, ExportLogs, OpenFile, OpenDialogInfo, OpenDialogError } from "../../wailsjs/go/backend/Backend";
     import { writable } from "svelte/store";
     import openIcon from "../assets/images/open.png";
+    import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+    }
 
     let filepath: string = "";
     let logs = writable([]);
@@ -146,25 +174,25 @@
 
 <style>
     h1 {
-        color: white;
+        color: var(--main-color);
         font-size: 24px;
         margin-bottom: 10px;
     }
 
     select {
-        color: white;
-        background-color: #303030;
+        color: var(--main-color);
+        background-color: var(--main-bg-color2);
         font-size: 16px;
         margin-bottom: 20px;
     }
 
     button {
-        background-color: #303030;
+        background-color: var(--main-bg-color2);
         border-color: #030303fa;
     }
 
     label p {
-        color: white;
+        color: var(--main-color);
     }
 
     .input-group {
@@ -187,16 +215,11 @@
         justify-content: center;
     }
 
-    button.open-btn:hover {
-        background-color: #131313;
-    }
-
     input {
         padding: 0.7em;
         border: 0;
         border-radius: 4px;
-        background: #333;
-        color: #fff;
+        color: var(--main-color);
         width: 100%;
         box-sizing: border-box;
         margin-bottom: 0.5em;
@@ -218,8 +241,7 @@
     .logs {
         border: 1px solid #dddbdb;
         padding: 0.5em;
-        background-color: #030303fa;
-        color: #070303;
+        background-color: var(--main-bg-color);
         text-align: left;
         overflow: auto;
     }
@@ -227,10 +249,10 @@
     .logs pre {
         white-space: pre-wrap;
         border-bottom: 1px solid #0a0909;
-        background-color: rgb(44, 43, 43);
+        background-color: var(--main-bg-color2);
         padding: 0.5em;
         margin: 0;
-        color: white;
+        color: var(--main-color);
     }
 
     .logs pre:last-child {

@@ -125,7 +125,7 @@ h1 {
     margin-bottom: 2rem;
     text-transform: capitalize;
     letter-spacing: 1.5px;
-    margin-top: 0; /* Remove default margin */
+    margin-top: 0;
 }
 
 .settings-grid {
@@ -148,7 +148,7 @@ label {
     color: #EEE;
     letter-spacing: 0.8px;
     text-transform: capitalize;
-    font-weight: 500; /* Slight boldness to improve readability */
+    font-weight: 500;
 }
 
 input, select {
@@ -177,7 +177,7 @@ input[type="color"] {
 }
 
 .theme-selector {
-    grid-column: 1 / 3; /* Span across both columns */
+    grid-column: 1 / 3;
     margin-top: 1rem;
 }
 

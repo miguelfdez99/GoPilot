@@ -12,6 +12,34 @@
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
     import infoIcon from "../assets/images/info.png";
+    import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
 
     let keyType = "";
     let keyName = "";
@@ -104,6 +132,7 @@
     <button type="button" class="info-button" title="Info" on:click={openInfo}>
         <img src={infoIcon} alt="Open Info" class="info-icon" />
     </button>
+    <h2>Certificates & Keys</h2>
     <div class="form-container">
         <h2>Generate Keys</h2>
         <form on:submit|preventDefault={generateKeys}>
@@ -178,12 +207,15 @@
 </div>
 
 <style>
+    .main-container {
+        background-color: var(--main-bg-color);
+    }
     .info-button {
         position: absolute;
         top: 10px;
         right: 10px;
         border: none;
-        background: #5a5858;
+        background: var(--main-button-color);
         height: 40px;
         width: 40px;
         display: flex;
@@ -201,7 +233,7 @@
         max-width: 600px;
         margin: 3rem auto;
         padding: 2rem;
-        background: #282828;
+        background-color: var(--main-bg-color2);
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         border-radius: 5px;
     }
@@ -214,7 +246,7 @@
     .input-field > span,
     .checkbox-field > span {
         font-weight: 500;
-        color: #ddd;
+        color: var(--main-color);
         margin-bottom: 0.5rem;
     }
 
@@ -223,32 +255,24 @@
         padding: 0.7em;
         border: 0;
         border-radius: 4px;
-        background: #333;
-        color: #fff;
+        background: var(--main-input-color);
+        color: var(--main-color);
     }
 
     .checkbox-field {
         display: flex;
         align-items: center;
-        color: #ddd;
+        color: var(--main-color);
     }
 
     .submit-button {
         padding: 0.8em 1em;
         border: none;
         border-radius: 4px;
-        background: #1abc9c;
+        background: var(--main-button-color);
         color: #fff;
         cursor: pointer;
         transition: background-color 0.3s;
-    }
-
-    .submit-button:hover {
-        background-color: #16a085;
-    }
-
-    button:hover {
-        background-color: #16a085;
     }
 
     button.open-btn {
@@ -265,10 +289,6 @@
         border-color: #333;
     }
 
-    button.open-btn:hover {
-        background-color: #131313;
-    }
-
     .input-group {
         display: flex;
         flex-direction: row;
@@ -278,7 +298,8 @@
 
     .input-group input {
         margin-right: 0.5em;
-        background: #333;
+        background: var(--main-input-color);
+        color: var(--main-color);
     }
 
     hr {
@@ -288,6 +309,6 @@
     }
 
     h2 {
-        color: white;
+        color: var(--main-color);
     }
 </style>
