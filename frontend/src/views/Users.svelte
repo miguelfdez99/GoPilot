@@ -8,6 +8,34 @@
   import { openDialog } from "../functions/functions";
   import CustomDialog from "../components/dialogs/CustomDialog.svelte";
   import infoIcon from "../assets/images/info.png";
+  import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
 
   let viewState = "default";
   let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
@@ -114,7 +142,7 @@
   }
 
   .section {
-    background-color: #f5f5f5;
+    background-color: var(--main-bg-color2);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -124,11 +152,11 @@
   h1 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
-    color: #333;
+    color: var(--main-color);
   }
 
   .btn {
-    background-color: #333;
+    background: var(--main-button-color);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -139,26 +167,18 @@
     transition: background-color 0.3s ease-in-out;
   }
 
-  .btn:hover {
-    background-color: #555;
-  }
-
   .info-button {
     position: absolute;
     top: 10px;
     right: 10px;
     border: none;
-    background: #5a5858;
+    background: var(--main-button-color);
     height: 40px;
     width: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-  }
-
-  .info-button:hover {
-    background: #7a7979;
   }
 
   .info-icon {

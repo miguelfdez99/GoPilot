@@ -10,6 +10,34 @@
     OpenDialogQuestion,
   } from "../../wailsjs/go/backend/Backend";
   import deleteIcon from "../assets/images/delete.png";
+  import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
 
   let packages: string[] = [];
   let filteredPackages: string[] = [];
@@ -146,11 +174,7 @@
     width: 80px;
     height: 30px;
     font-size: 14px;
-    background: #1abc9c;
-  }
-
-  button:hover {
-        background-color: #16a085;
+    background: var(--main-button-color);
   }
 
   .delete-btn {
@@ -189,7 +213,11 @@
   li,
   input,
   p {
-    color: white;
+    color: var(--main-color);
+  }
+
+  input {
+    background: var(--main-input-color);
   }
 
   .loading {

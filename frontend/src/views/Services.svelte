@@ -12,6 +12,34 @@
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import infoIcon from "../assets/images/info.png";
+    import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
 
     let serviceStore = writable([]);
     let runningServiceStore = writable([]);
@@ -184,7 +212,7 @@
         top: 10px;
         right: 10px;
         border: none;
-        background: #5a5858;
+        background: var(--main-button-color);
         height: 40px;
         width: 40px;
         display: flex;
@@ -208,8 +236,8 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     }
     thead tr {
-        background-color: #009879;
-        color: #ffffff;
+        background-color: var(--main-input-color);
+        color: var(--main-color);
         text-align: left;
     }
     th,
@@ -217,13 +245,13 @@
         padding: 12px 15px;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: white;
+        color: var(--main-color);
     }
     tbody tr {
         border-bottom: 1px solid #dddddd;
     }
     tbody tr:nth-of-type(even) {
-        background-color: #312c2c;
+        background-color:  var(--main-input-color2);
     }
     tbody tr:last-of-type {
         border-bottom: 2px solid #009879;
@@ -277,7 +305,12 @@
 
     h1,
     option {
-        color: white;
+        color: var(--main-color);
+    }
+
+    select {
+        background: var(--main-input-color);
+        color: var(--main-color);
     }
 
     .loading {

@@ -4,6 +4,34 @@
         OpenDialogError,
     } from "../../wailsjs/go/backend/Backend";
     import { createEventDispatcher } from "svelte";
+    import { settings } from '../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
 
     const dispatch = createEventDispatcher();
 
@@ -174,18 +202,22 @@
     }
 
     h2 {
-        color: white;
+        font-size: var(--main-font-size);
+        color: var(--main-color);
+        margin-bottom: 1em;
+        font-family: var(--main-font-family);
     }
 
     .form {
         padding: 20px;
-        background-color: #333;
-        color: #fff;
+        background-color: var(--main-bg-color2);
+        color: var(--main-color);
         border-radius: 4px;
     }
 
     .form-select {
-        color: white;
+        background-color: var(--main-input-color);
+        color: var(--main-color);
     }
 
     .form-title {
@@ -196,7 +228,7 @@
     .form-label {
         display: block;
         margin-bottom: 10px;
-        color: #fff;
+        color: var(--main-color);
     }
 
     .form-input {
@@ -204,32 +236,28 @@
         padding: 8px;
         border: none;
         border-radius: 4px;
-        background-color: #555;
+        background: var(--main-input-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        color: #fff;
+        color: var(--main-color);
         flex-grow: 1;
     }
 
     .form-note {
         font-size: 14px;
         margin-bottom: 10px;
-        color: #fff;
+        color: var(--main-color);
     }
 
     .form-button {
         display: inline-block;
         padding: 8px 16px;
-        background-color: #1abc9c;
-        color: #fff;
+        background: var(--main-button-color);
+        color: var(--main-color);
         border: none;
         border-radius: 4px;
         cursor: pointer;
         font-size: 16px;
         transition: background-color 0.2s;
-    }
-
-    .form-button:hover {
-        background-color: #16a085;
     }
 
     .input-container {
@@ -247,14 +275,11 @@
         right: 0;
         padding: 10px 20px;
         border: none;
-        background-color: #333;
+        background: var(--main-button-color);
         border-radius: 5px;
         font-size: 16px;
-        color: #fff;
+        color: var(--main-color);
         transition: background-color 0.3s;
     }
 
-    .back-button:hover {
-        background-color: #555;
-    }
 </style>

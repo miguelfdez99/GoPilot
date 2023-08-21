@@ -11,6 +11,34 @@
     import manjaroIcon from "../../assets/images/manjaro.png";
     import mintIcon from "../../assets/images/mint.png";
     import elementaryIcon from "../../assets/images/elementary.png";
+    import { settings } from '../../stores';
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+    }
 
     let distroIcons = {
     "Debian": debianIcon,
@@ -129,7 +157,6 @@ let osName: string = "";
 <style>
     :root {
         --main-color: #414a4c;
-        --secondary-color: #1abc9c;
         --font-family: "Roboto", sans-serif;
     }
 
@@ -185,6 +212,6 @@ let osName: string = "";
     }
 
     th {
-        background-color: var(--secondary-color);
+        background-color: var(--main-input-color);
     }
 </style>
