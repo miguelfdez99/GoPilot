@@ -22,6 +22,7 @@
     let backgroundColor2: string;
     let inputColor: string;
     let buttonColor: string;
+    let showInfoButton: boolean;
     settings.subscribe(($settings) => {
         fontSize = $settings.fontSize;
         color = $settings.color;
@@ -30,6 +31,7 @@
         backgroundColor2 = $settings.backgroundColor2;
         inputColor = $settings.inputColor;
         buttonColor = $settings.buttonColor;
+        showInfoButton = $settings.showInfoButton;
     });
 
     $: {
@@ -178,9 +180,11 @@
 />
 
 <div class="clean-system-container">
+    {#if showInfoButton}
     <button type="button" class="info-button" title="Info" on:click={openInfo}>
         <img src={infoIcon} alt="Open Info" class="info-icon" />
     </button>
+    {/if}
     <div class="clean-system-section">
         <h2>Clean System</h2>
 

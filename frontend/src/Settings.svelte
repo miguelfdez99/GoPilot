@@ -9,6 +9,7 @@
     let backgroundColor2: string;
     let inputColor: string;
     let buttonColor: string;
+    let showInfoButton: boolean;
     let currentSettings = {};
     let theme = 'dark';
 
@@ -20,6 +21,7 @@
         backgroundColor2 = $settings.backgroundColor2;
         inputColor = $settings.inputColor; 
         buttonColor = $settings.buttonColor;
+        showInfoButton = $settings.showInfoButton;
         currentSettings = { ...$settings };
     });
 
@@ -100,6 +102,11 @@
             <label for="buttonColor">Button Color</label>
             <input type="color" bind:value={buttonColor} on:blur={() => settings.update(n => ({...n, buttonColor}))}>
         </div>
+        <div class="setting-group custom-checkbox">
+            <label for="showInfoButton">Show Info Button</label>
+            <input id="showInfoButton" type="checkbox" class="hidden-checkbox" bind:checked={showInfoButton} on:change={() => settings.update(n => ({...n, showInfoButton}))}>
+            <span class="styled-checkbox"></span>
+        </div>                        
     </div>
 </div>
 
