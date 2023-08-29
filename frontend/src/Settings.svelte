@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { settings, lightTheme, darkTheme, highContrastTheme, darculaTheme } from './stores';
+    import { settings, lightTheme, darkTheme, highContrastTheme, nordTheme, oceanTheme, sunnyTheme } from './stores';
     import { onDestroy } from 'svelte';
   
     let fontSize: string;
@@ -37,8 +37,14 @@
             case 'high-contrast':
                 settings.set(highContrastTheme);
                 break;
-            case 'darcula':
-                settings.set(darculaTheme);
+            case 'nord':
+                settings.set(nordTheme);
+                break;
+            case 'ocean':
+                settings.set(oceanTheme);
+                break;
+            case 'sunny':
+                settings.set(sunnyTheme);
                 break;
             default:
                 settings.set(darkTheme);
@@ -62,7 +68,9 @@
             <option value="dark">Dark</option>
             <option value="light">Light</option>
             <option value="high-contrast">High Contrast</option>
-            <option value="darcula">Darcula</option>
+            <option value="nord">Nord</option>
+            <option value="ocean">Ocean</option>
+            <option value="sunny">Sunny</option>
         </select>
     </div>
         <div class="setting-group">

@@ -44,17 +44,37 @@ buttonColor: '#f1c40f',
 showInfoButton: true,
 };
 
-export const darculaTheme: SettingsType = {
-fontSize: '30px',
-color: '#BABABA',
-fontFamily: 'Arial',
-backgroundColor: '#282a36',
-backgroundColor2: '#44475a',
-inputColor: '#6272a4',
-buttonColor: '#8f3985',
-showInfoButton: true,
+export const nordTheme: SettingsType = {
+  fontSize: '30px',
+  color: '#D8DEE9',
+  fontFamily: 'Arial',
+  backgroundColor: '#2E3440',
+  backgroundColor2: '#3B4252',
+  inputColor: '#4C566A',
+  buttonColor: '#88C0D0',
+  showInfoButton: true,
 };
 
+export const oceanTheme: SettingsType = {
+  fontSize: '30px',
+  color: '#333',
+  fontFamily: 'Arial',
+  backgroundColor: '#E0F2F1',
+  backgroundColor2: '#B2DFDB',
+  inputColor: '#80CBC4',
+  buttonColor: '#00796B',
+  showInfoButton: true,
+};
 
+export const sunnyTheme: SettingsType = {
+  fontSize: '30px',
+  color: '#333',
+  fontFamily: 'Arial',
+  backgroundColor: '#FFF9C4',
+  backgroundColor2: '#FFECB3',
+  inputColor: '#FFE082',
+  buttonColor: '#FF5722',
+  showInfoButton: true,
+};
 
 export const settings = writable<SettingsType>(darkTheme);
