@@ -119,6 +119,8 @@ let osName: string = "";
     $: distroIcon = findDistroIcon(osName);
 </script>
 
+<h1 class="text-2xl font-bold">Welcome to GoPilot</h1>
+
 <div class="summary-container">
     <div class="header-container">
         {#if distroIcon}
@@ -155,11 +157,6 @@ let osName: string = "";
 </div>
 
 <style>
-    :root {
-        --main-color: #414a4c;
-        --font-family: "Roboto", sans-serif;
-    }
-
     .summary-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -199,8 +196,8 @@ let osName: string = "";
         border-collapse: collapse;
     }
 
-    h2, h3 {
-        color: white;
+    h2, h3, h1 {
+        color: var(--main-color);
     }
 
     th,
@@ -208,7 +205,7 @@ let osName: string = "";
         padding: 0.5em;
         text-align: left;
         border-bottom: 1px solid var(--main-color);
-        color: white;
+        color: var(--main-color);
     }
 
     th {

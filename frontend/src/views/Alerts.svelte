@@ -109,9 +109,9 @@
             dialog,
             "Info",
             `
-            <p>This component is used for file, directory, and system stats monitoring.</p>
-            <p>- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
-            <p>- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
+            <p style="color: ${color};">This component is used for file, directory, and system stats monitoring.</p>
+            <p style="color: ${color};">- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
+            <p style="color: ${color};">- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
             `
         );
     }

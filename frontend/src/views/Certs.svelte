@@ -12,7 +12,7 @@
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import openIcon from "../assets/images/open.png";
     import infoIcon from "../assets/images/info.png";
-    import { settings } from '../stores';
+    import { settings } from "../stores";
 
     let fontSize: string;
     let color: string;
@@ -34,14 +34,32 @@
     });
 
     $: {
-    document.documentElement.style.setProperty('--main-font-size', fontSize);
-    document.documentElement.style.setProperty('--main-color', color);
-    document.documentElement.style.setProperty('--main-font-family', fontFamily);
-    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
-    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
-    document.documentElement.style.setProperty('--main-input-color', inputColor);
-    document.documentElement.style.setProperty('--main-button-color', buttonColor);
-  }
+        document.documentElement.style.setProperty(
+            "--main-font-size",
+            fontSize
+        );
+        document.documentElement.style.setProperty("--main-color", color);
+        document.documentElement.style.setProperty(
+            "--main-font-family",
+            fontFamily
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color",
+            backgroundColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color2",
+            backgroundColor2
+        );
+        document.documentElement.style.setProperty(
+            "--main-input-color",
+            inputColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-button-color",
+            buttonColor
+        );
+    }
 
     let keyType = "";
     let keyName = "";
@@ -98,24 +116,26 @@
 
     function openInfo() {
         dialog = openDialog(
-            dialog,
-            "Info",
-            `
-        <p>This component generates cryptographic keys and self-signed certificates. 
-        It supports key types RSA, DSA, ECDSA, and Ed25519. 'Generate Keys' lets users define a key type, name, and output path. Existing keys at the same path can be overwritten if desired.</p>
-        
-        <p>
-            - <strong>RSA:</strong> Public key cryptography based on factoring problem. (https://simple.wikipedia.org/wiki/RSA_algorithm)<br>
-            - <strong>DSA:</strong> A digital signature standard using modular exponentiation. (https://en.wikipedia.org/wiki/Digital_Signature_Algorithm)<br>
-            - <strong>ECDSA:</strong> A DSA variant utilizing elliptic curve cryptography. (https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm)<br>
-            - <strong>Ed25519:</strong> A public-key signature system known for its speed and small signature size. (https://ed25519.cr.yp.to)
-        </p>
-        
-        <p>'Generate Self-Signed Certificate' requires a private key path to create a self-signed certificate.</p>
-        
-        <p>This component utilizes 'ssh-keygen' to generate keys. (https://linux.die.net/man/1/ssh-keygen)</p>
+        dialog,
+        "Info",
         `
-        );
+        <div style="color: ${color};">
+            <p style="color: ${color};>This component generates cryptographic keys and self-signed certificates. 
+            It supports key types RSA, DSA, ECDSA, and Ed25519. 'Generate Keys' lets users define a key type, name, and output path. Existing keys at the same path can be overwritten if desired.</p>
+            
+            <p style="color: ${color};> 
+                - <strong>RSA:</strong> Public key cryptography based on factoring problem. <a href="https://simple.wikipedia.org/wiki/RSA_algorithm" style="color: inherit;">RSA Algorithm</a><br>
+                - <strong>DSA:</strong> A digital signature standard using modular exponentiation. <a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm" style="color: inherit;">Digital Signature Algorithm</a><br>
+                - <strong>ECDSA:</strong> A DSA variant utilizing elliptic curve cryptography. <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" style="color: inherit;">Elliptic Curve DSA</a><br>
+                - <strong>Ed25519:</strong> A public-key signature system known for its speed and small signature size. <a href="https://ed25519.cr.yp.to" style="color: inherit;">Ed25519</a>
+            </p>
+            
+            <p style="color: ${color};>'Generate Self-Signed Certificate' requires a private key path to create a self-signed certificate.</p>
+            
+            <p style="color: ${color};>This component utilizes 'ssh-keygen' to generate keys. <a href="https://linux.die.net/man/1/ssh-keygen" style="color: inherit;">ssh-keygen</a></p>
+        </div>
+        `
+    );
     }
 
     function onDialogClose() {
@@ -132,9 +152,14 @@
 
 <div class="main-container">
     {#if showInfoButton}
-    <button type="button" class="info-button" title="Info" on:click={openInfo}>
-        <img src={infoIcon} alt="Open Info" class="info-icon" />
-    </button>
+        <button
+            type="button"
+            class="info-button"
+            title="Info"
+            on:click={openInfo}
+        >
+            <img src={infoIcon} alt="Open Info" class="info-icon" />
+        </button>
     {/if}
     <h2>Certificates & Keys</h2>
     <div class="form-container">

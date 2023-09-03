@@ -162,45 +162,45 @@
             dialog,
             "Info",
             `
-            <p>
+            <p style="color: ${color};>
                 This view shows the list of processes running on the system.
             </p>
-            <p>
+            <p style="color: ${color};>
                 The process list is updated every second.
                 The process list is sorted by the PID in ascending order by default.
                 Click on a column header to sort the process list by that column.
             </p>
-            <p>
+            <p style="color: ${color};>
                 You can terminate a process by clicking on the terminate icon in the last column.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>USER</b> - The user that started the process.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>PID</b> - The process ID.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>%CPU</b> - The percentage of the CPU time used by the process since the last update.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>%MEM</b> - The percentage of the total RAM used by the process.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>VSZ</b> - The total amount of virtual memory used by the process.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>RSS</b> - The total amount of physical memory used by the process.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>TTY</b> - The controlling terminal for the process.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>STAT</b> - The state of the process.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>START</b> - The time the process started.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>COMMAND</b> - The command that started the process.
             </p>
         `

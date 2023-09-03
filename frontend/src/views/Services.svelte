@@ -106,15 +106,16 @@
 
     function openInfo() {
         dialog = openDialog(
-            dialog,
-            "Info",
-            `
-            <p>
-                This page allows you to manage the services on your system.
-                You can enable/disable services to start on boot and start/stop
-                services.
-            </p>`
-        );
+        dialog,
+        "Info",
+        `
+        <p style="color: ${color};">
+            This page allows you to manage the services on your system.
+            You can enable/disable services to start on boot and start/stop
+            services.
+        </p>
+        `
+    );
     }
 
     function onDialogClose() {

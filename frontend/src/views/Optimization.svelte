@@ -146,21 +146,21 @@
             dialog,
             "Info",
             `
-            <p>
+            <p style="color: ${color};>
                 This section allows you to clean the system and packages. You can do the following:
-            <p>
+            <p style="color: ${color};>
                 <b>Remove Unused Packages:</b> Remove unused packages from the system.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>Clean Cache Packages:</b> Clean cache packages from the system.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>Delete Temporary Files:</b> Delete temporary files from the system.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>Delete Duplicated Files:</b> Delete duplicated files from the system.
             </p>
-            <p>
+            <p style="color: ${color};>
                 <b>Remove Old Logs:</b> Remove old logs from the system.
             </p>
         `

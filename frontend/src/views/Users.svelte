@@ -48,30 +48,30 @@
 
   function openInfo() {
     dialog = openDialog(
-      dialog,
-      "Info",
-      `
-            <p>
+        dialog,
+        "Info",
+        `
+        <p style="color: ${color};">
             This is the Users and Groups page. Here you can add, delete and modify users and groups.
-            </p>
-            <p>
-              <b>Add User</b>: click on the "Add User" button. You will be prompted to enter the username, password, UID, group and shell for the new user.
-            </p>
-            <p>
-              <b>Delete User</b>: click on the "Delete User" button. You will be prompted to enter the username of the user you want to delete.
-            </p>
-            <p>
-              <b>Modify User</b>: click on the "Modify User" button. You will be prompted to enter the username, password, UID, group, shell and home for the user.
-            </p>
-            <p>
-              <b>Create Group</b>: click on the "Create Group" button. You will be prompted to enter the name and GID for the new group.
-            </p>
-            <p>
-              <b>Delete Group</b>: click on the "Delete Group" button. You will be prompted to enter the name of the group you want to delete.
-            </p>
-            <p>
-              <b>Modify Group</b>: click on the "Modify Group" button. You will be prompted to enter the name and GID for the group.
-            </p>
+        </p>
+        <p style="color: ${color};">
+            <b>Add User</b>: click on the "Add User" button. You will be prompted to enter the username, password, UID, group and shell for the new user.
+        </p>
+        <p style="color: ${color};">
+            <b>Delete User</b>: click on the "Delete User" button. You will be prompted to enter the username of the user you want to delete.
+        </p>
+        <p style="color: ${color};">
+            <b>Modify User</b>: click on the "Modify User" button. You will be prompted to enter the username, password, UID, group, shell and home for the user.
+        </p>
+        <p style="color: ${color};">
+            <b>Create Group</b>: click on the "Create Group" button. You will be prompted to enter the name and GID for the new group.
+        </p>
+        <p style="color: ${color};">
+            <b>Delete Group</b>: click on the "Delete Group" button. You will be prompted to enter the name of the group you want to delete.
+        </p>
+        <p style="color: ${color};">
+            <b>Modify Group</b>: click on the "Modify Group" button. You will be prompted to enter the name and GID for the group.
+        </p>
         `
     );
   }

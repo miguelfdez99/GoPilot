@@ -97,34 +97,36 @@
             dialog,
             "Info",
             `
-        Backups are created using the rsync command.
-        <br />
-        <br />
-        <b>Source Directory</b> is the directory to be backed up.
-        <br />
-        <br />
-        <b>Destination Directory</b> is the directory where the backup will be stored.
-        <br />
-        <br />
-        <b>Exclude</b> is a list of files and directories to be excluded from the backup.
-        <br />
-        <br />
-        <b>Compress Data</b> compresses the data before transferring it.
-        <br />
-        <br />
-        <b>Links Option</b> is the option to preserve hard links.
-        <br />
-        <br />
-        <b>Verify</b> verifies the transfer.
-        <br />
-        <br />
-        <b>Compress File</b> compresses the file data during the transfer.
-        <br />
-        <br />
-        <b>Schedule</b> is the schedule for the backup. It uses the cron format.
-        <br />
-        <br />
-        More information about rsync(https://linux.die.net/man/1/rsync)
+        <div style="color: ${color};">
+            Backups are created using the rsync command.
+            <br />
+            <br />
+            <b>Source Directory</b> is the directory to be backed up.
+            <br />
+            <br />
+            <b>Destination Directory</b> is the directory where the backup will be stored.
+            <br />
+            <br />
+            <b>Exclude</b> is a list of files and directories to be excluded from the backup.
+            <br />
+            <br />
+            <b>Compress Data</b> compresses the data before transferring it.
+            <br />
+            <br />
+            <b>Links Option</b> is the option to preserve hard links.
+            <br />
+            <br />
+            <b>Verify</b> verifies the transfer.
+            <br />
+            <br />
+            <b>Compress File</b> compresses the file data during the transfer.
+            <br />
+            <br />
+            <b>Schedule</b> is the schedule for the backup. It uses the cron format.
+            <br />
+            <br />
+            More information about <a href="https://linux.die.net/man/1/rsync" style="color: inherit;">rsync</a>
+        </div>
         `
         );
     }
