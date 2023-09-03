@@ -117,7 +117,7 @@
 
     {#if activeComponent === ActiveComponent.SEARCH}
     <label >
-        Search:
+        <p>Search:</p>
         <input bind:value={$searchString} placeholder="Search logs..." />
     </label>
     {/if}
@@ -135,20 +135,20 @@
                 ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
             >
         </div>
-        <button on:click={exportLogs}>Export Logs</button>
+        <button class="export-button" on:click={exportLogs}>Export Logs</button>
     </label>
     
     {/if}
 
     {#if activeComponent === ActiveComponent.BOOT_NUMBER}
         <label>
-            Boot number:
+            <p>Boot number:</p>
             <input type="number" bind:value={$bootNumber} />
         </label>
     {/if}
 
     <label>
-        Log type:
+        <p>Log type:</p>
         <select bind:value={$selectedLogType}>
             <option value="all">All</option>
             <option value="important">Important</option>
@@ -220,11 +220,15 @@
         border: 0;
         border-radius: 4px;
         color: var(--main-color);
+        background-color: var(--main-bg-color2);
         width: 100%;
         box-sizing: border-box;
         margin-bottom: 0.5em;
     }
 
+    .export-button {
+        color: var(--main-color);
+    }
 
     .cont {
         position: relative;
