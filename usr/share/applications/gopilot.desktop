@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=0.5
+Type=Application
+Name=GoPilot
+Exec=/usr/bin/GoPilot
+Icon=appicon.png
+Terminal=false
