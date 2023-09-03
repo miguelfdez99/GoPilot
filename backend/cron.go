@@ -2,7 +2,6 @@ package backend
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
@@ -123,7 +122,7 @@ func (b *Backend) updateCronTab(jobs []CronJob) error {
 }
 
 func (b *Backend) AddCronJob(schedule string, command string) error {
-	tmpfile, err := ioutil.TempFile("", "crontab")
+	tmpfile, err := os.CreateTemp("", "crontab")
 	if err != nil {
 		b.logger.Error("Failed to create temp file")
 		return err
