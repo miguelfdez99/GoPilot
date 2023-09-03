@@ -1,0 +1,9 @@
+Package: gopilot
+Version: 0.5
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: rsync, diffutils, tar, openssh-client, cron, adduser, coreutils, procps, libx11-6, systemd, fdupes, libwebkit2gtk-4.0-37
+Maintainer: Miguel Fernandez <miguelfdez99@gmail.com>
+Description: GoPilot
+  GoPilot is a desktop application that allows you to automates and manages your Linux system
