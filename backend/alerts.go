@@ -174,20 +174,20 @@ func (b *Backend) MonitorSystemStats(thresholds SystemStatThresholds) {
 			d, _ := disk.Usage("/")
 
 			if v.Used > memoryThresholdInBytes {
-				err := beeep.Notify("System Monitor", "RAM usage is high!", "assets/information.png")
+				err := beeep.Notify("System Monitor", "RAM usage is high!", "assets/warning.png")
 				if err != nil {
 					log.Fatal(err)
 				}
 			}
 			if float64(d.Used) > float64(diskThresholdInBytes) {
-				err := beeep.Notify("System Monitor", "Disk usage is high!", "assets/information.png")
+				err := beeep.Notify("System Monitor", "Disk usage is high!", "assets/warning.png")
 				if err != nil {
 					log.Fatal(err)
 				}
 			}
 			cpuUsage, _ := cpu.Percent(0, false)
 			if cpuUsage[0] > thresholds.CPU {
-				err := beeep.Notify("System Monitor", "CPU usage is high!", "assets/information.png")
+				err := beeep.Notify("System Monitor", "CPU usage is high!", "assets/warning.png")
 				if err != nil {
 					log.Fatal(err)
 				}
