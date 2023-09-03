@@ -124,18 +124,19 @@
         color: var(--main-color);
     }
 
+    input[type="checkbox"] {
+        width: auto;
+        margin-left: 15px;
+        appearance: auto;
+        background: var(--main-input-color);
+    }
+
     input[type="text"], input[type="checkbox"] {
         border: none;
         padding: 10px;
         border-radius: 5px;
         font-size: 16px;
         background: var(--main-input-color);
-        color: var(--main-color);
-    }
-
-    input[type="checkbox"] {
-        width: auto;
-        margin-left: 15px;
     }
 
     .submit-button {
