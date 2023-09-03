@@ -323,14 +323,14 @@
     }
 
     .loading p {
-        color: white;
+        color: var(--main-color);;
         font-size: 16px;
         margin-bottom: 20px;
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid #fff;
+        border-top: 4px solid var(--main-color);;
         border-radius: 50%;
         width: 30px;
         height: 30px;
