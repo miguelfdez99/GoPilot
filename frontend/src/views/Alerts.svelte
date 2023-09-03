@@ -313,22 +313,19 @@
     ul {
         padding: 0;
         list-style: none;
-        border: 1px solid #333;
+        border: 1px;
         border-radius: 4px;
         margin-bottom: 1em;
     }
 
     li {
         padding: 0.8em;
-        border-bottom: 1px solid #444;
-        background: #333;
-    }
-
-    li:last-child {
-        border-bottom: none;
+        background-color: var(--main-bg-color);
+        color: var(--main-color);
+        list-style: none;
     }
 
     li strong {
-        color: #1abc9c;
+        color: var(--main-button-color);
     }
 </style>
