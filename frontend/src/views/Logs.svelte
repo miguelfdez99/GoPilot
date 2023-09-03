@@ -45,8 +45,8 @@
         loading.set(true);
         try {
             const result = await GetLogs(type, boot);
-            const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' ')); 
-            logs.set(cleanedLogs.slice().reverse()); 
+            //const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' ')); 
+            logs.set(result.slice().reverse()); 
         } catch (error) {
             await OpenDialogError(`Failed to fetch logs: ${error}`);
         } finally {
