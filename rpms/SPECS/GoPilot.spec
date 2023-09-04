@@ -24,6 +24,6 @@ install -m 755 usr/bin/GoPilot %buildroot/usr/bin/
 /usr/bin/GoPilot
 
 %changelog
-* Fri Sep 02 2023 Miguel Fernandez <miguelfdez99@gmail.com> - 0.5-1
-- Initial RPM package
+* Mon Sep 04 2023 Miguel Fernandez <miguelfdez99@gmail.com> - 0.5.2
+- Update RPM package
 
