@@ -8,7 +8,10 @@
     OpenDialogInfo,
     OpenDialogError,
     OpenDialogQuestion,
+    CheckAdmin
   } from "../../wailsjs/go/backend/Backend";
+  import { openDialog } from "../functions/functions";
+  import CustomDialog from "../components/dialogs/CustomDialog.svelte";
   import deleteIcon from "../assets/images/delete.png";
   import { settings } from '../stores';
 
@@ -102,10 +105,43 @@
     });
   }
 
-  onMount(() => {
+  let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+
+  async function checkPrivileges() {
+  try {
+    const admin = await CheckAdmin();
+    if (!admin) {
+      dialog = openDialog(
+        dialog,
+        "Warning",
+        `
+        <p style="color: ${color};">
+           You are not running this application as root. You will not be able to install or remove packages.
+        </p>
+        `
+      );
+    }
+  } catch (error) {
+    console.error("Error checking admin privileges:", error);
+  }
+}
+
+  function onDialogClose() {
+    dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+  }
+
+  onMount(async () => {
+    await checkPrivileges();
     listPackages();
   });
 </script>
+
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={onDialogClose}
+/>
 
 <main>
   <div class="input-box" id="input">

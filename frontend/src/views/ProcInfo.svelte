@@ -7,6 +7,7 @@
         OpenDialogInfo,
         OpenDialogError,
         OpenDialogQuestion,
+        CheckAdmin
     } from "../../wailsjs/go/backend/Backend";
     import terminateIcon from "../assets/images/terminate.png";
     import { openDialog } from "../functions/functions";
@@ -128,6 +129,7 @@
     }
 
     onMount(async () => {
+        await checkPrivileges();
         loading.set(true);
         try {
             interval = setInterval(async () => {
@@ -206,6 +208,25 @@
         `
         );
     }
+
+    async function checkPrivileges() {
+  try {
+    const admin = await CheckAdmin();
+    if (!admin) {
+      dialog = openDialog(
+        dialog,
+        "Info",
+        `
+        <p style="color: ${color};">
+           You are not running this application as root. You can see processes but you will not be able to kill them. 
+        </p>
+        `
+      );
+    }
+  } catch (error) {
+    console.error("Error checking admin privileges:", error);
+  }
+}
 
     function onDialogClose() {
         dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };

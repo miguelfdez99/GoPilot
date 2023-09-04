@@ -8,11 +8,12 @@
         DisableService,
         StartService,
         StopService,
+        CheckAdmin
     } from "../../wailsjs/go/backend/Backend";
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
     import infoIcon from "../assets/images/info.png";
-    import { settings } from '../stores';
+    import { settings } from "../stores";
 
     let fontSize: string;
     let color: string;
@@ -34,14 +35,32 @@
     });
 
     $: {
-    document.documentElement.style.setProperty('--main-font-size', fontSize);
-    document.documentElement.style.setProperty('--main-color', color);
-    document.documentElement.style.setProperty('--main-font-family', fontFamily);
-    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
-    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
-    document.documentElement.style.setProperty('--main-input-color', inputColor);
-    document.documentElement.style.setProperty('--main-button-color', buttonColor);
-  }
+        document.documentElement.style.setProperty(
+            "--main-font-size",
+            fontSize
+        );
+        document.documentElement.style.setProperty("--main-color", color);
+        document.documentElement.style.setProperty(
+            "--main-font-family",
+            fontFamily
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color",
+            backgroundColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color2",
+            backgroundColor2
+        );
+        document.documentElement.style.setProperty(
+            "--main-input-color",
+            inputColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-button-color",
+            buttonColor
+        );
+    }
 
     let serviceStore = writable([]);
     let runningServiceStore = writable([]);
@@ -51,6 +70,7 @@
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     onMount(async () => {
+        await checkPrivileges();
         loading.set(true);
         try {
             const services = await GetAllServices();
@@ -106,20 +126,39 @@
 
     function openInfo() {
         dialog = openDialog(
-        dialog,
-        "Info",
-        `
+            dialog,
+            "Info",
+            `
         <p style="color: ${color};">
             This page allows you to manage the services on your system.
             You can enable/disable services to start on boot and start/stop
             services.
         </p>
         `
-    );
+        );
     }
 
     function onDialogClose() {
         dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+    }
+
+    async function checkPrivileges() {
+        try {
+            const admin = await CheckAdmin();
+            if (!admin) {
+                dialog = openDialog(
+                    dialog,
+                    "Warning",
+                    `
+        <p style="color: ${color};">
+            You are not running this application as root. You will not be able to manage services.
+        </p>
+        `
+                );
+            }
+        } catch (error) {
+            console.error("Error checking admin privileges:", error);
+        }
     }
 </script>
 
@@ -132,9 +171,14 @@
 
 <div>
     {#if showInfoButton}
-    <button type="button" class="info-button" title="Info" on:click={openInfo}>
-        <img src={infoIcon} alt="Open Info" class="info-icon" />
-    </button>
+        <button
+            type="button"
+            class="info-button"
+            title="Info"
+            on:click={openInfo}
+        >
+            <img src={infoIcon} alt="Open Info" class="info-icon" />
+        </button>
     {/if}
     <h1>Services</h1>
 
@@ -256,7 +300,7 @@
         border-bottom: 1px solid #dddddd;
     }
     tbody tr:nth-of-type(even) {
-        background-color:  var(--main-input-color2);
+        background-color: var(--main-input-color2);
     }
     tbody tr:last-of-type {
         border-bottom: 2px solid #009879;
@@ -323,14 +367,14 @@
     }
 
     .loading p {
-        color: var(--main-color);;
+        color: var(--main-color);
         font-size: 16px;
         margin-bottom: 20px;
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid var(--main-color);;
+        border-top: 4px solid var(--main-color);
         border-radius: 50%;
         width: 30px;
         height: 30px;
