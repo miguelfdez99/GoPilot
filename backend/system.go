@@ -1,11 +1,14 @@
 package backend
 
 import (
+	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"os/user"
+	"strconv"
 	"strings"
 	"time"
 
@@ -113,7 +116,6 @@ func (b *Backend) GetSystemInfo() (string, error) {
 }
 
 func (b *Backend) GetCPUUsage() ([]float64, error) {
-	// Get percpu usage
 	percpuUsage, err := cpu.Percent(time.Second, true)
 	if err != nil {
 		return nil, err
@@ -127,19 +129,55 @@ type MemoryUsage struct {
 	Swap float64 `json:"swap"`
 }
 
+func getSwapUsage() (float64, error) {
+	file, err := os.Open("/proc/meminfo")
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+
+	var swapTotal, swapFree int64
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "SwapTotal:") {
+			parts := strings.Fields(line)
+			swapTotal, err = strconv.ParseInt(parts[1], 10, 64)
+			if err != nil {
+				return 0, err
+			}
+		}
+		if strings.HasPrefix(line, "SwapFree:") {
+			parts := strings.Fields(line)
+			swapFree, err = strconv.ParseInt(parts[1], 10, 64)
+			if err != nil {
+				return 0, err
+			}
+		}
+	}
+
+	if swapTotal == 0 {
+		return 0, errors.New("swap total is 0, can't compute usage")
+	}
+
+	swapUsed := swapTotal - swapFree
+	swapUsagePercentage := (float64(swapUsed) / float64(swapTotal)) * 100.0
+
+	return swapUsagePercentage, nil
+}
+
 func (b *Backend) GetMemoryUsage() (*MemoryUsage, error) {
 	v, err := mem.VirtualMemory()
 	if err != nil {
 		return nil, err
 	}
 
-	s, err := mem.SwapMemory()
+	swapUsage, err := getSwapUsage()
 	if err != nil {
 		return nil, err
 	}
 
 	ramUsage := 100.0 * (float64(v.Total) - float64(v.Available)) / float64(v.Total)
-	swapUsage := 100.0 * (float64(s.Total) - float64(s.Free)) / float64(s.Total)
 
 	return &MemoryUsage{
 		RAM:  ramUsage,
