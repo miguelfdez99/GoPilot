@@ -172,6 +172,8 @@ h1 {
 label {
     font-size: 1.1rem;
     color: var(--main-color);
+    font-size: var(--main-font-size);
+    font-family: var(--main-font-family);
     letter-spacing: 0.8px;
     text-transform: capitalize;
     font-weight: 500;
@@ -184,6 +186,8 @@ input, select {
     border-radius: 5px;
     background-color: var(--main-bg-color);
     color: var(--main-color);
+    font-size: var(--main-font-size);
+    font-family: var(--main-font-family);
     font-size: 1rem;
     transition: background 0.3s;
 }

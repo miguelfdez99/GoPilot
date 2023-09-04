@@ -198,6 +198,7 @@ let osName: string = "";
 
     h2, h3, h1 {
         color: var(--main-color);
+        font-family: var(--main-font-family);
     }
 
     th,
@@ -206,9 +207,13 @@ let osName: string = "";
         text-align: left;
         border-bottom: 1px solid var(--main-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     th {
         background-color: var(--main-input-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 </style>

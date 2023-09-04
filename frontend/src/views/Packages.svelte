@@ -115,7 +115,7 @@
         dialog,
         "Warning",
         `
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
            You are not running this application as root. You will not be able to install or remove packages.
         </p>
         `
@@ -245,11 +245,18 @@
     padding-top: 0.5rem;
   }
 
-  h1,
+
   li,
   input,
   p {
     color: var(--main-color);
+    font-size: var(--main-font-size);
+    font-family: var(--main-font-family);
+  }
+
+  h1 {
+    color: var(--main-color);
+    font-family: var(--main-font-family);
   }
 
   input {

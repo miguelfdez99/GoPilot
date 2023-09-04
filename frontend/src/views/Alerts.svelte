@@ -109,9 +109,9 @@
             dialog,
             "Info",
             `
-            <p style="color: ${color};">This component is used for file, directory, and system stats monitoring.</p>
-            <p style="color: ${color};">- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
-            <p style="color: ${color};">- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
+            <p style="color: ${color}; font-size: ${fontSize};">This component is used for file, directory, and system stats monitoring.</p>
+            <p style="color: ${color}; font-size: ${fontSize};">- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
+            <p style="color: ${color}; font-size: ${fontSize};">- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
             `
         );
     }
@@ -257,7 +257,6 @@
 
     h1,
     h2 {
-        font-size: var(--main-font-size);
         color: var(--main-color);
         margin-bottom: 1em;
         font-family: var(--main-font-family);

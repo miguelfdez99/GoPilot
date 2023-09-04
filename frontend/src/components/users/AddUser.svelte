@@ -145,6 +145,8 @@
       display: block;
       font-size: 14px;
       color: var(--main-color);
+      font-size: var(--main-font-size);
+      font-family: var(--main-font-family);
       margin-bottom: 5px;
     }
   
@@ -156,6 +158,8 @@
       font-size: 16px;
       background: var(--main-input-color);
       color: var(--main-color);
+      font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
   
     .submit-button {

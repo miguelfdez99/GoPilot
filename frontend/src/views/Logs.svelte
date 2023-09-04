@@ -175,14 +175,15 @@
 <style>
     h1 {
         color: var(--main-color);
-        font-size: 24px;
+        font-family: var(--main-font-family);
         margin-bottom: 10px;
     }
 
     select {
         color: var(--main-color);
         background-color: var(--main-bg-color2);
-        font-size: 16px;
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         margin-bottom: 20px;
     }
 
@@ -193,6 +194,8 @@
 
     label p {
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .input-group {
@@ -220,6 +223,8 @@
         border: 0;
         border-radius: 4px;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         background-color: var(--main-bg-color2);
         width: 100%;
         box-sizing: border-box;
@@ -257,6 +262,8 @@
         padding: 0.5em;
         margin: 0;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .logs pre:last-child {

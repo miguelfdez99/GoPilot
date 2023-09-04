@@ -146,21 +146,21 @@
             dialog,
             "Info",
             `
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 This section allows you to clean the system and packages. You can do the following:
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>Remove Unused Packages:</b> Remove unused packages from the system.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>Clean Cache Packages:</b> Clean cache packages from the system.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>Delete Temporary Files:</b> Delete temporary files from the system.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>Delete Duplicated Files:</b> Delete duplicated files from the system.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>Remove Old Logs:</b> Remove old logs from the system.
             </p>
         `
@@ -261,7 +261,7 @@
         top: 10px;
         right: 10px;
         border: none;
-        background: #5a5858;
+        background: var(--main-button-color);
         height: 40px;
         width: 40px;
         display: flex;
@@ -304,6 +304,7 @@
 
     h2 {
         color: var(--main-color);
+        font-family: var(--main-font-family);
     }
     input {
         margin-bottom: 10px;
@@ -313,6 +314,8 @@
         border: 1px solid var(--main-input-color);;
         background: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         border-radius: 5px;
     }
     button {

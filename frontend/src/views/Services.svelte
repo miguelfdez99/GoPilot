@@ -129,7 +129,7 @@
             dialog,
             "Info",
             `
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             This page allows you to manage the services on your system.
             You can enable/disable services to start on boot and start/stop
             services.
@@ -150,7 +150,7 @@
                     dialog,
                     "Warning",
                     `
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             You are not running this application as root. You will not be able to manage services.
         </p>
         `
@@ -287,6 +287,8 @@
     thead tr {
         background-color: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         text-align: left;
     }
     th,
@@ -295,6 +297,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
     tbody tr {
         border-bottom: 1px solid #dddddd;
@@ -355,11 +359,14 @@
     h1,
     option {
         color: var(--main-color);
+        font-family: var(--main-font-family);
     }
 
     select {
         background: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .loading {

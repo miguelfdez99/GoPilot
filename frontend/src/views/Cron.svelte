@@ -256,6 +256,8 @@
         align-items: center;
         border-bottom: 1px solid var(--main-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     li:last-child {

@@ -97,7 +97,7 @@
             dialog,
             "Info",
             `
-        <div style="color: ${color};">
+        <div style="color: ${color}; font-size: ${fontSize};">
             Backups are created using the rsync command.
             <br />
             <br />

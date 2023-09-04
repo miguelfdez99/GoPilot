@@ -164,45 +164,45 @@
             dialog,
             "Info",
             `
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 This view shows the list of processes running on the system.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 The process list is updated every second.
                 The process list is sorted by the PID in ascending order by default.
                 Click on a column header to sort the process list by that column.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 You can terminate a process by clicking on the terminate icon in the last column.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>USER</b> - The user that started the process.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>PID</b> - The process ID.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>%CPU</b> - The percentage of the CPU time used by the process since the last update.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>%MEM</b> - The percentage of the total RAM used by the process.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>VSZ</b> - The total amount of virtual memory used by the process.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>RSS</b> - The total amount of physical memory used by the process.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>TTY</b> - The controlling terminal for the process.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>STAT</b> - The state of the process.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>START</b> - The time the process started.
             </p>
-            <p style="color: ${color};>
+            <p style="color: ${color}; font-size: ${fontSize};>
                 <b>COMMAND</b> - The command that started the process.
             </p>
         `
@@ -217,7 +217,7 @@
         dialog,
         "Info",
         `
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
            You are not running this application as root. You can see processes but you will not be able to kill them. 
         </p>
         `
@@ -346,6 +346,8 @@
         border-radius: 0.25rem;
         background: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
     table {
         table-layout: auto;
@@ -360,6 +362,8 @@
     thead tr {
         background-color: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         text-align: left;
     }
     th,
@@ -369,6 +373,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
     tbody tr {
         border-bottom: 1px solid #dddddd;

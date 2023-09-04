@@ -88,25 +88,25 @@
       dialog,
       "Info",
       `
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             This is the Users and Groups page. Here you can add, delete and modify users and groups.
         </p>
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             <b>Add User</b>: click on the "Add User" button. You will be prompted to enter the username, password, UID, group and shell for the new user.
         </p>
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             <b>Delete User</b>: click on the "Delete User" button. You will be prompted to enter the username of the user you want to delete.
         </p>
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             <b>Modify User</b>: click on the "Modify User" button. You will be prompted to enter the username, password, UID, group, shell and home for the user.
         </p>
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             <b>Create Group</b>: click on the "Create Group" button. You will be prompted to enter the name and GID for the new group.
         </p>
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             <b>Delete Group</b>: click on the "Delete Group" button. You will be prompted to enter the name of the group you want to delete.
         </p>
-        <p style="color: ${color};">
+        <p style="color: ${color}; font-size: ${fontSize};">
             <b>Modify Group</b>: click on the "Modify Group" button. You will be prompted to enter the name and GID for the group.
         </p>
         `

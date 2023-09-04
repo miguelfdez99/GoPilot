@@ -119,20 +119,20 @@
         dialog,
         "Info",
         `
-        <div style="color: ${color};">
-            <p style="color: ${color};>This component generates cryptographic keys and self-signed certificates. 
+        <div style="color: ${color}; font-size: ${fontSize};">
+            <p style="color: ${color}; font-size: ${fontSize};>This component generates cryptographic keys and self-signed certificates. 
             It supports key types RSA, DSA, ECDSA, and Ed25519. 'Generate Keys' lets users define a key type, name, and output path. Existing keys at the same path can be overwritten if desired.</p>
             
-            <p style="color: ${color};> 
+            <p style="color: ${color}; font-size: ${fontSize};> 
                 - <strong>RSA:</strong> Public key cryptography based on factoring problem. <a href="https://simple.wikipedia.org/wiki/RSA_algorithm" style="color: inherit;">RSA Algorithm</a><br>
                 - <strong>DSA:</strong> A digital signature standard using modular exponentiation. <a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm" style="color: inherit;">Digital Signature Algorithm</a><br>
                 - <strong>ECDSA:</strong> A DSA variant utilizing elliptic curve cryptography. <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" style="color: inherit;">Elliptic Curve DSA</a><br>
                 - <strong>Ed25519:</strong> A public-key signature system known for its speed and small signature size. <a href="https://ed25519.cr.yp.to" style="color: inherit;">Ed25519</a>
             </p>
             
-            <p style="color: ${color};>'Generate Self-Signed Certificate' requires a private key path to create a self-signed certificate.</p>
+            <p style="color: ${color}; font-size: ${fontSize};>'Generate Self-Signed Certificate' requires a private key path to create a self-signed certificate.</p>
             
-            <p style="color: ${color};>This component utilizes 'ssh-keygen' to generate keys. <a href="https://linux.die.net/man/1/ssh-keygen" style="color: inherit;">ssh-keygen</a></p>
+            <p style="color: ${color}; font-size: ${fontSize};>This component utilizes 'ssh-keygen' to generate keys. <a href="https://linux.die.net/man/1/ssh-keygen" style="color: inherit;">ssh-keygen</a></p>
         </div>
         `
     );
@@ -277,6 +277,8 @@
         font-weight: 500;
         color: var(--main-color);
         margin-bottom: 0.5rem;
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .input-field > input,
@@ -286,6 +288,8 @@
         border-radius: 4px;
         background: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .checkbox-field {
@@ -329,6 +333,8 @@
         margin-right: 0.5em;
         background: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     hr {
@@ -339,5 +345,6 @@
 
     h2 {
         color: var(--main-color);
+        font-family: var(--main-font-family);
     }
 </style>
