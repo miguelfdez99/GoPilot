@@ -49,10 +49,13 @@ jobs:
           cp DEBIAN/control package/DEBIAN/control
           cp -R ./build/bin/GoPilot* package/
           dpkg-deb --build package GoPilot-${{ env.RELEASE_VERSION }}.deb
+
+      - name: Create tarball
+        run: |
+          tar -czvf rpms/SOURCES/GoPilot.tar.gz .
         
       - name: Package .rpm
         run: |
-          tar -xzf rpms/SOURCES/GoPilot.tar.gz -C rpms/SOURCES/
           rpmbuild -bb --define "_topdir $(pwd)/rpms" rpms/SPECS/GoPilot.spec
 
       - name: Set env
