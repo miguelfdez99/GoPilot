@@ -109,9 +109,9 @@
             dialog,
             "Info",
             `
-            <p>This component is used for file, directory, and system stats monitoring.</p>
-            <p>- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
-            <p>- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
+            <p style="color: ${color}; font-size: ${fontSize};">This component is used for file, directory, and system stats monitoring.</p>
+            <p style="color: ${color}; font-size: ${fontSize};">- Enter a file or directory path and click "Start Monitoring" to start the monitoring process. The file or directory will be monitored for changes and you will be alerted when a change occurs.</p>
+            <p style="color: ${color}; font-size: ${fontSize};">- For system stats, enter the threshold values for CPU, RAM, and Disk Space. When these thresholds are exceeded, you will be alerted.</p>
             `
         );
     }
@@ -257,7 +257,6 @@
 
     h1,
     h2 {
-        font-size: var(--main-font-size);
         color: var(--main-color);
         margin-bottom: 1em;
         font-family: var(--main-font-family);
@@ -313,22 +312,19 @@
     ul {
         padding: 0;
         list-style: none;
-        border: 1px solid #333;
+        border: 1px;
         border-radius: 4px;
         margin-bottom: 1em;
     }
 
     li {
         padding: 0.8em;
-        border-bottom: 1px solid #444;
-        background: #333;
-    }
-
-    li:last-child {
-        border-bottom: none;
+        background-color: var(--main-bg-color);
+        color: var(--main-color);
+        list-style: none;
     }
 
     li strong {
-        color: #1abc9c;
+        color: var(--main-button-color);
     }
 </style>

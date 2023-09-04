@@ -56,6 +56,16 @@
     $: currentSettings = { ...currentSettings };
     $: fontSize = `${fontSizeNumber}px`;
 
+    $: {
+    document.documentElement.style.setProperty('--main-font-size', fontSize);
+    document.documentElement.style.setProperty('--main-color', color);
+    document.documentElement.style.setProperty('--main-font-family', fontFamily);
+    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
+    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
+    document.documentElement.style.setProperty('--main-input-color', inputColor);
+    document.documentElement.style.setProperty('--main-button-color', buttonColor);
+  }
+
     onDestroy(unsubscribe);
 </script>
 
@@ -125,10 +135,10 @@
     justify-content: center;
     align-items: center;
     font-family: 'Roboto', sans-serif;
-    background-color: #333;
+    background-color: var(--main-bg-color2);
     padding: 2rem;
     border-radius: 15px;
-    color: #FFF;
+    color: var(--main-color);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     width: 80%;
     margin: auto;
@@ -141,6 +151,7 @@ h1 {
     text-transform: capitalize;
     letter-spacing: 1.5px;
     margin-top: 0;
+    color: var(--main-color);
 }
 
 .settings-grid {
@@ -160,7 +171,9 @@ h1 {
 
 label {
     font-size: 1.1rem;
-    color: #EEE;
+    color: var(--main-color);
+    font-size: var(--main-font-size);
+    font-family: var(--main-font-family);
     letter-spacing: 0.8px;
     text-transform: capitalize;
     font-weight: 500;
@@ -171,20 +184,12 @@ input, select {
     padding: 0.7rem;
     border: none;
     border-radius: 5px;
-    background-color: #444;
-    color: #FFF;
+    background-color: var(--main-bg-color);
+    color: var(--main-color);
+    font-size: var(--main-font-size);
+    font-family: var(--main-font-family);
     font-size: 1rem;
     transition: background 0.3s;
-}
-
-input:hover, select:hover {
-    background-color: #555;
-}
-
-input:focus, select:focus {
-    outline: none;
-    background-color: #555;
-    box-shadow: 0 0 5px #4a90e2;
 }
 
 input[type="color"] {

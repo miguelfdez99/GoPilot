@@ -12,7 +12,7 @@ export interface SettingsType {
 }
 
 export const lightTheme: SettingsType = {
-  fontSize: '30px',
+  fontSize: '20px',
   color: '#000',
   fontFamily: 'Arial',
   backgroundColor: '#FFF',
@@ -23,7 +23,7 @@ export const lightTheme: SettingsType = {
 };
 
 export const darkTheme: SettingsType = {
-  fontSize: '30px',
+  fontSize: '20px',
   color: '#FFF',
   fontFamily: 'Arial',
   backgroundColor: '#292929',
@@ -34,7 +34,7 @@ export const darkTheme: SettingsType = {
 };
 
 export const highContrastTheme: SettingsType = {
-fontSize: '30px',
+fontSize: '20px',
 color: '#FFF',
 fontFamily: 'Arial',
 backgroundColor: '#000',
@@ -45,7 +45,7 @@ showInfoButton: true,
 };
 
 export const nordTheme: SettingsType = {
-  fontSize: '30px',
+  fontSize: '20px',
   color: '#D8DEE9',
   fontFamily: 'Arial',
   backgroundColor: '#2E3440',
@@ -56,7 +56,7 @@ export const nordTheme: SettingsType = {
 };
 
 export const oceanTheme: SettingsType = {
-  fontSize: '30px',
+  fontSize: '20px',
   color: '#333',
   fontFamily: 'Arial',
   backgroundColor: '#E0F2F1',
@@ -67,7 +67,7 @@ export const oceanTheme: SettingsType = {
 };
 
 export const sunnyTheme: SettingsType = {
-  fontSize: '30px',
+  fontSize: '20px',
   color: '#333',
   fontFamily: 'Arial',
   backgroundColor: '#FFF9C4',

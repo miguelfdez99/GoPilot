@@ -11,13 +11,7 @@ import (
 
 func (b *Backend) CheckAdmin() bool {
 	uid := os.Getuid()
-	if uid != 0 {
-		fmt.Println("You are not an admin")
-		return false
-	} else {
-		fmt.Println("You are an admin")
-		return true
-	}
+	return uid == 0
 }
 
 func ExtractFirstParams(input string) []string {

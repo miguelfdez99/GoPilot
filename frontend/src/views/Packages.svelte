@@ -8,7 +8,10 @@
     OpenDialogInfo,
     OpenDialogError,
     OpenDialogQuestion,
+    CheckAdmin
   } from "../../wailsjs/go/backend/Backend";
+  import { openDialog } from "../functions/functions";
+  import CustomDialog from "../components/dialogs/CustomDialog.svelte";
   import deleteIcon from "../assets/images/delete.png";
   import { settings } from '../stores';
 
@@ -102,10 +105,43 @@
     });
   }
 
-  onMount(() => {
+  let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+
+  async function checkPrivileges() {
+  try {
+    const admin = await CheckAdmin();
+    if (!admin) {
+      dialog = openDialog(
+        dialog,
+        "Warning",
+        `
+        <p style="color: ${color}; font-size: ${fontSize};">
+           You are not running this application as root. You will not be able to install or remove packages.
+        </p>
+        `
+      );
+    }
+  } catch (error) {
+    console.error("Error checking admin privileges:", error);
+  }
+}
+
+  function onDialogClose() {
+    dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
+  }
+
+  onMount(async () => {
+    await checkPrivileges();
     listPackages();
   });
 </script>
+
+<CustomDialog
+  bind:show={dialog.showDialog}
+  title={dialog.dialogTitle}
+  message={dialog.dialogMessage}
+  onClose={onDialogClose}
+/>
 
 <main>
   <div class="input-box" id="input">
@@ -209,11 +245,18 @@
     padding-top: 0.5rem;
   }
 
-  h1,
+
   li,
   input,
   p {
     color: var(--main-color);
+    font-size: var(--main-font-size);
+    font-family: var(--main-font-family);
+  }
+
+  h1 {
+    color: var(--main-color);
+    font-family: var(--main-font-family);
   }
 
   input {
@@ -225,14 +268,14 @@
     }
 
     .loading p {
-        color: white;
+        color: var(--main-color);;
         font-size: 16px;
         margin-bottom: 20px;
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid #fff;
+        border-top: 4px solid var(--main-color);;
         border-radius: 50%;
         width: 30px;
         height: 30px;

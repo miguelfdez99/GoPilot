@@ -96,7 +96,7 @@
             dialog,
             "Info",
             `
-            <p>
+            <p style="color: ${color};>
                 This page allows you to <strong>manage cron jobs</strong>.
                 <br />
                 <br />
@@ -136,8 +136,7 @@
                 - "<strong>* * * * 1</strong>" runs a job every minute on Mondays
                 <br />
                 <br />
-                Please refer to the <em>cron syntax guide</em> for more detailed information.
-                (https://www.baeldung.com/cron-expressions)
+                Please refer to the <em><a href="https://www.baeldung.com/cron-expressions" style="color: inherit;">cron syntax guide</a></em> for more detailed information.
             `
         );
     }
@@ -255,7 +254,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #444;
+        border-bottom: 1px solid var(--main-color);
+        color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     li:last-child {

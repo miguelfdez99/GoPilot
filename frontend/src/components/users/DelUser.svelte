@@ -122,6 +122,15 @@
     .input-field span, .input-field.checkbox-field span {
         font-size: 14px;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
+    }
+
+    input[type="checkbox"] {
+        width: auto;
+        margin-left: 15px;
+        appearance: auto;
+        background: var(--main-input-color);
     }
 
     input[type="text"], input[type="checkbox"] {
@@ -130,12 +139,8 @@
         border-radius: 5px;
         font-size: 16px;
         background: var(--main-input-color);
-        color: var(--main-color);
-    }
-
-    input[type="checkbox"] {
-        width: auto;
-        margin-left: 15px;
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .submit-button {

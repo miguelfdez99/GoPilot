@@ -1,10 +1,56 @@
 <script lang="ts">
+    import { settings } from "../../stores";
+
+    let fontSize: string;
+    let color: string;
+    let fontFamily: string;
+    let backgroundColor: string;
+    let backgroundColor2: string;
+    let inputColor: string;
+    let buttonColor: string;
+    settings.subscribe(($settings) => {
+        fontSize = $settings.fontSize;
+        color = $settings.color;
+        fontFamily = $settings.fontFamily;
+        backgroundColor = $settings.backgroundColor;
+        backgroundColor2 = $settings.backgroundColor2;
+        inputColor = $settings.inputColor;
+        buttonColor = $settings.buttonColor;
+    });
+
+    $: {
+        document.documentElement.style.setProperty(
+            "--main-font-size",
+            fontSize
+        );
+        document.documentElement.style.setProperty("--main-color", color);
+        document.documentElement.style.setProperty(
+            "--main-font-family",
+            fontFamily
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color",
+            backgroundColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-bg-color2",
+            backgroundColor2
+        );
+        document.documentElement.style.setProperty(
+            "--main-input-color",
+            inputColor
+        );
+        document.documentElement.style.setProperty(
+            "--main-button-color",
+            buttonColor
+        );
+    }
+
     export let show: boolean = false;
     export let title: string = "";
     export let message: string = "";
     export let onClose: () => void = () => {};
 
-    
     function handleClick(event: MouseEvent) {
         if (event.target === event.currentTarget) {
             onClose();
@@ -40,19 +86,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(0,0,0,0.8); 
+        background-color: rgba(0, 0, 0, 0.8);
         z-index: 9999;
     }
     .modal-content {
-        background-color: #2f2f2f; 
-        color: #f5f5f5;
+        background-color: var(--main-bg-color2);
+        color: var(--main-color);
         padding: 30px;
         border-radius: 15px;
         max-width: 500px;
         max-height: 80vh;
         overflow-y: auto;
         width: 90%;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
     .modal-buttons {
         margin-top: 30px;
@@ -66,18 +112,15 @@
         font-size: 16px;
         cursor: pointer;
         transition: background-color 0.2s;
-        background-color: #4b4b4b; 
-        color: #f5f5f5;
+        background: var(--main-button-color);
+        color: var(--main-color);
     }
-    .modal-buttons button:hover {
-        background-color: #666;
-    }
+
     .modal-content h1 {
-        color: #f5f5f5;
+        color: var(--main-color);
         margin-bottom: 15px;
     }
     .modal-content p {
-        color: #bdbdbd;
         line-height: 1.6;
     }
 </style>

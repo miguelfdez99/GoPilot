@@ -45,8 +45,8 @@
         loading.set(true);
         try {
             const result = await GetLogs(type, boot);
-            const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' ')); 
-            logs.set(cleanedLogs.slice().reverse()); 
+            //const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' ')); 
+            logs.set(result.slice().reverse()); 
         } catch (error) {
             await OpenDialogError(`Failed to fetch logs: ${error}`);
         } finally {
@@ -117,7 +117,7 @@
 
     {#if activeComponent === ActiveComponent.SEARCH}
     <label >
-        Search:
+        <p>Search:</p>
         <input bind:value={$searchString} placeholder="Search logs..." />
     </label>
     {/if}
@@ -135,20 +135,20 @@
                 ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
             >
         </div>
-        <button on:click={exportLogs}>Export Logs</button>
+        <button class="export-button" on:click={exportLogs}>Export Logs</button>
     </label>
     
     {/if}
 
     {#if activeComponent === ActiveComponent.BOOT_NUMBER}
         <label>
-            Boot number:
+            <p>Boot number:</p>
             <input type="number" bind:value={$bootNumber} />
         </label>
     {/if}
 
     <label>
-        Log type:
+        <p>Log type:</p>
         <select bind:value={$selectedLogType}>
             <option value="all">All</option>
             <option value="important">Important</option>
@@ -175,14 +175,15 @@
 <style>
     h1 {
         color: var(--main-color);
-        font-size: 24px;
+        font-family: var(--main-font-family);
         margin-bottom: 10px;
     }
 
     select {
         color: var(--main-color);
         background-color: var(--main-bg-color2);
-        font-size: 16px;
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         margin-bottom: 20px;
     }
 
@@ -193,6 +194,8 @@
 
     label p {
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .input-group {
@@ -220,11 +223,17 @@
         border: 0;
         border-radius: 4px;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
+        background-color: var(--main-bg-color2);
         width: 100%;
         box-sizing: border-box;
         margin-bottom: 0.5em;
     }
 
+    .export-button {
+        color: var(--main-color);
+    }
 
     .cont {
         position: relative;
@@ -253,6 +262,8 @@
         padding: 0.5em;
         margin: 0;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .logs pre:last-child {
@@ -264,14 +275,14 @@
     }
 
     .loading p {
-        color: white;
+        color: var(--main-color);
         font-size: 16px;
         margin-bottom: 20px;
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid #fff;
+        border-top: 4px solid var(--main-color);;
         border-radius: 50%;
         width: 30px;
         height: 30px;

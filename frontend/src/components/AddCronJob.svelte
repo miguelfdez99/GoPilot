@@ -212,12 +212,16 @@
         padding: 20px;
         background-color: var(--main-bg-color2);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
         border-radius: 4px;
     }
 
     .form-select {
         background-color: var(--main-input-color);
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .form-title {
@@ -229,6 +233,8 @@
         display: block;
         margin-bottom: 10px;
         color: var(--main-color);
+        font-size: var(--main-font-size);
+        font-family: var(--main-font-family);
     }
 
     .form-input {
