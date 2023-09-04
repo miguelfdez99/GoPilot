@@ -52,7 +52,8 @@ jobs:
 
       - name: Create tarball
         run: |
-          tar -czvf rpms/SOURCES/GoPilot.tar.gz .
+          tar -czvf GoPilot.tar.gz .
+          mv GoPilot.tar.gz rpms/SOURCES/
         
       - name: Package .rpm
         run: |
