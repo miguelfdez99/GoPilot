@@ -58,11 +58,11 @@ jobs:
           mkdir -p GoPilot/rpms/SOURCES/ && mv GoPilot.tar.gz GoPilot/rpms/SOURCES/
           ls -la GoPilot/rpms/SOURCES/
           ls -la GoPilot/rpms/
-          ls -la GoPilot/rpms/RPMS/x86_64/
         
       - name: Package .rpm
         run: |
           rpmbuild -bb --define "_topdir $(pwd)/rpms" rpms/SPECS/GoPilot.spec
+          ls -la GoPilot/rpms/RPMS/x86_64/
 
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
