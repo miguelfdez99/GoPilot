@@ -52,7 +52,7 @@ jobs:
 
       - name: Create tarball
         run: |
-          tar --exclude='./.git' --exclude='./frontend/node_modules/' -czvf GoPilot.tar.gz .
+          tar --exclude='./.git' --exclude='./frontend/node_modules/*' -czvf GoPilot.tar.gz .
           mv GoPilot.tar.gz rpms/SOURCES/
         
       - name: Package .rpm
