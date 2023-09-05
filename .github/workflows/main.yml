@@ -75,6 +75,6 @@ jobs:
           prerelease: false
           files: |
             ./build/bin/GoPilot*
-            GoPilot-${{ env.RELEASE_VERSION }}.deb
-            ~/rpmbuild/RPMS/x86_64/GoPilot-${{ env.RELEASE_VERSION }}*.rpm
+            ./GoPilot-${{ env.RELEASE_VERSION }}.deb
+            ./rpms/RPMS/x86_64/GoPilot-${{ env.RELEASE_VERSION }}*.rpm
       
