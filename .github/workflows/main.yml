@@ -53,8 +53,8 @@ jobs:
       - name: Create tarball
         run: |
           cd ..
-          tar --exclude='./GoPilot/.*' --exclude='./GoPilot/frontend/node_modules/*' -czvf GoPilot.tar.gz GoPilot/
-          mv GoPilot.tar.gz GoPilot/rpms/SOURCES/
+          tar --exclude='GoPilot/.*' --exclude='GoPilot/frontend/node_modules/*' -czvf GoPilot.tar.gz GoPilot/
+          mkdir -p GoPilot/rpms/SOURCES/ && mv GoPilot.tar.gz GoPilot/rpms/SOURCES/
         
       - name: Package .rpm
         run: |
