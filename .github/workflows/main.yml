@@ -49,12 +49,16 @@ jobs:
           cp DEBIAN/control package/DEBIAN/control
           cp -R ./build/bin/GoPilot* package/
           dpkg-deb --build package GoPilot-${{ env.RELEASE_VERSION }}.deb
+          ls -la
 
       - name: Create tarball
         run: |
           cd ..
           tar --exclude='GoPilot/.*' --exclude='GoPilot/frontend/node_modules/*' -czvf GoPilot.tar.gz GoPilot/
           mkdir -p GoPilot/rpms/SOURCES/ && mv GoPilot.tar.gz GoPilot/rpms/SOURCES/
+          ls -la GoPilot/rpms/SOURCES/
+          ls -la GoPilot/rpms/
+          ls -la GoPilot/rpms/RPMS/x86_64/
         
       - name: Package .rpm
         run: |
