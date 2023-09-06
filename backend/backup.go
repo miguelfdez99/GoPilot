@@ -64,14 +64,13 @@ func (b *Backend) Backup(options BackupOptions) (string, error) {
 	}
 
 	if options.CompressFile {
-		cmd = exec.Command("tar", "-czf", options.DestDir+".tar.gz", "-C", options.DestDir, ".")
+		compressedFilePath := filepath.Join(options.DestDir, filepath.Base(options.SourceDir)+".tar.gz")
+		cmd = exec.Command("tar", "-czf", compressedFilePath, "-C", options.SourceDir, ".")
 		output, err = cmd.CombinedOutput()
-
 		if err != nil {
 			log.Println("Error compressing backup:", err)
 			return "", fmt.Errorf("error compressing backup: %s", string(output))
 		}
-
 		b.logger.Info(fmt.Sprintf("Backup compressed successfully:\n%s", string(output)))
 	}
 
