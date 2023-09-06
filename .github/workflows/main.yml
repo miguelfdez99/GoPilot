@@ -37,8 +37,11 @@ jobs:
           go mod download
           cd frontend && npm install
 
-      - name: Build application
-        run: wails build
+      - name: Build application and copy to usr/bin
+        run: |
+          wails build
+          mkdir -p usr/bin
+          cp ./build/bin/GoPilot usr/bin/GoPilot
 
       - name: Install packaging tools
         run: sudo apt-get install -y rpm
