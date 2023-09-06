@@ -51,7 +51,7 @@ jobs:
           mkdir -p package/DEBIAN
           cp DEBIAN/control package/DEBIAN/control
           cp -R ./build/bin/GoPilot* package/
-          dpkg-deb --build package GoPilot-0.5.deb
+          dpkg-deb --build package GoPilot-0.6.deb
 
       - name: Create tarball
         run: |
@@ -78,6 +78,6 @@ jobs:
           prerelease: false
           files: |
             ./build/bin/GoPilot*
-            ./GoPilot-0.5.deb
-            ./rpms/RPMS/x86_64/GoPilot-0.5-1.x86_64.rpm
+            ./GoPilot-0.6.deb
+            ./rpms/RPMS/x86_64/GoPilot-0.6-1.x86_64.rpm
             

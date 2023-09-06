@@ -1,5 +1,5 @@
 Name:           GoPilot
-Version:        0.5
+Version:        0.6
 Release:        1%{?dist}
 Summary:        GoPilot
 
@@ -24,6 +24,6 @@ install -m 755 usr/bin/GoPilot %buildroot/usr/bin/
 /usr/bin/GoPilot
 
 %changelog
-* Mon Sep 04 2023 Miguel Fernandez <miguelfdez99@gmail.com> - 0.5.2
+* Wed Sep 06 2023 Miguel Fernandez <miguelfdez99@gmail.com> - 0.6-1
 - Update RPM package
 
