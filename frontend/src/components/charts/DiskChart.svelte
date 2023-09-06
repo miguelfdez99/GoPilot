@@ -9,6 +9,16 @@
         Tooltip,
         CategoryScale,
     } from "chart.js";
+    import { settings } from '../../stores';
+
+    let colorH: string;
+    settings.subscribe(($settings) => {
+        colorH = $settings.color;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-color', colorH);
+  }
 
     Chart.register(
         DoughnutController,
@@ -33,8 +43,8 @@
                 datasets: [
                     {
                         data: [
-                            diskUsage.Used / 1024 / 1024 / 1024, // Convert from bytes to GB
-                            (diskUsage.Total - diskUsage.Used) / 1024 / 1024 / 1024, // Convert from bytes to GB
+                            diskUsage.Used / 1024 / 1024 / 1024,
+                            (diskUsage.Total - diskUsage.Used) / 1024 / 1024 / 1024,
                         ],
                         backgroundColor: COLORS,
                     },
@@ -42,18 +52,18 @@
             },
             options: {
                 animation: false,
-                responsive: true,
+                responsive: false,
                 plugins: {
                     legend: {
                         display: true,
                         labels: {
-                            color: "white",
+                            color: colorH,
                         }
                     },
                     title: {
                         display: true,
                         text: "Disk Usage (GB)",
-                        color: "white"
+                        color: colorH
                     },
                     tooltip: {
                         callbacks: {
@@ -63,7 +73,7 @@
                                 const total = context.dataset.data.reduce(
                                     (a, b) => a + b
                                 );
-                                const percentage = ((value / total) * 100).toFixed(2); // Calculate the percentage
+                                const percentage = ((value / total) * 100).toFixed(2);
                                 return `${label}: ${value.toFixed(2)} GB (${percentage}%)`;
                             },
                         },
@@ -74,4 +84,14 @@
     });
 </script>
 
-<canvas bind:this={canvas} />
+<div class="chart-container">
+    <canvas bind:this={canvas} width="400" height="400" />
+</div>
+
+<style>
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>

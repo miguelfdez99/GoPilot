@@ -3,8 +3,17 @@
   import DiskChart from "../components/charts/DiskChart.svelte";
   import MemChart from "../components/charts/MemChart.svelte";
   import NetworkChart from "../components/charts/NetworkChart.svelte";
-
   import dropdownIcon from "../assets/images/dropdown.png";
+  import { settings } from '../stores';
+
+    let colorH: string;
+    settings.subscribe(($settings) => {
+        colorH = $settings.color;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-color', colorH);
+  }
 
   let showCpuChart: boolean = true;
   let showDiskChart: boolean = true;
@@ -89,7 +98,7 @@
     margin: 0;
     line-height: 24px;
     padding: 10px;
-    color: white;
+    color: var(--main-color);;
   }
 
   .dropdown-btn {

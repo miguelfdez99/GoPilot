@@ -9,6 +9,16 @@
         PointElement,
         LineElement,
     } from "chart.js";
+    import { settings } from '../../stores';
+
+    let colorH: string;
+    settings.subscribe(($settings) => {
+        colorH = $settings.color;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-color', colorH);
+  }
 
     Chart.register(
         LineController,
@@ -67,7 +77,7 @@
                     legend: {
                         display: true,
                         labels: {
-                            color: "white",
+                            color: colorH,
                         }
                     },
                     tooltip: {

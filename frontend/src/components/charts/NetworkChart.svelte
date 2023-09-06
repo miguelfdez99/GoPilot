@@ -12,6 +12,16 @@
         Title,
         Legend,
     } from "chart.js";
+    import { settings } from '../../stores';
+
+    let colorH: string;
+    settings.subscribe(($settings) => {
+        colorH = $settings.color;
+    });
+
+    $: {
+    document.documentElement.style.setProperty('--main-color', colorH);
+  }
 
     Chart.register(
         LineController,
@@ -67,12 +77,12 @@
                     title: {
                         display: true,
                         text: "Network Usage",
-                        color: "white"
+                        color: colorH
                     },
                     legend: {
                         position: "top",
                         labels: {
-                            color: "white",
+                            color: colorH,
                         }
                     },
                 },
