@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"bytes"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -17,18 +18,26 @@ type User struct {
 }
 
 func (b *Backend) CreateUser(user User) error {
-	cmd := exec.Command("useradd",
+	args := []string{
 		"-m",
 		"-s", user.Shell,
-		"-u", fmt.Sprint(user.UID),
-		"-g", fmt.Sprint(user.GID),
 		"-p", user.Password,
-		user.Username,
-	)
+		"-g", fmt.Sprint(user.GID),
+	}
+
+	if user.UID != 0 {
+		args = append(args, "-u", fmt.Sprint(user.UID))
+	}
+
+	args = append(args, user.Username)
+
+	cmd := exec.Command("useradd", args...)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		b.logger.Error(fmt.Sprintf("Failed to create user: %s", user.Username))
-		return fmt.Errorf("failed to create user: %v", err)
+		b.logger.Error(fmt.Sprintf("Failed to create user: %s. Reason: %s", user.Username, stderr.String()))
+		return fmt.Errorf("failed to create user: %v. Reason: %s", err, stderr.String())
 	}
 	b.logger.Info(fmt.Sprintf("User created successfully: %s", user.Username))
 	return nil
