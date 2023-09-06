@@ -291,6 +291,7 @@
 
     input[type="checkbox"] {
         margin: 0;
+        appearance: auto;
         background: var(--main-input-color);
     }
 
