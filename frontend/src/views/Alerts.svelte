@@ -195,14 +195,14 @@
                 <input
                     type="number"
                     bind:value={ramThreshold}
-                    placeholder="Enter RAM threshold (in GB)"
+                    placeholder="Enter RAM threshold (in %)"
                 />
                 <input
                     type="number"
                     bind:value={diskThreshold}
-                    placeholder="Enter Disk Space threshold (in GB)"
+                    placeholder="Enter Disk Space threshold (in %)"
                 />
-            </div>
+            </div>            
             <button on:click={startMonitoringSystemStats}
                 >Start Monitoring System Stats</button
             >

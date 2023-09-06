@@ -164,14 +164,14 @@ func (b *Backend) WatchList() map[string]string {
 
 func (b *Backend) MonitorSystemStats(thresholds SystemStatThresholds) {
 
-	memoryThresholdInBytes := uint64(thresholds.Memory * float64(1024*1024*1024))
-	diskThresholdInBytes := uint64(thresholds.Disk * float64(1024*1024*1024))
-
 	done := make(chan bool)
 	go func() {
 		for {
 			v, _ := mem.VirtualMemory()
 			d, _ := disk.Usage("/")
+
+			memoryThresholdInBytes := uint64(thresholds.Memory / 100.0 * float64(v.Total))
+			diskThresholdInBytes := uint64(thresholds.Disk / 100.0 * float64(d.Total))
 
 			if v.Used > memoryThresholdInBytes {
 				err := beeep.Notify("System Monitor", "RAM usage is high!", "assets/warning.png")
@@ -179,12 +179,14 @@ func (b *Backend) MonitorSystemStats(thresholds SystemStatThresholds) {
 					log.Fatal(err)
 				}
 			}
+
 			if float64(d.Used) > float64(diskThresholdInBytes) {
 				err := beeep.Notify("System Monitor", "Disk usage is high!", "assets/warning.png")
 				if err != nil {
 					log.Fatal(err)
 				}
 			}
+
 			cpuUsage, _ := cpu.Percent(0, false)
 			if cpuUsage[0] > thresholds.CPU {
 				err := beeep.Notify("System Monitor", "CPU usage is high!", "assets/warning.png")
