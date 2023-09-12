@@ -1,5 +1,5 @@
 # GoPilot
-Desktop app for automating Linux tasks written in Go
+Desktop app for automating/managing Linux tasks written in Go
 
 ## About
 
