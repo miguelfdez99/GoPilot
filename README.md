@@ -1,9 +1,49 @@
 # GoPilot
 Desktop app for automating/managing Linux tasks written in Go
 
-## About
+## Installation
 
-This is the official Wails Svelte-TS template.
+Download and execute the script that installs all the packages needed (Optional)
+
+```
+curl https://raw.githubusercontent.com/miguelfdez99/GoPilot/main/install-packages.sh -o install-packages.sh
+chmod +x install-packages.sh
+./install-packages.sh
+```
+
+Download the binary
+
+```
+curl -L https://github.com/miguelfdez99/GoPilot/releases/download/v0.6/GoPilot -o GoPilot
+```
+
+Give execution permissions
+
+```
+chmod +x GoPilot
+```
+
+Execute the binary
+
+```
+./GoPilot
+```
+
+You must execute the application with sudo for some functionalities to work
+
+```
+sudo ./GoPilot
+```
+
+If your system is using Wayland it will probably give you an error when running the application with sudo, in that case, try to execute the application like this:
+
+```
+sudo -EH ./GoPilot
+```
+### Packages
+
+You can also install the application using the deb and rpm packages, you can download them from the release page.
+
 
 ## Live Development
 
