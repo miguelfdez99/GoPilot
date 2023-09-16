@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Packages for Debian/Ubuntu
 DEB_PACKAGES=(rsync diffutils tar openssh-client cron adduser coreutils procps libx11-6 systemd fdupes libwebkit2gtk-4.0-37 kdialog)
