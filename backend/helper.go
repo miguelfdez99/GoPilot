@@ -3,7 +3,6 @@ package backend
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -21,24 +20,32 @@ func ExtractFirstParams(input string) []string {
 	}
 
 	lines := strings.Split(input, "\n")
-	params := make([]string, len(lines))
-	for i, line := range lines {
-		if distribution == "debian" || distribution == "ubuntu" {
-			fields := strings.Split(line, "/")
-			params[i] = fields[0]
-		} else if distribution == "fedora" || distribution == "centos" || distribution == "rhel" {
-			fields := strings.Split(line, ".")
-			params[i] = fields[0]
-		} else if distribution == "arch" {
-			fields := strings.Split(line, " ")
-			params[i] = fields[0]
+	var params []string
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) == 0 {
+			continue
+		}
+		switch distribution {
+		case "debian", "ubuntu":
+			parts := strings.Split(fields[0], "/")
+			params = append(params, parts[0])
+		case "fedora", "centos", "rhel":
+			parts := strings.Split(fields[0], ".")
+			params = append(params, parts[0])
+		case "arch":
+			params = append(params, fields[0])
+		case "opensuse":
+			if fields[0] == "i" && fields[1] == "|" {
+				params = append(params, fields[2])
+			}
 		}
 	}
 	return params
 }
 
 func getLinuxDistribution() (string, error) {
-	fileContent, err := ioutil.ReadFile("/etc/os-release")
+	fileContent, err := os.ReadFile("/etc/os-release")
 	if err != nil {
 		return "", err
 	}
@@ -50,7 +57,8 @@ func getLinuxDistribution() (string, error) {
 			continue
 		}
 		if strings.Trim(parts[0], "\"") == "ID_LIKE" {
-			return strings.Trim(parts[1], "\""), nil
+			value := strings.Split(strings.Trim(parts[1], "\""), " ")
+			return value[0], nil
 		}
 	}
 

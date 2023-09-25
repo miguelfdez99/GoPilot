@@ -112,6 +112,7 @@ func (b *Backend) GetSystemInfo() (string, error) {
 		return "", fmt.Errorf("error converting system info to JSON: %v", err)
 	}
 
+	fmt.Println(string(jsonData))
 	return string(jsonData), nil
 }
 
