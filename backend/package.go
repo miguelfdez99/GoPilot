@@ -22,6 +22,8 @@ func (b *Backend) ListPackages() []string {
 		cmd = exec.Command("dnf", "list", "installed")
 	case "arch":
 		cmd = exec.Command("pacman", "-Q")
+	case "opensuse":
+		cmd = exec.Command("zypper", "se", "--installed-only")
 	default:
 		fmt.Println("Unsupported Linux distribution")
 		return nil
@@ -56,6 +58,8 @@ func (b *Backend) RemovePackage(pkgName string) error {
 		cmd = exec.Command("dnf", "remove", pkgName, "-y")
 	case "arch":
 		cmd = exec.Command("pacman", "-R", pkgName, "--noconfirm")
+	case "opensuse":
+		cmd = exec.Command("zypper", "--non-interactive", "rm", "--clean-deps", pkgName)
 	default:
 		return fmt.Errorf("unsupported Linux distribution: %s", distribution)
 	}
@@ -86,6 +90,8 @@ func (b *Backend) InstallPackage(pkgName string) error {
 		cmd = exec.Command("dnf", "install", pkgName, "-y")
 	case "arch":
 		cmd = exec.Command("pacman", "-S", pkgName, "--noconfirm")
+	case "opensuse":
+		cmd = exec.Command("zypper", "--non-interactive", "in", pkgName)
 	default:
 		return fmt.Errorf("unsupported Linux distribution: %s", distribution)
 	}

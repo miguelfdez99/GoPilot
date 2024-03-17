@@ -108,6 +108,7 @@ func (b *Backend) GetSystemInfo() (string, error) {
 	}
 
 	jsonData, err := json.Marshal(sysInfo)
+
 	if err != nil {
 		return "", fmt.Errorf("error converting system info to JSON: %v", err)
 	}
@@ -120,7 +121,6 @@ func (b *Backend) GetCPUUsage() ([]float64, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return percpuUsage, nil
 }
 

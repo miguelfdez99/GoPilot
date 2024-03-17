@@ -11,6 +11,7 @@
     import manjaroIcon from "../../assets/images/manjaro.png";
     import mintIcon from "../../assets/images/mint.png";
     import elementaryIcon from "../../assets/images/elementary.png";
+    import opensuseIcon from "../../assets/images/suse.png";
     import { settings } from '../../stores';
 
     let fontSize: string;
@@ -48,6 +49,7 @@
     "Manjaro": manjaroIcon,
     "Mint": mintIcon,
     "Elementary": elementaryIcon,
+    "OpenSUSE": opensuseIcon,
 };
 
 let distroIcon: string = "";
