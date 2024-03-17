@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
@@ -111,12 +112,22 @@ func getKernelVersion() (string, error) {
 }
 
 func getUptime() (string, error) {
-	cmd := exec.Command("uptime", "-p")
+	cmd := exec.Command("uptime")
 	out, err := cmd.Output()
 	if err != nil {
 		return "", err
 	}
-	return strings.TrimSpace(string(out)), nil
+
+	data := strings.TrimSpace(string(out))
+
+	re := regexp.MustCompile(`up\s+((\d+\s+days?,\s+)?\d+:\d+|\d+\s+min)`)
+	matches := re.FindStringSubmatch(data)
+
+	if len(matches) < 2 {
+		return "", nil
+	}
+
+	return matches[1], nil
 }
 
 func getMemory() (string, error) {
@@ -131,7 +142,16 @@ func getMemory() (string, error) {
 		return "", fmt.Errorf("unable to parse memory info")
 	}
 
-	return strings.TrimSpace(lines[1]), nil
+	parts := strings.Fields(lines[1])
+	if len(parts) < 3 {
+		return "", fmt.Errorf("unexpected format of memory info")
+	}
+
+	totalMemory := parts[1]
+	usedMemory := parts[2]
+
+	memoryInfo := fmt.Sprintf("Total: %s, Used: %s", totalMemory, usedMemory)
+	return memoryInfo, nil
 }
 
 func getDesktopEnv() (string, error) {
