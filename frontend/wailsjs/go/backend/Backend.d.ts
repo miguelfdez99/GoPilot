@@ -97,8 +97,6 @@ export function RemovePackage(arg1:string):Promise<void>;
 
 export function RemoveUnusedPackages():Promise<void>;
 
-export function ScheduleBackup(arg1:backend.BackupOptions,arg2:string):Promise<void>;
-
 export function StartService(arg1:string):Promise<void>;
 
 export function Startup(arg1:context.Context):Promise<void>;

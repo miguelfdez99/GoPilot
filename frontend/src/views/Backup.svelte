@@ -48,12 +48,8 @@
         sourceDir: "",
         destDir: "",
         exclude: [],
-        compressData: false,
-        linksOption: "",
-        verify: false,
-        compressFile: false,
-        schedule: "",
     };
+
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
 
     onMount(async () => {
@@ -69,14 +65,14 @@
         }
     };
 
-    const scheduleBackup = async () => {
-        try {
-            await ScheduleBackup(options, options.schedule);
-            await OpenDialogInfo("Backup scheduled successfully");
-        } catch (err) {
-            await OpenDialogError(`Error scheduling backup: ${err.message}`);
-        }
-    };
+    // const scheduleBackup = async () => {
+    //     try {
+    //         await ScheduleBackup(options, options.schedule);
+    //         await OpenDialogInfo("Backup scheduled successfully");
+    //     } catch (err) {
+    //         await OpenDialogError(`Error scheduling backup: ${err.message}`);
+    //     }
+    // };
 
     const selectDir = async () => {
         const dir = await OpenDir();
@@ -97,37 +93,19 @@
             dialog,
             "Info",
             `
-        <div style="color: ${color}; font-size: ${fontSize};">
-            Backups are created using the rsync command.
-            <br />
-            <br />
-            <b>Source Directory</b> is the directory to be backed up.
-            <br />
-            <br />
-            <b>Destination Directory</b> is the directory where the backup will be stored.
-            <br />
-            <br />
-            <b>Exclude</b> is a list of files and directories to be excluded from the backup.
-            <br />
-            <br />
-            <b>Compress Data</b> compresses the data before transferring it.
-            <br />
-            <br />
-            <b>Links Option</b> is the option to preserve hard links.
-            <br />
-            <br />
-            <b>Verify</b> verifies the transfer.
-            <br />
-            <br />
-            <b>Compress File</b> compresses the file data during the transfer.
-            <br />
-            <br />
-            <b>Schedule</b> is the schedule for the backup. It uses the cron format.
-            <br />
-            <br />
-            More information about <a href="https://linux.die.net/man/1/rsync" style="color: inherit;">rsync</a>
-        </div>
-        `
+            <div style="color: ${color}; font-size: ${fontSize};">
+                This interface allows you to create a compressed backup of a directory.
+                <br />
+                <br />
+                <b>Source Directory</b> is the directory to be backed up.
+                <br />
+                <br />
+                <b>Destination Directory</b> is where the compressed backup will be stored.
+                <br />
+                <br />
+                The backup is created as a tar.gz file.
+            </div>
+            `
         );
     }
 
@@ -177,49 +155,14 @@
             >
         </div>
 
-        <div class="grid-item">
+        <!-- <div class="grid-item">
             <label for="exclude">Exclude (comma-separated paths):</label>
         </div>
         <div class="grid-item">
             <input type="text" bind:value={options.exclude} />
-        </div>
+        </div> -->
 
-        <div class="grid-item">
-            <label for="compressData">Compress Data:</label>
-        </div>
-        <div class="grid-item">
-            <input type="checkbox" bind:checked={options.compressData} />
-        </div>
-
-        <div class="grid-item">
-            <label for="linksOption">Symbolic Links Option:</label>
-        </div>
-        <div class="grid-item">
-            <select bind:value={options.linksOption}>
-                <option value="">Default</option>
-                <option value="-l">-l (copy links as links)</option>
-                <option value="-L"
-                    >-L (transform symlink into referent file/dir)</option
-                >
-                <option value="-k">-k (copy symlinks as regular files)</option>
-            </select>
-        </div>
-
-        <div class="grid-item">
-            <label for="verify">Verify Backup:</label>
-        </div>
-        <div class="grid-item">
-            <input type="checkbox" bind:checked={options.verify} />
-        </div>
-
-        <div class="grid-item">
-            <label for="compressFile">Create a compress file:</label>
-        </div>
-        <div class="grid-item">
-            <input type="checkbox" bind:checked={options.compressFile} />
-        </div>
-
-        <div class="grid-item">
+        <!-- <div class="grid-item">
             <label for="schedule">Schedule:</label>
         </div>
         <div class="grid-item">
@@ -228,14 +171,14 @@
                 bind:value={options.schedule}
                 placeholder="Cron schedule (e.g., * * * * *)"
             />
-        </div>
+        </div> -->
 
         <div class="grid-item">
             <button on:click={backup}>Backup Now</button>
         </div>
-        <div class="grid-item">
+        <!-- <div class="grid-item">
             <button on:click={scheduleBackup}>Schedule Backup</button>
-        </div>
+        </div> -->
     </div>
 </div>
 
@@ -289,7 +232,7 @@
         margin-bottom: 0.5em;
     }
 
-    input[type="checkbox"] {
+    /* input[type="checkbox"] {
         margin: 0;
         appearance: auto;
         background: var(--main-input-color);
@@ -305,7 +248,7 @@
         width: 100%;
         box-sizing: border-box;
         color: var(--main-color);
-    }
+    } */
 
     button {
         padding: 0.8em 1em;

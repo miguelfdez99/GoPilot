@@ -5,85 +5,28 @@ import (
 	"log"
 	"os/exec"
 	"path/filepath"
-	"strings"
 )
 
 type BackupOptions struct {
-	SourceDir    string
-	DestDir      string
-	Exclude      []string
-	CompressData bool
-	LinksOption  string
-	Verify       bool
-	CompressFile bool
+	SourceDir string
+	DestDir   string
 }
 
 func (b *Backend) Backup(options BackupOptions) (string, error) {
-	args := []string{"-av", "--delete"}
+	backupFileName := filepath.Base(options.SourceDir) + ".tar.gz"
+	compressedFilePath := filepath.Join(options.DestDir, backupFileName)
+	args := []string{"-czf", compressedFilePath}
+	args = append(args, "-C", filepath.Dir(options.SourceDir), filepath.Base(options.SourceDir))
 
-	if options.CompressData {
-		args = append(args, "-z")
-	}
-
-	if options.LinksOption != "" {
-		args = append(args, options.LinksOption)
-	}
-
-	for _, path := range options.Exclude {
-		args = append(args, fmt.Sprintf("--exclude=%s", path))
-	}
-
-	args = append(args, options.SourceDir, options.DestDir)
-
-	cmdString := fmt.Sprintf("rsync %s", strings.Join(args, " "))
-
-	cmd := exec.Command("rsync", args...)
+	cmd := exec.Command("tar", args...)
 	output, err := cmd.CombinedOutput()
 
 	if err != nil {
-		log.Println("Error creating backup:", err)
-		return "", fmt.Errorf("error creating backup: %s", string(output))
+		log.Println("Error compressing backup:", err)
+		return "", fmt.Errorf("error compressing backup: %s", string(output))
 	}
 
-	b.logger.Info(fmt.Sprintf("Backup created successfully:\n%s", string(output)))
+	b.logger.Info(fmt.Sprintf("Backup compressed successfully:\n%s", string(output)))
 
-	if options.Verify {
-
-		sourceBase := filepath.Base(options.SourceDir)
-		dirDest := filepath.Join(options.DestDir, sourceBase)
-
-		cmd = exec.Command("diff", "-rq", options.SourceDir, dirDest)
-		output, err = cmd.CombinedOutput()
-
-		if err != nil {
-			log.Println("Backup verification failed:", err)
-			return "", fmt.Errorf("backup verification failed: %s", string(output))
-		}
-
-		b.logger.Info(fmt.Sprintf("Backup verified successfully:\n%s", string(output)))
-	}
-
-	if options.CompressFile {
-		compressedFilePath := filepath.Join(options.DestDir, filepath.Base(options.SourceDir)+".tar.gz")
-		cmd = exec.Command("tar", "-czf", compressedFilePath, "-C", options.SourceDir, ".")
-		output, err = cmd.CombinedOutput()
-		if err != nil {
-			log.Println("Error compressing backup:", err)
-			return "", fmt.Errorf("error compressing backup: %s", string(output))
-		}
-		b.logger.Info(fmt.Sprintf("Backup compressed successfully:\n%s", string(output)))
-	}
-
-	return cmdString, nil
-}
-
-func (b *Backend) ScheduleBackup(options BackupOptions, schedule string) error {
-	cmdString, err := b.Backup(options)
-	if err != nil {
-		return err
-	}
-
-	b.logger.Info(fmt.Sprint("Scheduling backup: ", cmdString))
-
-	return b.AddCronJob(schedule, cmdString)
+	return compressedFilePath, nil
 }
