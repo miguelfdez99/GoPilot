@@ -61,13 +61,12 @@
         );
     }
 
-    let keyType = "";
-    let keyName = "";
-    let outputPath = "";
-    let overwrite = false;
+    let keyType: string = "";
+    let keyName: string = "";
+    let outputPath: string = "";
+    let certName: string = "";
+    let overwrite: boolean = false;
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
-
-    let privateKeyPath = "";
 
     async function generateKeys() {
         if (!keyType || !keyName || !outputPath) {
@@ -88,26 +87,23 @@
     }
 
     async function generateCertificate() {
-        if (!privateKeyPath) {
-            await OpenDialogError("Private key path is required");
+        if (!outputPath || !certName) {
+            await OpenDialogError("All fields are required");
             return;
         }
 
         try {
-            await GenerateSelfSignedCertificate(privateKeyPath);
+            let concatedPath = outputPath + "/" + certName;
+            await GenerateSelfSignedCertificate(concatedPath);
             await OpenDialogInfo(
                 "Successfully created self-signed certificate"
             );
-            privateKeyPath = "";
+            outputPath = "";
+            certName = "";
         } catch (err) {
             await OpenDialogError(`Error: ${err}`);
         }
     }
-
-    const selectFile = async () => {
-        const file = await OpenFile();
-        privateKeyPath = file;
-    };
 
     const selectDir = async () => {
         const dir = await OpenDir();
@@ -122,16 +118,16 @@
         <div style="color: ${color}; font-size: ${fontSize};">
             <p style="color: ${color}; font-size: ${fontSize};>This component generates cryptographic keys and self-signed certificates. 
             It supports key types RSA, DSA, ECDSA, and Ed25519. 'Generate Keys' lets users define a key type, name, and output path. Existing keys at the same path can be overwritten if desired.</p>
-            
-            <p style="color: ${color}; font-size: ${fontSize};> 
+
+            <p style="color: ${color}; font-size: ${fontSize};>
                 - <strong>RSA:</strong> Public key cryptography based on factoring problem. <a href="https://simple.wikipedia.org/wiki/RSA_algorithm" style="color: inherit;">RSA Algorithm</a><br>
                 - <strong>DSA:</strong> A digital signature standard using modular exponentiation. <a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm" style="color: inherit;">Digital Signature Algorithm</a><br>
                 - <strong>ECDSA:</strong> A DSA variant utilizing elliptic curve cryptography. <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" style="color: inherit;">Elliptic Curve DSA</a><br>
                 - <strong>Ed25519:</strong> A public-key signature system known for its speed and small signature size. <a href="https://ed25519.cr.yp.to" style="color: inherit;">Ed25519</a>
             </p>
-            
+
             <p style="color: ${color}; font-size: ${fontSize};>'Generate Self-Signed Certificate' requires a private key path to create a self-signed certificate.</p>
-            
+
             <p style="color: ${color}; font-size: ${fontSize};>This component utilizes 'ssh-keygen' to generate keys. <a href="https://linux.die.net/man/1/ssh-keygen" style="color: inherit;">ssh-keygen</a></p>
         </div>
         `
@@ -214,18 +210,22 @@
         <h2>Generate Self-Signed Certificate</h2>
         <form on:submit|preventDefault={generateCertificate}>
             <label class="input-field">
-                <span>Private Key Path:</span>
+                <span>Certificate Destination Path:</span>
                 <div class="input-group">
-                    <input type="text" bind:value={privateKeyPath} />
+                    <input type="text" bind:value={outputPath} />
                     <button
                         type="button"
                         class="open-btn"
-                        title="Select Private Key"
-                        on:click={selectFile}
+                        title="Select Certificate Directory"
+                        on:click={selectDir}
                     >
                         <img src={openIcon} alt="Open File" class="open-icon" />
                     </button>
                 </div>
+                <label class="input-field">
+                    <span>Cert Name:</span>
+                    <input type="text" bind:value={certName} />
+                </label>
             </label>
 
             <button class="submit-button" type="submit"
