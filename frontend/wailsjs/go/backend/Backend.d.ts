@@ -33,7 +33,7 @@ export function ExportLogs(arg1:string,arg2:number,arg3:string):Promise<void>;
 
 export function GenerateKeys(arg1:string,arg2:string,arg3:string,arg4:boolean):Promise<string>;
 
-export function GenerateSelfSignedCertificate(arg1:string):Promise<string>;
+export function GenerateSelfSignedCertificate(arg1:string):Promise<void>;
 
 export function GetAllServices():Promise<Array<backend.Service>>;
 
