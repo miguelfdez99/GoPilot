@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"goPilot/backend"
+	"path/filepath"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -23,10 +24,17 @@ func main() {
 	app := NewApp()
 
 	// Create backend
-	backend := backend.NewBackend(logger.NewDefaultLogger())
+	logFilePath := filepath.Join("logs.txt")
+	customLogger, err := backend.NewCustomLogger(logger.NewDefaultLogger(), logFilePath)
+	if err != nil {
+		println("Error creating custom logger:", err.Error())
+		return
+	}
+	defer customLogger.Close()
+	backend := backend.NewBackend(customLogger)
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:  "GoPilot",
 		Width:  1024,
 		Height: 768,
