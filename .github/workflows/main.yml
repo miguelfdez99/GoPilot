@@ -60,7 +60,7 @@ jobs:
 
       - name: Set Version from Git Tag
         run: |
-          VERSION=$(echo ${GITHUB_REF#refs/tags/v})
+          VERSION=$(echo ${GITHUB_REF#refs/tags/})
           echo "Version extracted: $VERSION"
           sed -i "s/^Version:.*/Version:        $VERSION/" rpms/SPECS/GoPilot.spec
 
