@@ -58,6 +58,12 @@ jobs:
           cp -R ./build/bin/GoPilot* package/
           dpkg-deb --build package "GoPilot-${{ env.RELEASE_VERSION }}.deb"
 
+      - name: Set Version from Git Tag
+        run: |
+          VERSION=$(echo ${GITHUB_REF#refs/tags/v})
+          echo "Version extracted: $VERSION"
+          sed -i "s/^Version:.*/Version:        $VERSION/" rpms/SPECS/GoPilot.spec
+
       - name: Create tarball
         run: |
           cd ..
