@@ -1,5 +1,5 @@
 Name:           GoPilot
-Version:        0.6
+Version:        %{?version}
 Release:        1%{?dist}
 Summary:        GoPilot
 
