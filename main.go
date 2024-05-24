@@ -31,7 +31,12 @@ func main() {
 		return
 	}
 	defer customLogger.Close()
-	backend := backend.NewBackend(customLogger)
+
+	backend, err := backend.NewBackend(customLogger)
+	if err != nil {
+		println("Error initializing the backend:", err.Error())
+		return
+	}
 
 	// Create application with options
 	err = wails.Run(&options.App{

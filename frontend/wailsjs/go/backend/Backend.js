@@ -74,6 +74,10 @@ export function GetCPUUsage() {
   return window['go']['backend']['Backend']['GetCPUUsage']();
 }
 
+export function GetContainerLogs(arg1) {
+  return window['go']['backend']['Backend']['GetContainerLogs'](arg1);
+}
+
 export function GetDiskUsage() {
   return window['go']['backend']['Backend']['GetDiskUsage']();
 }
@@ -114,8 +118,16 @@ export function InstallPackage(arg1) {
   return window['go']['backend']['Backend']['InstallPackage'](arg1);
 }
 
+export function ListContainers() {
+  return window['go']['backend']['Backend']['ListContainers']();
+}
+
 export function ListCronJobs() {
   return window['go']['backend']['Backend']['ListCronJobs']();
+}
+
+export function ListImages() {
+  return window['go']['backend']['Backend']['ListImages']();
 }
 
 export function ListPackages() {
@@ -176,6 +188,10 @@ export function RemoveAllCronJobs() {
 
 export function RemoveCronJob(arg1) {
   return window['go']['backend']['Backend']['RemoveCronJob'](arg1);
+}
+
+export function RemoveImage(arg1) {
+  return window['go']['backend']['Backend']['RemoveImage'](arg1);
 }
 
 export function RemoveOldLogs(arg1) {

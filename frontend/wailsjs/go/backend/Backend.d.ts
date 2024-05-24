@@ -39,6 +39,8 @@ export function GetAllServices():Promise<Array<backend.Service>>;
 
 export function GetCPUUsage():Promise<Array<number>>;
 
+export function GetContainerLogs(arg1:string):Promise<string>;
+
 export function GetDiskUsage():Promise<backend.DiskUsage>;
 
 export function GetDistribution():Promise<string>;
@@ -59,7 +61,11 @@ export function GetSystemInfo():Promise<string>;
 
 export function InstallPackage(arg1:string):Promise<void>;
 
+export function ListContainers():Promise<Array<string>>;
+
 export function ListCronJobs():Promise<Array<backend.CronJob>>;
+
+export function ListImages():Promise<Array<string>>;
 
 export function ListPackages():Promise<Array<string>>;
 
@@ -90,6 +96,8 @@ export function OpenURL(arg1:string):Promise<void>;
 export function RemoveAllCronJobs():Promise<void>;
 
 export function RemoveCronJob(arg1:string):Promise<void>;
+
+export function RemoveImage(arg1:string):Promise<void>;
 
 export function RemoveOldLogs(arg1:string):Promise<void>;
 
