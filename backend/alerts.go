@@ -12,12 +12,6 @@ import (
 	"github.com/shirou/gopsutil/mem"
 )
 
-type SystemStatThresholds struct {
-	CPU    float64 `json:"CPU"`
-	Memory float64 `json:"Memory"`
-	Disk   float64 `json:"Disk"`
-}
-
 func (b *Backend) MonitorFile(filepath string) {
 	b.watchList.Store(filepath, "file")
 	watcher, err := fsnotify.NewWatcher()

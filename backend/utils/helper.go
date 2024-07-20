@@ -1,4 +1,4 @@
-package backend
+package utils
 
 import (
 	"bufio"
@@ -9,13 +9,8 @@ import (
 	"strings"
 )
 
-func (b *Backend) CheckAdmin() bool {
-	uid := os.Getuid()
-	return uid == 0
-}
-
 func ExtractFirstParams(input string) []string {
-	distribution, err := getLinuxDistribution()
+	distribution, err := GetLinuxDistribution()
 	if err != nil {
 		return nil
 	}
@@ -45,7 +40,7 @@ func ExtractFirstParams(input string) []string {
 	return params
 }
 
-func getLinuxDistribution() (string, error) {
+func GetLinuxDistribution() (string, error) {
 	fileContent, err := os.ReadFile("/etc/os-release")
 	if err != nil {
 		return "", err
@@ -77,7 +72,7 @@ func getLinuxDistribution() (string, error) {
 	return "", fmt.Errorf("unable to determine Linux distribution")
 }
 
-func getOSName() (string, error) {
+func GetOSName() (string, error) {
 	file, err := os.Open("/etc/os-release")
 	if err != nil {
 		return "", err
@@ -102,7 +97,7 @@ func getOSName() (string, error) {
 	return "", fmt.Errorf("OS name not found")
 }
 
-func getKernelVersion() (string, error) {
+func GetKernelVersion() (string, error) {
 	kernelVersion := exec.Command("uname", "-r")
 	out, err := kernelVersion.Output()
 	if err != nil {
@@ -111,7 +106,7 @@ func getKernelVersion() (string, error) {
 	return string(out), nil
 }
 
-func getUptime() (string, error) {
+func GetUptime() (string, error) {
 	cmd := exec.Command("uptime")
 	out, err := cmd.Output()
 	if err != nil {
@@ -130,7 +125,7 @@ func getUptime() (string, error) {
 	return matches[1], nil
 }
 
-func getMemory() (string, error) {
+func GetMemory() (string, error) {
 	cmd := exec.Command("free", "-h")
 	out, err := cmd.Output()
 	if err != nil {
@@ -154,7 +149,7 @@ func getMemory() (string, error) {
 	return memoryInfo, nil
 }
 
-func getDesktopEnv() (string, error) {
+func GetDesktopEnv() (string, error) {
 	if desktopEnv := os.Getenv("XDG_CURRENT_DESKTOP"); desktopEnv != "" {
 		splitEnv := strings.Split(desktopEnv, ":")
 		if len(splitEnv) > 1 {
@@ -172,14 +167,14 @@ func getDesktopEnv() (string, error) {
 		return desktopEnv, nil
 	}
 
-	if desktopEnv, err := getDesktopEnvFromXprop(); err == nil {
+	if desktopEnv, err := GetDesktopEnvFromXprop(); err == nil {
 		return desktopEnv, nil
 	}
 
 	return "Not Found", nil
 }
 
-func getDesktopEnvFromXprop() (string, error) {
+func GetDesktopEnvFromXprop() (string, error) {
 	cmd := exec.Command("xprop", "-root")
 	output, err := cmd.Output()
 	if err != nil {
@@ -195,13 +190,4 @@ func getDesktopEnvFromXprop() (string, error) {
 	}
 
 	return "", fmt.Errorf("could not determine desktop environment from xprop")
-}
-
-func (b *Backend) CommandExists(cmd string) (bool, string) {
-	_, err := exec.LookPath(cmd)
-	if err != nil {
-		b.logger.Error(fmt.Sprintf("%s command is not available. Error: %v", cmd, err))
-		return false, fmt.Sprintf("%s command is not available", cmd)
-	}
-	return true, ""
 }

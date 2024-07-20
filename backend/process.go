@@ -10,19 +10,6 @@ import (
 	"github.com/shirou/gopsutil/process"
 )
 
-type ProcessInfo struct {
-	User       string
-	Pid        int32
-	CpuPercent float64
-	MemPercent float32
-	VMS        uint64
-	RSS        uint64
-	TTY        string
-	Status     string
-	StartTime  int64
-	Cmdline    string
-}
-
 func (b *Backend) GetProcessInfo() ([]ProcessInfo, error) {
 	procs, err := process.Processes()
 	if err != nil {

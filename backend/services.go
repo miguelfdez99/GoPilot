@@ -8,17 +8,6 @@ import (
 	"strings"
 )
 
-type Service struct {
-	Name          string
-	StartupStatus string
-}
-
-type RunningService struct {
-	Name        string
-	ActiveState string
-	Description string
-}
-
 func (b *Backend) GetAllServices() ([]Service, error) {
 	cmd := exec.Command("systemctl", "list-unit-files", "--type=service", "--state=enabled", "--state=disabled", "--no-pager", "--no-legend", "--plain", "--all")
 	var out bytes.Buffer

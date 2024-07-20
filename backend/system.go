@@ -14,6 +14,8 @@ import (
 
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
+
+	"goPilot/backend/utils"
 )
 
 func (b *Backend) GetLSCPU() string {
@@ -63,29 +65,19 @@ func (b *Backend) GetLSCPU() string {
 	return string(jsonData)
 }
 
-type SystemInfo struct {
-	OsName          string `json:"osName"`
-	KernelVer       string `json:"kernelVer"`
-	Uptime          string `json:"uptime"`
-	Hostname        string `json:"hostname"`
-	DesktopEnv      string `json:"desktopEnv"`
-	CurrentUsername string `json:"currentUsername"`
-	Memory          string `json:"memory"`
-}
-
 func (b *Backend) GetSystemInfo() (string, error) {
 	var sysInfo SystemInfo
 	var err error
 
-	if sysInfo.OsName, err = getOSName(); err != nil {
+	if sysInfo.OsName, err = utils.GetOSName(); err != nil {
 		return "", fmt.Errorf("error obtaining operating system name: %v", err)
 	}
 
-	if sysInfo.KernelVer, err = getKernelVersion(); err != nil {
+	if sysInfo.KernelVer, err = utils.GetKernelVersion(); err != nil {
 		return "", fmt.Errorf("error obtaining kernel version: %v", err)
 	}
 
-	if sysInfo.Uptime, err = getUptime(); err != nil {
+	if sysInfo.Uptime, err = utils.GetUptime(); err != nil {
 		return "", fmt.Errorf("error obtaining system uptime: %v", err)
 	}
 
@@ -93,7 +85,7 @@ func (b *Backend) GetSystemInfo() (string, error) {
 		return "", fmt.Errorf("error obtaining system hostname: %v", err)
 	}
 
-	if sysInfo.DesktopEnv, err = getDesktopEnv(); err != nil {
+	if sysInfo.DesktopEnv, err = utils.GetDesktopEnv(); err != nil {
 		return "", fmt.Errorf("error obtaining desktop environment: %v", err)
 	}
 
@@ -103,7 +95,7 @@ func (b *Backend) GetSystemInfo() (string, error) {
 		return "", fmt.Errorf("error obtaining current user: %v", err)
 	}
 
-	if sysInfo.Memory, err = getMemory(); err != nil {
+	if sysInfo.Memory, err = utils.GetMemory(); err != nil {
 		return "", fmt.Errorf("error obtaining memory info: %v", err)
 	}
 
@@ -122,11 +114,6 @@ func (b *Backend) GetCPUUsage() ([]float64, error) {
 		return nil, err
 	}
 	return percpuUsage, nil
-}
-
-type MemoryUsage struct {
-	RAM  float64 `json:"ram"`
-	Swap float64 `json:"swap"`
 }
 
 func getSwapUsage() (float64, error) {

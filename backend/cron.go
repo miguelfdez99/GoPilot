@@ -8,11 +8,6 @@ import (
 	"strings"
 )
 
-type CronJob struct {
-	Schedule string
-	Command  string
-}
-
 func (b *Backend) ListCronJobs() ([]CronJob, error) {
 	cmd := exec.Command("crontab", "-l")
 	output, err := cmd.Output()

@@ -3,18 +3,14 @@ package backend
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
 
-type User struct {
-	Username      string
-	Password      string
-	UID           int
-	GID           int
-	HomeDirectory string
-	Shell         string
-	Groups        []string
+func (b *Backend) CheckAdmin() bool {
+	uid := os.Getuid()
+	return uid == 0
 }
 
 func (b *Backend) CreateUser(user User) error {
