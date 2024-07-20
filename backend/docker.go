@@ -77,7 +77,7 @@ func CreateContainer(ctx context.Context, cli *client.Client, imageName string) 
 }
 
 func getContainerLogs(ctx context.Context, cli *client.Client, containerID string) (string, error) {
-	out, err := cli.ContainerLogs(ctx, containerID, container.LogsOptions{ShowStdout: true})
+	out, err := cli.ContainerLogs(ctx, containerID, container.LogsOptions{ShowStdout: true, ShowStderr: true})
 	if err != nil {
 		panic(err)
 	}
@@ -88,11 +88,10 @@ func getContainerLogs(ctx context.Context, cli *client.Client, containerID strin
 	if err != nil {
 		return "", err
 	}
-
 	return string(logs), nil
 }
 
-func (b *Backend) GetContainerLogs(containerID string) (string, error){
+func (b *Backend) GetContainerLogs(containerID string) (string, error) {
 	return getContainerLogs(b.ctx, b.cli, containerID)
 }
 
