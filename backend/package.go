@@ -2,12 +2,13 @@ package backend
 
 import (
 	"fmt"
+	"goPilot/backend/utils"
 	"os/exec"
 )
 
 func (b *Backend) ListPackages() []string {
 
-	distribution, err := getLinuxDistribution()
+	distribution, err := utils.GetLinuxDistribution()
 	if err != nil {
 		b.logger.Error("Failed to get Linux distribution")
 		return nil
@@ -34,7 +35,7 @@ func (b *Backend) ListPackages() []string {
 		b.logger.Error("Failed to list packages")
 		return nil
 	}
-	packageNames := ExtractFirstParams(string(out))
+	packageNames := utils.ExtractFirstParams(string(out))
 	if distribution != "arch" {
 		packageNames = packageNames[1:]
 	}
@@ -43,7 +44,7 @@ func (b *Backend) ListPackages() []string {
 }
 
 func (b *Backend) RemovePackage(pkgName string) error {
-	distribution, err := getLinuxDistribution()
+	distribution, err := utils.GetLinuxDistribution()
 	if err != nil {
 		b.logger.Error("Failed to get Linux distribution")
 		return err
@@ -75,7 +76,7 @@ func (b *Backend) RemovePackage(pkgName string) error {
 }
 
 func (b *Backend) InstallPackage(pkgName string) error {
-	distribution, err := getLinuxDistribution()
+	distribution, err := utils.GetLinuxDistribution()
 	if err != nil {
 		b.logger.Error("Failed to get Linux distribution")
 		return err
@@ -107,7 +108,7 @@ func (b *Backend) InstallPackage(pkgName string) error {
 }
 
 func (b *Backend) GetDistribution() string {
-	distribution, err := getLinuxDistribution()
+	distribution, err := utils.GetLinuxDistribution()
 	if err != nil {
 		b.logger.Error("Failed to get distribution")
 		return ""

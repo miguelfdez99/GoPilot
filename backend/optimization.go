@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"goPilot/backend/utils"
 )
 
 func (b *Backend) DeleteTempFiles(dirPath string, expireDays int) {
@@ -37,7 +39,7 @@ func (b *Backend) DeleteTempFiles(dirPath string, expireDays int) {
 
 func (b *Backend) RemoveUnusedPackages() {
 
-	distribution, err := getLinuxDistribution()
+	distribution, err := utils.GetLinuxDistribution()
 	if err != nil {
 		b.logger.Error("Failed to get Linux distribution")
 	}
@@ -56,7 +58,7 @@ func (b *Backend) RemoveUnusedPackages() {
 }
 
 func (b *Backend) CleanCachePackages() {
-	distribution, err := getLinuxDistribution()
+	distribution, err := utils.GetLinuxDistribution()
 	if err != nil {
 		b.logger.Error("Failed to get Linux distribution")
 	}

@@ -6,11 +6,6 @@ import (
 	"github.com/shirou/gopsutil/net"
 )
 
-type NetworkUsage struct {
-	BytesSent     float64 `json:"bytes_sent"`
-	BytesReceived float64 `json:"bytes_received"`
-}
-
 var lastNetIOCounters *net.IOCountersStat
 
 func (b *Backend) GetNetworkUsage() (*NetworkUsage, error) {

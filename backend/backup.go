@@ -7,11 +7,6 @@ import (
 	"path/filepath"
 )
 
-type BackupOptions struct {
-	SourceDir string
-	DestDir   string
-}
-
 func (b *Backend) Backup(options BackupOptions) (string, error) {
 	backupFileName := filepath.Base(options.SourceDir) + ".tar.gz"
 	compressedFilePath := filepath.Join(options.DestDir, backupFileName)
