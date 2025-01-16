@@ -9,45 +9,13 @@
         OpenDialogQuestion,
     } from "../../wailsjs/go/backend/Backend";
     import AddCronJob from "../components/AddCronJob.svelte";
-    import deleteIcon from "../assets/images/delete.png";
+    import { createEventDispatcher } from "svelte";
     import { checkCommand } from "../functions/functions";
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import infoIcon from "../assets/images/info.png";
-    import { settings } from '../stores';
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    let showInfoButton: boolean;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-        showInfoButton = $settings.showInfoButton;
-    });
-
-    $: {
-    document.documentElement.style.setProperty('--main-font-size', fontSize);
-    document.documentElement.style.setProperty('--main-color', color);
-    document.documentElement.style.setProperty('--main-font-family', fontFamily);
-    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
-    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
-    document.documentElement.style.setProperty('--main-input-color', inputColor);
-    document.documentElement.style.setProperty('--main-button-color', buttonColor);
-  }
 
     let jobs = [];
     let dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
-
     let viewState: string = "default";
 
     function setViewState(newViewState: string): void {
@@ -90,100 +58,37 @@
                 OpenDialogError(`Failed to delete ${name}: ${err}`);
             });
     }
-
-    function openInfo() {
-        dialog = openDialog(
-            dialog,
-            "Info",
-            `
-            <p style="color: ${color};>
-                This page allows you to <strong>manage cron jobs</strong>.
-                <br />
-                <br />
-                You can <em>add a cron job</em> by clicking the "Add Cron Job" button.
-                <br />
-                <br />
-                You can <em>delete a cron job</em> by clicking the "Delete" button next to the cron job.
-                <br />
-                <br />
-                You can <em>delete all cron jobs</em> by clicking the "Remove all cron jobs" button.
-                <br />
-                <br />
-                Cron jobs use a specific syntax for scheduling tasks. The syntax is made up of <strong>five fields</strong>:
-                <br />
-                <br />
-                - <strong>Minute</strong> (0 - 59)
-                <br />
-                - <strong>Hour</strong> (0 - 23, where 0 is midnight)
-                <br />
-                - <strong>Day of the month</strong> (1 - 31)
-                <br />
-                - <strong>Month</strong> (1 - 12)
-                <br />
-                - <strong>Day of the week</strong> (0 - 7, where both 0 and 7 are Sunday)
-                <br />
-                <br />
-                Each field is separated by a space and can contain a <em>single value</em>, a <em>range of values</em>, or an <em>asterisk</em> to indicate "any value".
-                <br />
-                <br />
-                Here are some examples:
-                <br />
-                <br />
-                - "<strong>5 0 * * *</strong>" runs a job at 0:05 every day
-                <br />
-                - "<strong>15 14 1 * *</strong>" runs a job at 14:15 on the first day of every month
-                <br />
-                - "<strong>* * * * 1</strong>" runs a job every minute on Mondays
-                <br />
-                <br />
-                Please refer to the <em><a href="https://www.baeldung.com/cron-expressions" style="color: inherit;">cron syntax guide</a></em> for more detailed information.
-            `
-        );
-    }
-
-    function onDialogClose() {
-        dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
-    }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title="Info"
-    message={dialog.dialogMessage}
-    onClose={onDialogClose}
-/>
-
-<div class="container">
-    {#if showInfoButton}
-    <button type="button" class="info-button" title="Info" on:click={openInfo}>
-        <img src={infoIcon} alt="Open Info" class="info-icon" />
-    </button>
-    {/if}
+<div class="cron-container">
     <h1>Cron Jobs</h1>
 
     {#if viewState === "default"}
-        <button on:click={() => setViewState("addCronJob")}>Add Cron Job</button
-        >
-        <button on:click={removeAllCronJobs}>Remove all cron jobs</button>
+        <div class="actions">
+            <button on:click={() => setViewState("addCronJob")}>
+                <span class="material-icons">add</span>
+                Add Cron Job
+            </button>
+            <button on:click={removeAllCronJobs}>
+                <span class="material-icons">delete_forever</span>
+                Remove All Cron Jobs
+            </button>
+        </div>
 
         <h2>Crontab List</h2>
         {#if jobs.length < 1}
             <p>No jobs found</p>
         {:else}
-            <ul>
+            <ul class="job-list">
                 {#each jobs as job}
                     <li>
-                        {job.Schedule}
-                        {job.Command}
+                        <span class="job-schedule">{job.Schedule}</span>
+                        <span class="job-command">{job.Command}</span>
                         <button
                             class="delete-btn"
                             on:click={() => deleteCron(job.Command)}
                         >
-                            <img
-                                src={deleteIcon}
-                                alt="Delete"
-                                class="delete-icon"
-                            />
+                            <span class="material-icons">delete</span>
                         </button>
                     </li>
                 {/each}
@@ -201,92 +106,118 @@
 </div>
 
 <style>
-    .container {
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
+    }
+
+    .cron-container {
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        padding: var(--spacing-lg);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
+    }
+
+    h1 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        color: var(--color-text-primary);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.25rem;
+    }
+
+    .actions {
         display: flex;
-        flex-direction: column;
-        max-width: 75%;
-        margin: 2rem auto;
-        background-color: var(--main-bg-color2);
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-        color: #ddd;
-        padding: 1rem;
-    }
-
-    .info-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        border: none;
-        background: var(--main-button-color);
-        height: 40px;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-    }
-
-    .info-icon {
-        max-width: none;
-    }
-
-    h1,
-    h2,
-    p {
-        font-size: var(--main-font-size);
-        color: var(--main-color);
-        margin-bottom: 1em;
-        font-family: var(--main-font-family);
-    }
-
-    ul {
-        list-style: none;
-        padding: 0;
-        border: 1px solid #333;
-        border-radius: 4px;
-        margin-bottom: 1em;
-        background-color: var(--main-bg-color);
-    }
-
-    li {
-        padding: 0.8em;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid var(--main-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-    }
-
-    li:last-child {
-        border-bottom: none;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
     }
 
     button {
-        padding: 0.8em 1em;
-        border: none;
-        border-radius: 4px;
-        background: var(--main-button-color);
-        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+        border-radius: 0.5rem;
         cursor: pointer;
-        transition: background-color 0.3s;
-        width: 100%;
-        margin-bottom: 1em;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+        background-color: var(--color-bg-tertiary);
+    }
+
+    .material-icons {
+        font-size: 1.2rem;
+        color: var(--color-accent-blue);
+    }
+
+    .job-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .job-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-sm);
+        border-bottom: 1px solid var(--color-bg-tertiary);
+    }
+
+    .job-list li:last-child {
+        border-bottom: none;
+    }
+
+    .job-schedule {
+        color: var(--color-text-secondary);
+        font-family: monospace;
+    }
+
+    .job-command {
+        flex: 1;
+        margin: 0 var(--spacing-md);
     }
 
     .delete-btn {
-        width: 24px;
-        height: 24px;
-        padding: 0;
-        margin: 0;
-        border: none;
         background: none;
+        border: none;
+        cursor: pointer;
+        padding: var(--spacing-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .delete-icon {
-        width: 100%;
-        height: 100%;
+    .delete-btn .material-icons {
+        color: var(--color-accent-red);
+    }
+
+    .delete-btn:hover .material-icons {
+        color: var(--color-accent-orange);
     }
 </style>

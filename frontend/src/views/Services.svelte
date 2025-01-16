@@ -8,59 +8,10 @@
         DisableService,
         StartService,
         StopService,
-        CheckAdmin
+        CheckAdmin,
     } from "../../wailsjs/go/backend/Backend";
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import infoIcon from "../assets/images/info.png";
-    import { settings } from "../stores";
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    let showInfoButton: boolean;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-        showInfoButton = $settings.showInfoButton;
-    });
-
-    $: {
-        document.documentElement.style.setProperty(
-            "--main-font-size",
-            fontSize
-        );
-        document.documentElement.style.setProperty("--main-color", color);
-        document.documentElement.style.setProperty(
-            "--main-font-family",
-            fontFamily
-        );
-        document.documentElement.style.setProperty(
-            "--main-bg-color",
-            backgroundColor
-        );
-        document.documentElement.style.setProperty(
-            "--main-bg-color2",
-            backgroundColor2
-        );
-        document.documentElement.style.setProperty(
-            "--main-input-color",
-            inputColor
-        );
-        document.documentElement.style.setProperty(
-            "--main-button-color",
-            buttonColor
-        );
-    }
 
     let serviceStore = writable([]);
     let runningServiceStore = writable([]);
@@ -124,20 +75,6 @@
         }
     });
 
-    function openInfo() {
-        dialog = openDialog(
-            dialog,
-            "Info",
-            `
-        <p style="color: ${color}; font-size: ${fontSize};">
-            This page allows you to manage the services on your system.
-            You can enable/disable services to start on boot and start/stop
-            services.
-        </p>
-        `
-        );
-    }
-
     function onDialogClose() {
         dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
     }
@@ -150,10 +87,10 @@
                     dialog,
                     "Warning",
                     `
-        <p style="color: ${color}; font-size: ${fontSize};">
-            You are not running this application as root. You will not be able to manage services.
-        </p>
-        `
+                    <p>
+                        You are not running this application as root. You will not be able to manage services.
+                    </p>
+                    `
                 );
             }
         } catch (error) {
@@ -162,37 +99,23 @@
     }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title="Info"
-    message={dialog.dialogMessage}
-    onClose={onDialogClose}
-/>
-
-<div>
-    {#if showInfoButton}
-        <button
-            type="button"
-            class="info-button"
-            title="Info"
-            on:click={openInfo}
-        >
-            <img src={infoIcon} alt="Open Info" class="info-icon" />
-        </button>
-    {/if}
+<div class="services-container">
     <h1>Services</h1>
 
+    <!-- Table Selector -->
     <select bind:value={selectedTable}>
         <option value="all">Startup Services</option>
         <option value="running">Running Services</option>
     </select>
 
+    <!-- Loading State -->
     {#if $loading}
         <div class="loading">
             <p>Loading...</p>
             <div class="spinner" />
         </div>
     {:else if selectedTable === "all"}
+        <!-- Startup Services Table -->
         <table>
             <thead>
                 <tr>
@@ -220,6 +143,7 @@
             </tbody>
         </table>
     {:else}
+        <!-- Running Services Table -->
         <table>
             <thead>
                 <tr>
@@ -250,76 +174,93 @@
         </table>
     {/if}
 
+    <!-- Error Message -->
     {#if error}
         <p class="error">{error.message}</p>
     {/if}
 </div>
 
 <style>
-    .info-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        border: none;
-        background: var(--main-button-color);
-        height: 40px;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
     }
 
-    .info-icon {
-        max-width: none;
+    .services-container {
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        padding: var(--spacing-lg);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
     }
-    div {
-        padding-bottom: 1rem;
+
+    h1 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.5rem;
     }
+
+    select {
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        font-size: 1rem;
+        margin-bottom: var(--spacing-md);
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
-        margin: 1rem 0;
-        font-size: 0.9em;
-        min-width: 400px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        margin-bottom: var(--spacing-md);
     }
+
     thead tr {
-        background-color: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        background-color: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
         text-align: left;
     }
+
     th,
     td {
-        padding: 12px 15px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        padding: var(--spacing-sm);
+        border-bottom: 1px solid var(--color-bg-tertiary);
     }
-    tbody tr {
-        border-bottom: 1px solid #dddddd;
+
+    tbody tr:hover {
+        background-color: var(--color-bg-secondary);
     }
-    tbody tr:nth-of-type(even) {
-        background-color: var(--main-input-color2);
-    }
-    tbody tr:last-of-type {
-        border-bottom: 2px solid #009879;
-    }
+
     .switch {
         position: relative;
         display: inline-block;
         width: 60px;
         height: 34px;
     }
+
     .switch input {
         opacity: 0;
         width: 0;
         height: 0;
     }
+
     .slider {
         position: absolute;
         cursor: pointer;
@@ -327,9 +268,10 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #ccc;
+        background-color: var(--color-bg-tertiary);
         transition: 0.4s;
     }
+
     .slider:before {
         position: absolute;
         content: "";
@@ -337,51 +279,43 @@
         width: 26px;
         left: 4px;
         bottom: 4px;
-        background-color: white;
+        background-color: var(--color-text-primary);
         transition: 0.4s;
     }
+
     input:checked + .slider {
-        background-color: #2196f3;
+        background-color: var(--color-accent-blue);
     }
+
     input:focus + .slider {
-        box-shadow: 0 0 1px #2196f3;
+        box-shadow: 0 0 1px var(--color-accent-blue);
     }
+
     input:checked + .slider:before {
         transform: translateX(26px);
     }
+
     .slider.round {
         border-radius: 34px;
     }
+
     .slider.round:before {
         border-radius: 50%;
     }
 
-    h1,
-    option {
-        color: var(--main-color);
-        font-family: var(--main-font-family);
-    }
-
-    select {
-        background: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-    }
-
     .loading {
         text-align: center;
+        padding: var(--spacing-lg);
     }
 
     .loading p {
-        color: var(--main-color);
-        font-size: 16px;
-        margin-bottom: 20px;
+        color: var(--color-text-primary);
+        margin-bottom: var(--spacing-md);
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid var(--main-color);
+        border-top: 4px solid var(--color-accent-blue);
         border-radius: 50%;
         width: 30px;
         height: 30px;
@@ -396,5 +330,11 @@
         100% {
             transform: rotate(360deg);
         }
+    }
+
+    .error {
+        color: var(--color-accent-red);
+        text-align: center;
+        margin-top: var(--spacing-md);
     }
 </style>

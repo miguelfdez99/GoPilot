@@ -10,39 +10,6 @@
     import { checkCommand } from "../functions/functions";
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import openIcon from "../assets/images/open.png";
-    import infoIcon from "../assets/images/info.png";
-    import { settings } from '../stores';
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    let showInfoButton: boolean;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-        showInfoButton = $settings.showInfoButton;
-    });
-
-    $: {
-    document.documentElement.style.setProperty('--main-font-size', fontSize);
-    document.documentElement.style.setProperty('--main-color', color);
-    document.documentElement.style.setProperty('--main-font-family', fontFamily);
-    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
-    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
-    document.documentElement.style.setProperty('--main-input-color', inputColor);
-    document.documentElement.style.setProperty('--main-button-color', buttonColor);
-  }
-
 
     let options = {
         sourceDir: "",
@@ -65,15 +32,6 @@
         }
     };
 
-    // const scheduleBackup = async () => {
-    //     try {
-    //         await ScheduleBackup(options, options.schedule);
-    //         await OpenDialogInfo("Backup scheduled successfully");
-    //     } catch (err) {
-    //         await OpenDialogError(`Error scheduling backup: ${err.message}`);
-    //     }
-    // };
-
     const selectDir = async () => {
         const dir = await OpenDir();
         if (dir) {
@@ -88,47 +46,15 @@
         }
     };
 
-    function openInfo() {
-        dialog = openDialog(
-            dialog,
-            "Info",
-            `
-            <div style="color: ${color}; font-size: ${fontSize};">
-                This interface allows you to create a compressed backup of a directory.
-                <br />
-                <br />
-                <b>Source Directory</b> is the directory to be backed up.
-                <br />
-                <br />
-                <b>Destination Directory</b> is where the compressed backup will be stored.
-                <br />
-                <br />
-                The backup is created as a tar.gz file.
-            </div>
-            `
-        );
-    }
-
     function onDialogClose() {
         dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
     }
 </script>
 
-<CustomDialog
-    bind:show={dialog.showDialog}
-    title="Info"
-    message={dialog.dialogMessage}
-    onClose={onDialogClose}
-/>
-
-<div class="main-container">
-    {#if showInfoButton}
-    <button type="button" class="info-button" title="Info" on:click={openInfo}>
-        <img src={infoIcon} alt="Open Info" class="info-icon" />
-    </button>
-    {/if}
+<div class="backup-container">
     <h2>Backups</h2>
     <div class="grid-container">
+        <!-- Source Directory -->
         <div class="grid-item">
             <label for="sourceDir">Source Directory:</label>
         </div>
@@ -138,10 +64,12 @@
                 class="open-btn"
                 title="Select Source Directory"
                 on:click={selectDir}
-                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
             >
+                <span class="material-icons">folder_open</span>
+            </button>
         </div>
 
+        <!-- Destination Directory -->
         <div class="grid-item">
             <label for="destDir">Destination Directory:</label>
         </div>
@@ -151,132 +79,111 @@
                 class="open-btn"
                 title="Select Destination Directory"
                 on:click={selectDestDir}
-                ><img src={openIcon} alt="Open Dir" class="open-icon" /></button
             >
+                <span class="material-icons">folder_open</span>
+            </button>
         </div>
 
-        <!-- <div class="grid-item">
-            <label for="exclude">Exclude (comma-separated paths):</label>
-        </div>
+        <!-- Backup Button -->
         <div class="grid-item">
-            <input type="text" bind:value={options.exclude} />
-        </div> -->
-
-        <!-- <div class="grid-item">
-            <label for="schedule">Schedule:</label>
+            <button on:click={backup}>
+                <span class="material-icons">backup</span>
+                Backup Now
+            </button>
         </div>
-        <div class="grid-item">
-            <input
-                type="text"
-                bind:value={options.schedule}
-                placeholder="Cron schedule (e.g., * * * * *)"
-            />
-        </div> -->
-
-        <div class="grid-item">
-            <button on:click={backup}>Backup Now</button>
-        </div>
-        <!-- <div class="grid-item">
-            <button on:click={scheduleBackup}>Schedule Backup</button>
-        </div> -->
     </div>
 </div>
 
 <style>
-    .main-container {
-        background-color: var(--main-bg-color);
-        font-size: var(--main-font-size);
-        color: var(--main-color);
-    }
-    .info-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        border: none;
-        background: var(--main-button-color);
-        height: 40px;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
     }
 
-    .info-icon {
-        max-width: none;
+    .backup-container {
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        padding: var(--spacing-lg);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
+    }
+
+    h2 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.5rem;
     }
 
     .grid-container {
         display: grid;
-        gap: 1.5rem;
-        padding: 2rem;
-        background: #282828;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        border-radius: 5px;
+        gap: var(--spacing-md);
         grid-template-columns: 1fr 1fr;
-        color: #ddd;
-        width: 90%;
-        max-width: 800px;
-        margin: 2rem auto;
-        background-color: var(--main-bg-color2);
+        align-items: center;
     }
 
     .grid-item {
         display: flex;
         align-items: center;
-        color: var(--main-color);
+        gap: var(--spacing-sm);
     }
 
     label {
-        font-weight: 500;
-        margin-bottom: 0.5em;
+        font-weight: bold;
+        color: var(--color-text-primary);
     }
 
-    /* input[type="checkbox"] {
-        margin: 0;
-        appearance: auto;
-        background: var(--main-input-color);
+    input {
+        flex: 1;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
     }
-
-    input[type="text"],
-    select {
-        padding: 0.7em;
-        border: 0;
-        border-radius: 4px;
-        background: var(--main-input-color);
-        color: #fff;
-        width: 100%;
-        box-sizing: border-box;
-        color: var(--main-color);
-    } */
 
     button {
-        padding: 0.8em 1em;
-        border: none;
-        border-radius: 4px;
-        background: var(--main-button-color);
-        color: #fff;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        width: 100%;
-        margin: 0 auto;
-        grid-column: span 2;
-    }
-
-    button.open-btn {
-        background: none;
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 0;
-        margin: 0;
-        margin-left: 10px;
-        margin-bottom: 15px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
     }
 
-    h2 {
-        color: var(--main-color);
+    button:hover {
+        background-color: var(--color-bg-tertiary);
+    }
+
+    .open-btn {
+        padding: var(--spacing-sm);
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+
+    .material-icons {
+        font-size: 1.2rem;
+        color: var(--color-accent-blue);
     }
 </style>

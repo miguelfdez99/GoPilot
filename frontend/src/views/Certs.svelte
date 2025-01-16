@@ -3,63 +3,11 @@
     import {
         GenerateKeys,
         GenerateSelfSignedCertificate,
-        OpenFile,
         OpenDir,
         OpenDialogInfo,
         OpenDialogError,
     } from "../../wailsjs/go/backend/Backend";
-    import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import openIcon from "../assets/images/open.png";
-    import infoIcon from "../assets/images/info.png";
-    import { settings } from "../stores";
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    let showInfoButton: boolean;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-        showInfoButton = $settings.showInfoButton;
-    });
-
-    $: {
-        document.documentElement.style.setProperty(
-            "--main-font-size",
-            fontSize
-        );
-        document.documentElement.style.setProperty("--main-color", color);
-        document.documentElement.style.setProperty(
-            "--main-font-family",
-            fontFamily
-        );
-        document.documentElement.style.setProperty(
-            "--main-bg-color",
-            backgroundColor
-        );
-        document.documentElement.style.setProperty(
-            "--main-bg-color2",
-            backgroundColor2
-        );
-        document.documentElement.style.setProperty(
-            "--main-input-color",
-            inputColor
-        );
-        document.documentElement.style.setProperty(
-            "--main-button-color",
-            buttonColor
-        );
-    }
 
     let keyType: string = "";
     let keyName: string = "";
@@ -76,13 +24,10 @@
 
         try {
             await GenerateKeys(keyType, keyName, outputPath, overwrite);
-            await OpenDialogInfo("Successfully created keys");
-            keyType = "";
-            keyName = "";
-            outputPath = "";
-            overwrite = false;
+            await OpenDialogInfo("Keys generated successfully");
+            resetKeyForm();
         } catch (err) {
-            await OpenDialogError(`Error: ${err}`);
+            await OpenDialogError(`Error generating keys: ${err}`);
         }
     }
 
@@ -93,45 +38,34 @@
         }
 
         try {
-            let concatedPath = outputPath + "/" + certName;
-            await GenerateSelfSignedCertificate(concatedPath);
+            const fullPath = `${outputPath}/${certName}`;
+            await GenerateSelfSignedCertificate(fullPath);
             await OpenDialogInfo(
-                "Successfully created self-signed certificate"
+                "Self-signed certificate generated successfully",
             );
-            outputPath = "";
-            certName = "";
+            resetCertForm();
         } catch (err) {
-            await OpenDialogError(`Error: ${err}`);
+            await OpenDialogError(`Error generating certificate: ${err}`);
         }
     }
 
     const selectDir = async () => {
         const dir = await OpenDir();
-        outputPath = dir;
+        if (dir) {
+            outputPath = dir;
+        }
     };
 
-    function openInfo() {
-        dialog = openDialog(
-        dialog,
-        "Info",
-        `
-        <div style="color: ${color}; font-size: ${fontSize};">
-            <p style="color: ${color}; font-size: ${fontSize};>This component generates cryptographic keys and self-signed certificates. 
-            It supports key types RSA, DSA, ECDSA, and Ed25519. 'Generate Keys' lets users define a key type, name, and output path. Existing keys at the same path can be overwritten if desired.</p>
+    function resetKeyForm() {
+        keyType = "";
+        keyName = "";
+        outputPath = "";
+        overwrite = false;
+    }
 
-            <p style="color: ${color}; font-size: ${fontSize};>
-                - <strong>RSA:</strong> Public key cryptography based on factoring problem. <a href="https://simple.wikipedia.org/wiki/RSA_algorithm" style="color: inherit;">RSA Algorithm</a><br>
-                - <strong>DSA:</strong> A digital signature standard using modular exponentiation. <a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm" style="color: inherit;">Digital Signature Algorithm</a><br>
-                - <strong>ECDSA:</strong> A DSA variant utilizing elliptic curve cryptography. <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" style="color: inherit;">Elliptic Curve DSA</a><br>
-                - <strong>Ed25519:</strong> A public-key signature system known for its speed and small signature size. <a href="https://ed25519.cr.yp.to" style="color: inherit;">Ed25519</a>
-            </p>
-
-            <p style="color: ${color}; font-size: ${fontSize};>'Generate Self-Signed Certificate' requires a private key path to create a self-signed certificate.</p>
-
-            <p style="color: ${color}; font-size: ${fontSize};>This component utilizes 'ssh-keygen' to generate keys. <a href="https://linux.die.net/man/1/ssh-keygen" style="color: inherit;">ssh-keygen</a></p>
-        </div>
-        `
-    );
+    function resetCertForm() {
+        outputPath = "";
+        certName = "";
     }
 
     function onDialogClose() {
@@ -141,53 +75,53 @@
 
 <CustomDialog
     bind:show={dialog.showDialog}
-    title="Info"
+    title={dialog.dialogTitle}
     message={dialog.dialogMessage}
     onClose={onDialogClose}
 />
 
 <div class="main-container">
-    {#if showInfoButton}
-        <button
-            type="button"
-            class="info-button"
-            title="Info"
-            on:click={openInfo}
-        >
-            <img src={infoIcon} alt="Open Info" class="info-icon" />
-        </button>
-    {/if}
     <h2>Certificates & Keys</h2>
+
     <div class="form-container">
-        <h2>Generate Keys</h2>
+        <h3>Generate Keys</h3>
         <form on:submit|preventDefault={generateKeys}>
             <label class="input-field">
-                <span>Key Type:</span>
+                <span>Key Type <span class="required">*</span>:</span>
                 <select bind:value={keyType}>
-                    <option value="">--Please choose an option--</option>
-                    <option>rsa</option>
-                    <option>dsa</option>
-                    <option>ecdsa</option>
-                    <option>ed25519</option>
+                    <option value="">-- Select Key Type --</option>
+                    <option value="rsa">RSA</option>
+                    <option value="dsa">DSA</option>
+                    <option value="ecdsa">ECDSA</option>
+                    <option value="ed25519">Ed25519</option>
                 </select>
             </label>
 
             <label class="input-field">
-                <span>Key Name:</span>
-                <input type="text" bind:value={keyName} />
+                <span>Key Name <span class="required">*</span>:</span>
+                <input
+                    type="text"
+                    bind:value={keyName}
+                    placeholder="Enter key name"
+                />
             </label>
 
             <label class="input-field">
-                <span>Output Path:</span>
+                <span>Output Path <span class="required">*</span>:</span>
                 <div class="input-group">
-                    <input type="text" bind:value={outputPath} />
+                    <input
+                        type="text"
+                        bind:value={outputPath}
+                        placeholder="Select output directory"
+                        readonly
+                    />
                     <button
                         type="button"
                         class="open-btn"
-                        title="Select Output Directory"
                         on:click={selectDir}
+                        title="Select Output Directory"
                     >
-                        <img src={openIcon} alt="Open Dir" class="open-icon" />
+                        <span class="material-icons">folder_open</span>
                     </button>
                 </div>
             </label>
@@ -207,144 +141,178 @@
     <hr />
 
     <div class="form-container">
-        <h2>Generate Self-Signed Certificate</h2>
+        <h3>Generate Self-Signed Certificate</h3>
         <form on:submit|preventDefault={generateCertificate}>
             <label class="input-field">
-                <span>Certificate Destination Path:</span>
+                <span
+                    >Certificate Destination Path <span class="required">*</span
+                    >:</span
+                >
                 <div class="input-group">
-                    <input type="text" bind:value={outputPath} />
+                    <input
+                        type="text"
+                        bind:value={outputPath}
+                        placeholder="Select certificate directory"
+                        readonly
+                    />
                     <button
                         type="button"
                         class="open-btn"
-                        title="Select Certificate Directory"
                         on:click={selectDir}
+                        title="Select Certificate Directory"
                     >
-                        <img src={openIcon} alt="Open File" class="open-icon" />
+                        <span class="material-icons">folder_open</span>
                     </button>
                 </div>
-                <label class="input-field">
-                    <span>Cert Name:</span>
-                    <input type="text" bind:value={certName} />
-                </label>
             </label>
 
-            <button class="submit-button" type="submit"
-                >Generate Self-Signed Certificate</button
-            >
+            <label class="input-field">
+                <span>Cert Name <span class="required">*</span>:</span>
+                <input
+                    type="text"
+                    bind:value={certName}
+                    placeholder="Enter certificate name"
+                />
+            </label>
+
+            <button class="submit-button" type="submit">
+                Generate Self-Signed Certificate
+            </button>
         </form>
     </div>
 </div>
 
 <style>
-    .main-container {
-        background-color: var(--main-bg-color);
-    }
-    .info-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        border: none;
-        background: var(--main-button-color);
-        height: 40px;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
     }
 
-    .info-icon {
-        max-width: none;
+    button {
+        background-color: var(--color-accent-blue);
+        color: var(--color-bg-primary);
+        border: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+        background-color: var(--color-accent-cyan);
+    }
+
+    .main-container {
+        padding: var(--spacing-lg);
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h2,
+    h3 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    h3 {
+        font-size: 1.25rem;
     }
 
     .form-container {
-        width: 90%;
-        max-width: 600px;
-        margin: 3rem auto;
-        padding: 2rem;
-        background-color: var(--main-bg-color2);
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        border-radius: 5px;
+        margin-bottom: var(--spacing-lg);
+        padding: var(--spacing-lg);
+        background-color: var(--color-bg-secondary);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .input-field,
-    .checkbox-field {
-        margin-bottom: 1.5rem;
+    .input-field {
+        margin-bottom: var(--spacing-md);
     }
 
-    .input-field > span,
-    .checkbox-field > span {
-        font-weight: 500;
-        color: var(--main-color);
-        margin-bottom: 0.5rem;
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+    .input-field > span {
+        display: block;
+        margin-bottom: var(--spacing-sm);
+        color: var(--color-text-primary);
+        font-size: 1rem;
     }
 
     .input-field > input,
     .input-field > select {
-        padding: 0.7em;
-        border: 0;
-        border-radius: 4px;
-        background: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-    }
-
-    .checkbox-field {
-        display: flex;
-        align-items: center;
-        color: var(--main-color);
-    }
-
-    .submit-button {
-        padding: 0.8em 1em;
-        border: none;
-        border-radius: 4px;
-        background: var(--main-button-color);
-        color: #fff;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    button.open-btn {
-        background: none;
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 0;
-        margin: 0;
-        margin-left: 10px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-color: #333;
+        width: 100%;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        font-size: 1rem;
     }
 
     .input-group {
         display: flex;
-        flex-direction: row;
         align-items: center;
-        margin-bottom: 1em;
+        gap: var(--spacing-sm);
     }
 
-    .input-group input {
-        margin-right: 0.5em;
-        background: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+    .open-btn {
+        background: none;
+        border: none;
+        padding: var(--spacing-sm);
+        color: var(--color-text-primary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .open-btn:hover {
+        color: var(--color-accent-blue);
+    }
+
+    .material-icons {
+        font-size: 1.5rem;
+    }
+
+    .required {
+        color: var(--color-accent-red);
+        font-size: 0.9rem;
+        margin-left: 0.25rem;
+    }
+
+    .submit-button {
+        width: 100%;
+        margin-top: var(--spacing-md);
     }
 
     hr {
         border: 0;
         height: 1px;
-        background: #444;
-    }
-
-    h2 {
-        color: var(--main-color);
-        font-family: var(--main-font-family);
+        background-color: var(--color-bg-tertiary);
+        margin: var(--spacing-lg) 0;
     }
 </style>
