@@ -9,52 +9,6 @@
     } from "../../wailsjs/go/backend/Backend";
     import { writable } from "svelte/store";
     import openIcon from "../assets/images/open.png";
-    import { settings } from "../stores";
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-    });
-
-    $: {
-        document.documentElement.style.setProperty(
-            "--main-font-size",
-            fontSize
-        );
-        document.documentElement.style.setProperty("--main-color", color);
-        document.documentElement.style.setProperty(
-            "--main-font-family",
-            fontFamily
-        );
-        document.documentElement.style.setProperty(
-            "--main-bg-color",
-            backgroundColor
-        );
-        document.documentElement.style.setProperty(
-            "--main-bg-color2",
-            backgroundColor2
-        );
-        document.documentElement.style.setProperty(
-            "--main-input-color",
-            inputColor
-        );
-        document.documentElement.style.setProperty(
-            "--main-button-color",
-            buttonColor
-        );
-    }
 
     let filepath: string = "";
     let logs = writable([]);
@@ -75,12 +29,11 @@
             loading.set(true);
             try {
                 const result = await GetLogs(type, boot);
-                //const cleanedLogs = result.map(log => log.split(' ').slice(4).join(' '));
                 logs.set(result.slice().reverse());
             } catch (error) {
                 if (error.includes("Invalid boot number")) {
                     await OpenDialogError(
-                        `The provided boot number is not valid: ${boot}`
+                        `The provided boot number is not valid: ${boot}`,
                     );
                 } else {
                     await OpenDialogError(`Failed to fetch logs: ${error}`);
@@ -141,27 +94,33 @@
                     activeComponent !== ActiveComponent.SEARCH
                         ? ActiveComponent.SEARCH
                         : ActiveComponent.NONE)}
-            title="Toggle search">🔍</button
+            title="Toggle search"
         >
+            <span class="material-icons">search</span>
+        </button>
         <button
             on:click={() =>
                 (activeComponent =
                     activeComponent !== ActiveComponent.EXPORT
                         ? ActiveComponent.EXPORT
                         : ActiveComponent.NONE)}
-            title="Toggle export">💾</button
+            title="Toggle export"
         >
+            <span class="material-icons">save</span>
+        </button>
         <button
             on:click={() =>
                 (activeComponent =
                     activeComponent !== ActiveComponent.BOOT_NUMBER
                         ? ActiveComponent.BOOT_NUMBER
                         : ActiveComponent.NONE)}
-            title="Toggle boot number">🔢</button
+            title="Toggle boot number"
         >
+            <span class="material-icons">numbers</span>
+        </button>
     </div>
 
-    <h1>Log viewer</h1>
+    <h1>Log Viewer</h1>
 
     {#if activeComponent === ActiveComponent.SEARCH}
         <label>
@@ -229,97 +188,157 @@
 </div>
 
 <style>
-    h1 {
-        color: var(--main-color);
-        font-family: var(--main-font-family);
-        margin-bottom: 10px;
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
     }
 
-    select {
-        color: var(--main-color);
-        background-color: var(--main-bg-color2);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-        margin-bottom: 20px;
+    .cont {
+        position: relative;
+        padding: var(--spacing-lg);
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        font-family: sans-serif;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.5rem;
+    }
+
+    .control-buttons {
+        position: absolute;
+        right: var(--spacing-lg);
+        top: var(--spacing-lg);
+        display: flex;
+        gap: var(--spacing-sm);
     }
 
     button {
-        background-color: var(--main-bg-color2);
-        border-color: #030303fa;
-    }
-
-    label p {
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-    }
-
-    .input-group {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-bottom: 1em;
-    }
-
-    button.open-btn {
-        background: none;
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 0;
-        margin: 0;
-        margin-left: 10px;
-        margin-bottom: 15px;
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+        padding: var(--spacing-sm);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
+    button:hover {
+        background-color: var(--color-bg-tertiary);
+    }
+
+    .material-icons {
+        font-size: 1.2rem;
+        color: var(--color-text-primary);
+    }
+
+    label p {
+        color: var(--color-text-primary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+    }
+
     input {
-        padding: 0.7em;
-        border: 0;
-        border-radius: 4px;
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-        background-color: var(--main-bg-color2);
-        width: 100%;
-        box-sizing: border-box;
-        margin-bottom: 0.5em;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        flex: 1;
+    }
+
+    .open-btn {
+        padding: var(--spacing-sm);
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+
+    .open-icon {
+        width: 1.2rem;
+        height: 1.2rem;
     }
 
     .export-button {
-        color: var(--main-color);
+        background-color: var(--color-accent-blue);
+        color: var(--color-bg-primary);
+        border: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
     }
 
-    .cont {
-        position: relative;
+    .export-button:hover {
+        background-color: var(--color-accent-cyan);
     }
 
-    .control-buttons {
-        position: absolute;
-        right: 0;
-        top: 0;
-        display: flex;
-        gap: 1em;
+    select {
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        font-size: 1rem;
+        cursor: pointer;
+        appearance: none; /* Remove default arrow */
+        width: 100%;
+        padding-right: 2rem; /* Space for custom arrow */
+    }
+
+    select:hover {
+        border-color: var(--color-accent-blue);
+    }
+
+    select:focus {
+        outline: none;
+        border-color: var(--color-accent-blue);
+        box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
     }
 
     .logs {
-        border: 1px solid #dddbdb;
-        padding: 0.5em;
-        background-color: var(--main-bg-color);
-        text-align: left;
-        overflow: auto;
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        padding: var(--spacing-md);
+        max-height: 400px;
+        overflow-y: auto;
     }
 
     .logs pre {
         white-space: pre-wrap;
-        border-bottom: 1px solid #0a0909;
-        background-color: var(--main-bg-color2);
-        padding: 0.5em;
         margin: 0;
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        padding: var(--spacing-sm) 0;
+        border-bottom: 1px solid var(--color-bg-tertiary);
     }
 
     .logs pre:last-child {
@@ -328,17 +347,17 @@
 
     .loading {
         text-align: center;
+        padding: var(--spacing-lg);
     }
 
     .loading p {
-        color: var(--main-color);
-        font-size: 16px;
-        margin-bottom: 20px;
+        color: var(--color-text-primary);
+        margin-bottom: var(--spacing-md);
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid var(--main-color);
+        border-top: 4px solid var(--color-accent-blue);
         border-radius: 50%;
         width: 30px;
         height: 30px;

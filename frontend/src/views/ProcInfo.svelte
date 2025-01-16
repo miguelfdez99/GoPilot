@@ -7,42 +7,10 @@
         OpenDialogInfo,
         OpenDialogError,
         OpenDialogQuestion,
-        CheckAdmin
+        CheckAdmin,
     } from "../../wailsjs/go/backend/Backend";
-    import terminateIcon from "../assets/images/terminate.png";
     import { openDialog } from "../functions/functions";
     import CustomDialog from "../components/dialogs/CustomDialog.svelte";
-    import infoIcon from "../assets/images/info.png";
-    import { settings } from '../stores';
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    let showInfoButton: boolean;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-        showInfoButton = $settings.showInfoButton;
-    });
-
-    $: {
-    document.documentElement.style.setProperty('--main-font-size', fontSize);
-    document.documentElement.style.setProperty('--main-color', color);
-    document.documentElement.style.setProperty('--main-font-family', fontFamily);
-    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
-    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
-    document.documentElement.style.setProperty('--main-input-color', inputColor);
-    document.documentElement.style.setProperty('--main-button-color', buttonColor);
-  }
 
     let processInfo: string[] = [];
     let filteredProcessInfo = [];
@@ -96,7 +64,7 @@
     const sortProcessInfo = (
         processInfo: string[],
         sortBy: string,
-        sortDirection: string
+        sortDirection: string,
     ) => {
         return [...processInfo].sort((a, b) => {
             if (a[sortBy] < b[sortBy]) return sortDirection === "asc" ? -1 : 1;
@@ -108,14 +76,16 @@
     const filterProcesses = () => {
         filteredProcessInfo = processInfo.filter((process) =>
             Object.values(process).some((val) =>
-                val.toString().toLowerCase().includes(searchTerm.toLowerCase())
-            )
+                val.toString().toLowerCase().includes(searchTerm.toLowerCase()),
+            ),
         );
     };
 
     async function killProcess(pid: number) {
         try {
-            const res = await OpenDialogQuestion(`Are you sure you want to kill process ${pid}?`);
+            const res = await OpenDialogQuestion(
+                `Are you sure you want to kill process ${pid}?`,
+            );
             if (res === "Yes") {
                 await TerminateProcess(pid);
                 processList = processList.filter((proc) => proc.Pid !== pid);
@@ -138,7 +108,7 @@
                     processInfo = sortProcessInfo(
                         processInfo,
                         sortBy,
-                        sortDirection
+                        sortDirection,
                     );
                 }
                 filterProcesses();
@@ -150,7 +120,6 @@
         }
     });
 
-
     onDestroy(() => {
         clearInterval(interval);
     });
@@ -159,74 +128,24 @@
         filterProcesses();
     }
 
-    function openInfo() {
-        dialog = openDialog(
-            dialog,
-            "Info",
-            `
-            <p style="color: ${color}; font-size: ${fontSize};>
-                This view shows the list of processes running on the system.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                The process list is updated every second.
-                The process list is sorted by the PID in ascending order by default.
-                Click on a column header to sort the process list by that column.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                You can terminate a process by clicking on the terminate icon in the last column.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>USER</b> - The user that started the process.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>PID</b> - The process ID.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>%CPU</b> - The percentage of the CPU time used by the process since the last update.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>%MEM</b> - The percentage of the total RAM used by the process.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>VSZ</b> - The total amount of virtual memory used by the process.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>RSS</b> - The total amount of physical memory used by the process.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>TTY</b> - The controlling terminal for the process.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>STAT</b> - The state of the process.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>START</b> - The time the process started.
-            </p>
-            <p style="color: ${color}; font-size: ${fontSize};>
-                <b>COMMAND</b> - The command that started the process.
-            </p>
-        `
-        );
-    }
-
     async function checkPrivileges() {
-  try {
-    const admin = await CheckAdmin();
-    if (!admin) {
-      dialog = openDialog(
-        dialog,
-        "Info",
-        `
-        <p style="color: ${color}; font-size: ${fontSize};">
-           You are not running this application as root. You can see processes but you will not be able to kill them. 
-        </p>
-        `
-      );
+        try {
+            const admin = await CheckAdmin();
+            if (!admin) {
+                dialog = openDialog(
+                    dialog,
+                    "Info",
+                    `
+                    <p style="color: var(--color-text-primary); font-size: 1rem;">
+                        You are not running this application as root. You can see processes but you will not be able to kill them.
+                    </p>
+                    `,
+                );
+            }
+        } catch (error) {
+            console.error("Error checking admin privileges:", error);
+        }
     }
-  } catch (error) {
-    console.error("Error checking admin privileges:", error);
-  }
-}
 
     function onDialogClose() {
         dialog = { showDialog: false, dialogTitle: "", dialogMessage: "" };
@@ -239,183 +158,181 @@
     message={dialog.dialogMessage}
     onClose={onDialogClose}
 />
-<div class="main-container">
-    {#if showInfoButton}
-    <button type="button" class="info-button" title="Info" on:click={openInfo}>
-        <img src={infoIcon} alt="Open Info" class="info-icon" />
-    </button>
-    {/if}
-<div class="search-container">
-    <input type="text" bind:value={searchTerm} placeholder="Search..." />
-</div>
 
-{#if $loading}
+<div class="main-container">
+    <div class="search-container">
+        <input type="text" bind:value={searchTerm} placeholder="Search..." />
+    </div>
+
+    {#if $loading}
         <div class="loading">
             <p>Loading...</p>
             <div class="spinner" />
         </div>
     {:else}
-
-<table>
-    <thead>
-        <tr>
-            <th on:click={() => sortTable("User")}>USER {currentIcon.User}</th>
-            <th on:click={() => sortTable("Pid")}>PID {currentIcon.Pid}</th>
-            <th on:click={() => sortTable("CpuPercent")}
-                >%CPU {currentIcon.CpuPercent}</th
-            >
-            <th on:click={() => sortTable("MemPercent")}
-                >%MEM {currentIcon.MemPercent}</th
-            >
-            <th on:click={() => sortTable("VMS")}>VSZ {currentIcon.VMS}</th>
-            <th on:click={() => sortTable("RSS")}>RSS {currentIcon.RSS}</th>
-            <th on:click={() => sortTable("TTY")}>TTY {currentIcon.TTY}</th>
-            <th on:click={() => sortTable("Status")}
-                >STAT {currentIcon.Status}</th
-            >
-            <th on:click={() => sortTable("StartTime")}
-                >START {currentIcon.StartTime}</th
-            >
-            <th on:click={() => sortTable("Cmdline")}
-                >COMMAND {currentIcon.Cmdline}</th
-            >
-        </tr>
-    </thead>
-    <tbody>
-        {#each filteredProcessInfo as proc (proc.Pid)}
-            <tr>
-                <td>{proc.User}</td>
-                <td>{proc.Pid}</td>
-                <td>{proc.CpuPercent.toFixed(2)}</td>
-                <td>{proc.MemPercent.toFixed(2)}</td>
-                <td>{proc.VMS}</td>
-                <td>{proc.RSS}</td>
-                <td>{proc.TTY}</td>
-                <td>{proc.Status}</td>
-                <td>{new Date(proc.StartTime).toLocaleString()}</td>
-                <td class="command">{proc.Cmdline}</td>
-                <td>
-                    <button 
-                    class="terminate-btn"
-                    on:click={() => killProcess(proc.Pid)}>
-                        <img src={terminateIcon} alt="Terminate" class="terminate-icon" />
-                    </button>
-                </td>
-            </tr>
-        {/each}
-    </tbody>
-</table>
-{/if}
+        <table>
+            <thead>
+                <tr>
+                    <th on:click={() => sortTable("User")}
+                        >USER {currentIcon.User}</th
+                    >
+                    <th on:click={() => sortTable("Pid")}
+                        >PID {currentIcon.Pid}</th
+                    >
+                    <th on:click={() => sortTable("CpuPercent")}
+                        >%CPU {currentIcon.CpuPercent}</th
+                    >
+                    <th on:click={() => sortTable("MemPercent")}
+                        >%MEM {currentIcon.MemPercent}</th
+                    >
+                    <th on:click={() => sortTable("VMS")}
+                        >VSZ {currentIcon.VMS}</th
+                    >
+                    <th on:click={() => sortTable("RSS")}
+                        >RSS {currentIcon.RSS}</th
+                    >
+                    <th on:click={() => sortTable("TTY")}
+                        >TTY {currentIcon.TTY}</th
+                    >
+                    <th on:click={() => sortTable("Status")}
+                        >STAT {currentIcon.Status}</th
+                    >
+                    <th on:click={() => sortTable("StartTime")}
+                        >START {currentIcon.StartTime}</th
+                    >
+                    <th on:click={() => sortTable("Cmdline")}
+                        >COMMAND {currentIcon.Cmdline}</th
+                    >
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each filteredProcessInfo as proc (proc.Pid)}
+                    <tr>
+                        <td>{proc.User}</td>
+                        <td>{proc.Pid}</td>
+                        <td>{proc.CpuPercent.toFixed(2)}</td>
+                        <td>{proc.MemPercent.toFixed(2)}</td>
+                        <td>{proc.VMS}</td>
+                        <td>{proc.RSS}</td>
+                        <td>{proc.TTY}</td>
+                        <td>{proc.Status}</td>
+                        <td>{new Date(proc.StartTime).toLocaleString()}</td>
+                        <td class="command">{proc.Cmdline}</td>
+                        <td>
+                            <button
+                                class="terminate-btn"
+                                on:click={() => killProcess(proc.Pid)}
+                            >
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    {/if}
 </div>
 
 <style>
-    .info-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        border: none;
-        background: var(--main-button-color);
-        height: 40px;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
     }
 
-    .info-icon {
-        max-width: none;
+    .main-container {
+        padding: var(--spacing-lg);
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
-    .command {
-        max-width: 400px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        word-wrap: break-word;
-    }
+
     .search-container {
-        padding-bottom: 1rem;
-        max-width: 98%;
+        padding-bottom: var(--spacing-md);
     }
 
     input[type="text"] {
         width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 0.25rem;
-        background: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        font-size: 1rem;
     }
+
     table {
-        table-layout: auto;
         width: 100%;
         border-collapse: collapse;
-        margin: 1rem 0;
-        font-size: 0.9em;
-        font-family: sans-serif;
-        min-width: 400px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        margin: var(--spacing-md) 0;
+        font-size: 0.9rem;
     }
+
     thead tr {
-        background-color: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        background-color: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
         text-align: left;
     }
+
     th,
     td {
-        padding: 12px 15px;
-        width: 10%;
+        padding: var(--spacing-sm);
+        border-bottom: 1px solid var(--color-bg-tertiary);
+    }
+
+    tbody tr:hover {
+        background-color: var(--color-bg-secondary);
+    }
+
+    .command {
+        max-width: 400px;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-    }
-    tbody tr {
-        border-bottom: 1px solid #dddddd;
-    }
-    tbody tr:nth-of-type(even) {
-        background-color:  var(--main-input-color);
-    }
-    tbody tr:last-of-type {
-        border-bottom: 2px solid var(--main-input-color);
+        white-space: nowrap;
     }
 
     .terminate-btn {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    margin: 0;
-    background: var(--main-button-color);
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    border: none;
-}
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        color: var(--color-accent-red);
+    }
 
-.terminate-icon {
-    width: 16px;
-    height: 16px;
-}
+    .material-icons {
+        font-size: 1.5rem;
+    }
 
-.loading {
+    .loading {
         text-align: center;
     }
 
     .loading p {
-        color: var(--main-color);;
-        font-size: 16px;
-        margin-bottom: 20px;
+        color: var(--color-text-primary);
+        font-size: 1rem;
+        margin-bottom: var(--spacing-md);
     }
 
     .spinner {
         border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid var(--main-color);;
+        border-top: 4px solid var(--color-accent-blue);
         border-radius: 50%;
         width: 30px;
         height: 30px;

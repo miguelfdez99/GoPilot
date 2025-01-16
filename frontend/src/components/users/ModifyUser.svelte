@@ -4,7 +4,7 @@
         OpenDialogInfo,
         OpenDialogError,
     } from "../../../wailsjs/go/backend/Backend";
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -17,7 +17,7 @@
     let addGroup: string = "";
 
     function dismiss() {
-        dispatch('dismiss');
+        dispatch("dismiss");
     }
 
     async function modifyUser() {
@@ -87,77 +87,82 @@
                 <option value="/usr/bin/zsh">/usr/bin/zsh</option>
             </select>
         </label>
-        <button type="submit" class="submit-button">Modify user</button>
-        <button class="back-button" on:click={dismiss}>Back</button>
+        <button type="submit" class="submit-button">
+            <span class="material-icons">edit</span>
+            Modify User
+        </button>
+        <button class="back-button" on:click={dismiss}>
+            <span class="material-icons">arrow_back</span>
+            Back
+        </button>
     </form>
 </div>
 
 <style>
-    h2 {
-      text-align: center;
-      color: var(--main-color);
-    }
-    
     .container {
-        position: relative;
-        padding: 20px;
+        background-color: var(--color-bg-secondary);
+        padding: var(--spacing-lg);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         max-width: 400px;
         margin: 0 auto;
     }
 
-    .back-button {
-        right: 0;
-        padding: 10px 20px;
-        border: none;
-        background: var(--main-button-color);
-        border-radius: 5px;
-        font-size: 16px;
-        color: #fff;
-        transition: background-color 0.3s;
+    h2 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.5rem;
+        text-align: center;
     }
 
     .form-control {
-        padding: 30px;
-        background-color: var(--main-bg-color2);
-        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
     }
 
     .input-field {
-        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
     }
 
     .input-field span {
-        display: block;
-        font-size: 14px;
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
-        margin-bottom: 5px;
+        color: var(--color-text-primary);
+        font-size: 1rem;
     }
 
-    input[type="text"], input[type="password"], select {
-        width: 100%;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 16px;
-        background: var(--main-input-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+    input[type="text"],
+    input[type="password"],
+    select {
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-bg-tertiary);
+        border-radius: 0.5rem;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
     }
 
-    .submit-button {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        border: none;
-        background: var(--main-button-color);
-        color: white;
-        border-radius: 5px;
-        font-size: 16px;
+    .submit-button,
+    .back-button {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: var(--color-bg-tertiary);
+        border: 1px solid var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+        border-radius: 0.5rem;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background-color 0.2s ease-in-out;
     }
 
+    .submit-button:hover,
+    .back-button:hover {
+        background-color: var(--color-bg-secondary);
+    }
+
+    .material-icons {
+        font-size: 1.2rem;
+        color: var(--color-accent-blue);
+    }
 </style>

@@ -4,56 +4,6 @@
         GetLSCPU,
         GetSystemInfo,
     } from "../../../wailsjs/go/backend/Backend";
-    import debianIcon from "../../assets/images/debian.png";
-    import archIcon from "../../assets/images/arch.png";
-    import fedoraIcon from "../../assets/images/fedora.png";
-    import ubuntuIcon from "../../assets/images/ubuntu.png";
-    import manjaroIcon from "../../assets/images/manjaro.png";
-    import mintIcon from "../../assets/images/mint.png";
-    import elementaryIcon from "../../assets/images/elementary.png";
-    import opensuseIcon from "../../assets/images/suse.png";
-    import { settings } from '../../stores';
-
-    let fontSize: string;
-    let color: string;
-    let fontFamily: string;
-    let backgroundColor: string;
-    let backgroundColor2: string;
-    let inputColor: string;
-    let buttonColor: string;
-    settings.subscribe(($settings) => {
-        fontSize = $settings.fontSize;
-        color = $settings.color;
-        fontFamily = $settings.fontFamily;
-        backgroundColor = $settings.backgroundColor;
-        backgroundColor2 = $settings.backgroundColor2;
-        inputColor = $settings.inputColor;
-        buttonColor = $settings.buttonColor;
-    });
-
-    $: {
-    document.documentElement.style.setProperty('--main-font-size', fontSize);
-    document.documentElement.style.setProperty('--main-color', color);
-    document.documentElement.style.setProperty('--main-font-family', fontFamily);
-    document.documentElement.style.setProperty('--main-bg-color', backgroundColor);
-    document.documentElement.style.setProperty('--main-bg-color2', backgroundColor2);
-    document.documentElement.style.setProperty('--main-input-color', inputColor);
-    document.documentElement.style.setProperty('--main-button-color', buttonColor);
-    }
-
-    let distroIcons = {
-    "Debian": debianIcon,
-    "Arch": archIcon,
-    "Fedora": fedoraIcon,
-    "Ubuntu": ubuntuIcon,
-    "Manjaro": manjaroIcon,
-    "Mint": mintIcon,
-    "Elementary": elementaryIcon,
-    "OpenSUSE": opensuseIcon,
-};
-
-let distroIcon: string = "";
-let osName: string = "";
 
     let cpuInfo = {
         architecture: "",
@@ -80,117 +30,113 @@ let osName: string = "";
         cpuInfo = parseResponse(lscpuResponse);
         const systemInfoResponse = await GetSystemInfo();
         systemInfo = parseSystemInfo(systemInfoResponse);
-        osName = systemInfo.osName;
     });
 
     function parseResponse(response: string) {
-        const data = JSON.parse(response);
-        return {
-            architecture: data.architecture,
-            cpus: data.cpus,
-            modelName: data.modelName,
-            threadPerCore: data.threadPerCore,
-            corePerSocket: data.corePerSocket,
-            socket: data.socket,
-            cpuModes: data.cpuModes,
-        };
+        return JSON.parse(response);
     }
 
     function parseSystemInfo(response: string) {
-        const data = JSON.parse(response);
-        return {
-            osName: data.osName,
-            kernelVer: data.kernelVer,
-            uptime: data.uptime,
-            hostname: data.hostname,
-            desktopEnv: data.desktopEnv,
-            currentUsername: data.currentUsername,
-            memory: data.memory,
-        };
+        return JSON.parse(response);
     }
-
-    function findDistroIcon(osName: string): string {
-    for (let distro in distroIcons) {
-        if (osName.toLowerCase().includes(distro.toLowerCase())) {
-            return distroIcons[distro];
-        }
-    }
-    return "";
-}
-
-    $: distroIcon = findDistroIcon(osName);
 </script>
 
-<h1 class="text-2xl font-bold">Welcome to GoPilot</h1>
+<div class="summary">
+    <header class="header">
+        <h2>{systemInfo.osName}</h2>
+    </header>
 
-<div class="summary-container">
-    <div class="header-container">
-        {#if distroIcon}
-            <div class="os-info">
-                <img class="os-icon" src={distroIcon} alt="Distro icon" />
-                <h2>{osName}</h2>
-            </div>
-        {/if}
-    </div>
-    <div class="info-tables">
-        <h3>System Info</h3>
-        <table>
-            <tr><th>OS Name</th><td>{systemInfo.osName}</td></tr>
-            <tr><th>Kernel Version</th><td>{systemInfo.kernelVer}</td></tr>
-            <tr><th>Uptime</th><td>{systemInfo.uptime}</td></tr>
-            <tr><th>Hostname</th><td>{systemInfo.hostname}</td></tr>
-            <tr><th>DE</th><td>{systemInfo.desktopEnv}</td></tr>
-            <tr><th>User</th><td>{systemInfo.currentUsername}</td></tr>
-            <tr><th>Memory</th><td>{systemInfo.memory}</td></tr>
-        </table>
-    </div>
-    <div>
-        <h3>CPU Info</h3>
-        <table>
-            <tr><th>Architecture</th><td>{cpuInfo.architecture}</td></tr>
-            <tr><th>CPUs</th><td>{cpuInfo.cpus}</td></tr>
-            <tr><th>Model Name</th><td>{cpuInfo.modelName}</td></tr>
-            <tr><th>Threads Per Core</th><td>{cpuInfo.threadPerCore}</td></tr>
-            <tr><th>Cores Per Socket</th><td>{cpuInfo.corePerSocket}</td></tr>
-            <tr><th>Socket</th><td>{cpuInfo.socket}</td></tr>
-            <tr><th>CPU Modes</th><td>{cpuInfo.cpuModes}</td></tr>
-        </table>
+    <div class="info-grid">
+        <div class="info-card">
+            <h3>System Information</h3>
+            <table>
+                <tr><th>OS Name</th><td>{systemInfo.osName}</td></tr>
+                <tr><th>Kernel Version</th><td>{systemInfo.kernelVer}</td></tr>
+                <tr><th>Uptime</th><td>{systemInfo.uptime}</td></tr>
+                <tr><th>Hostname</th><td>{systemInfo.hostname}</td></tr>
+                <tr><th>DE</th><td>{systemInfo.desktopEnv}</td></tr>
+                <tr><th>User</th><td>{systemInfo.currentUsername}</td></tr>
+                <tr><th>Memory</th><td>{systemInfo.memory}</td></tr>
+            </table>
+        </div>
+
+        <div class="info-card">
+            <h3>CPU Information</h3>
+            <table>
+                <tr><th>Architecture</th><td>{cpuInfo.architecture}</td></tr>
+                <tr><th>CPUs</th><td>{cpuInfo.cpus}</td></tr>
+                <tr><th>Model Name</th><td>{cpuInfo.modelName}</td></tr>
+                <tr
+                    ><th>Threads Per Core</th><td>{cpuInfo.threadPerCore}</td
+                    ></tr
+                >
+                <tr
+                    ><th>Cores Per Socket</th><td>{cpuInfo.corePerSocket}</td
+                    ></tr
+                >
+                <tr><th>Socket</th><td>{cpuInfo.socket}</td></tr>
+                <tr><th>CPU Modes</th><td>{cpuInfo.cpuModes}</td></tr>
+            </table>
+        </div>
     </div>
 </div>
 
 <style>
-    .summary-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2em;
-        font-family: var(--font-family);
-        color: var(--main-color);
-        margin: 2em;
+    :global(:root) {
+        /* Tokyo Night theme colors */
+        --color-bg-primary: #1a1b26;
+        --color-bg-secondary: #16161e;
+        --color-bg-tertiary: #1f2335;
+        --color-text-primary: #a9b1d6;
+        --color-text-secondary: #787c99;
+        --color-accent-blue: #7aa2f7;
+        --color-accent-purple: #9d7cd8;
+        --color-accent-cyan: #7dcfff;
+        --color-accent-green: #9ece6a;
+        --color-accent-orange: #ff9e64;
+        --color-accent-red: #f7768e;
+
+        /* Layout */
+        --sidebar-width: 250px;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
     }
 
-    .header-container {
-        grid-column: 1 / -1;
+    .summary {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg);
     }
 
-    .os-info {
+    .header {
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
+        background-color: var(--color-bg-secondary);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .os-icon {
-        width: 100px;
-        margin-bottom: 10px;
-        margin-right: 20px;
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: var(--spacing-lg);
     }
 
-    h2 {
-        margin-top: 30px;
+    .info-card {
+        background-color: var(--color-bg-secondary);
+        border-radius: 0.5rem;
+        padding: var(--spacing-lg);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        color: var(--color-accent-blue);
+        margin-bottom: var(--spacing-md);
+        font-size: 1.5rem;
     }
 
     table {
@@ -198,24 +144,20 @@ let osName: string = "";
         border-collapse: collapse;
     }
 
-    h2, h3, h1 {
-        color: var(--main-color);
-        font-family: var(--main-font-family);
-    }
-
     th,
     td {
-        padding: 0.5em;
+        padding: var(--spacing-md);
         text-align: left;
-        border-bottom: 1px solid var(--main-color);
-        color: var(--main-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        border-bottom: 1px solid var(--color-bg-tertiary);
     }
 
     th {
-        background-color: var(--main-input-color);
-        font-size: var(--main-font-size);
-        font-family: var(--main-font-family);
+        color: var(--color-text-secondary);
+        font-weight: 600;
+        width: 40%;
+    }
+
+    td {
+        color: var(--color-text-primary);
     }
 </style>
